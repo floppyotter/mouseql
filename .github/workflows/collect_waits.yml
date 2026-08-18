@@ -3,6 +3,12 @@ name: Run MOUSEQL analysis
 on:
   workflow_dispatch:
 
+  workflow_run:
+    workflows:
+      - "Collect Magic Kingdom wait times"
+    types:
+      - completed
+
 env:
   TZ: America/New_York
 
@@ -11,11 +17,17 @@ permissions:
 
 jobs:
   analyze:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Run data check
         run: sqlite3 -header -column data/mouseql.db < queries/01_data_check.sql
