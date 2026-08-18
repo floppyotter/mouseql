@@ -43,6 +43,19 @@ def load_data():
     return waits
 
 
+def format_hour(hour):
+    hour = int(hour)
+
+    if hour == 0:
+        return "12 AM"
+    if hour < 12:
+        return f"{hour} AM"
+    if hour == 12:
+        return "12 PM"
+
+    return f"{hour - 12} PM"
+
+
 df = load_data()
 
 if df.empty:
@@ -81,7 +94,21 @@ attractions = sorted(df["attraction"].dropna().unique())
 selected_attraction = st.selectbox(
     "Choose an attraction",
     attractions,
+    index=attractions.index("TRON Lightcycle / Run")
+    if "TRON Lightcycle / Run" in attractions
+    else 0,
 )
+
+date_range = st.selectbox(
+    "Date range",
+    [
+        "Today",
+        "Last 7 days",
+        "Last 30 days",
+        "All data",
+    ],
+)
+
 
 ride_data = (
     df[df["attraction"] == selected_attraction]
@@ -89,6 +116,32 @@ ride_data = (
     .sort_values("recorded_at")
     .copy()
 )
+
+
+# Date filtering
+
+if not ride_data.empty:
+
+    latest_timestamp = df["recorded_at"].max()
+    today = latest_timestamp.date()
+
+    if date_range == "Today":
+        ride_data = ride_data[
+            ride_data["recorded_at"].dt.date == today
+        ]
+
+    elif date_range == "Last 7 days":
+        cutoff = latest_timestamp - pd.Timedelta(days=7)
+        ride_data = ride_data[
+            ride_data["recorded_at"] >= cutoff
+        ]
+
+    elif date_range == "Last 30 days":
+        cutoff = latest_timestamp - pd.Timedelta(days=30)
+        ride_data = ride_data[
+            ride_data["recorded_at"] >= cutoff
+        ]
+
 
 if not ride_data.empty:
 
@@ -121,6 +174,13 @@ if not ride_data.empty:
         f"{highest_wait:.0f} min",
     )
 
+    st.caption(
+        f"{len(ride_data)} observations in selected date range"
+    )
+
+
+    # Wait history
+
     st.subheader("Wait Time History")
 
     history = (
@@ -129,6 +189,7 @@ if not ride_data.empty:
     )
 
     st.line_chart(history)
+
 
     # Best observed hour
 
@@ -151,18 +212,6 @@ if not ride_data.empty:
         ascending=[True, False],
     ).iloc[0]
 
-    def format_hour(hour):
-        hour = int(hour)
-
-        if hour == 0:
-            return "12 AM"
-        if hour < 12:
-            return f"{hour} AM"
-        if hour == 12:
-            return "12 PM"
-
-        return f"{hour - 12} PM"
-
     st.write(
         f"Best observed hour: "
         f"**{format_hour(best_hour['hour'])}** "
@@ -172,7 +221,10 @@ if not ride_data.empty:
     )
 
 else:
-    st.write("No wait-time observations available for this attraction.")
+    st.info(
+        "No observations are available for this attraction "
+        "during the selected date range."
+    )
 
 
 # Attraction averages
