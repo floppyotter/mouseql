@@ -6,9 +6,6 @@ import pandas as pd
 
 
 WALKING_SPEED_MPH = 3.0
-
-# The path network already represents actual walkable segments,
-# so we use a smaller adjustment than the old straight-line model.
 WALKING_DISTANCE_MULTIPLIER = 1.05
 
 MIN_HISTORY_OBSERVATIONS = 5
@@ -26,13 +23,8 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 PATHS_FILE = DATA_DIR / "park_paths.csv"
 NODES_FILE = DATA_DIR / "attraction_nodes.csv"
+PARK_NODES_FILE = DATA_DIR / "park_nodes.csv"
 
-
-# --------------------------------------------------
-# Old distance calculation
-# Used as a fallback if an attraction cannot be
-# connected to the park routing network.
-# --------------------------------------------------
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     """
@@ -66,10 +58,6 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     return earth_radius_miles * c
 
 
-# --------------------------------------------------
-# Walking time
-# --------------------------------------------------
-
 def estimate_walking_time(distance_miles):
     """
     Convert walking distance into estimated minutes.
@@ -87,10 +75,6 @@ def estimate_walking_time(distance_miles):
 
     return walking_hours * 60
 
-
-# --------------------------------------------------
-# Load park routing network
-# --------------------------------------------------
 
 def load_park_paths():
     """
@@ -156,7 +140,6 @@ def load_park_paths():
             )
         )
 
-        # Walking paths work both directions.
         graph.setdefault(
             to_node,
             [],
@@ -217,14 +200,98 @@ def load_attraction_nodes():
     return attraction_nodes
 
 
-# Load once when the module is imported.
+def load_park_nodes():
+    """
+    Load coordinates for park routing nodes.
+    """
+
+    if not PARK_NODES_FILE.exists():
+        return {}
+
+    try:
+        nodes = pd.read_csv(
+            PARK_NODES_FILE
+        )
+    except Exception:
+        return {}
+
+    required_columns = {
+        "node",
+        "latitude",
+        "longitude",
+    }
+
+    if not required_columns.issubset(
+        nodes.columns
+    ):
+        return {}
+
+    park_nodes = {}
+
+    for _, row in nodes.iterrows():
+
+        node = str(
+            row["node"]
+        ).strip()
+
+        try:
+            latitude = float(
+                row["latitude"]
+            )
+
+            longitude = float(
+                row["longitude"]
+            )
+        except (TypeError, ValueError):
+            continue
+
+        if not (
+            isfinite(latitude)
+            and isfinite(longitude)
+        ):
+            continue
+
+        park_nodes[node] = {
+            "latitude": latitude,
+            "longitude": longitude,
+        }
+
+    return park_nodes
+
+
 PARK_GRAPH = load_park_paths()
 ATTRACTION_NODES = load_attraction_nodes()
+PARK_NODES = load_park_nodes()
 
 
-# --------------------------------------------------
-# Shortest path
-# --------------------------------------------------
+def get_route_coordinates(path_nodes):
+    """
+    Convert routing node names into map coordinates.
+
+    Returns coordinates in [longitude, latitude] format
+    for use by PyDeck PathLayer.
+    """
+
+    coordinates = []
+
+    for node in path_nodes:
+
+        location = PARK_NODES.get(
+            node
+        )
+
+        if location is None:
+            continue
+
+        coordinates.append(
+            [
+                location["longitude"],
+                location["latitude"],
+            ]
+        )
+
+    return coordinates
+
 
 def find_shortest_path(
     start_node,
@@ -345,10 +412,6 @@ def find_shortest_path(
     )
 
 
-# --------------------------------------------------
-# Attraction-to-attraction routing
-# --------------------------------------------------
-
 def calculate_walking_route(
     current_attraction,
     target_attraction,
@@ -397,11 +460,6 @@ def calculate_walking_route(
                 "path_nodes": path_nodes,
                 "routing_method": "Park path",
             }
-
-
-    # --------------------------------------------------
-    # Fallback
-    # --------------------------------------------------
 
     current_location = locations[
         locations["attraction"]
@@ -477,10 +535,6 @@ def calculate_walking_route(
     }
 
 
-# --------------------------------------------------
-# History confidence
-# --------------------------------------------------
-
 def get_history_confidence(
     observations
 ):
@@ -528,10 +582,6 @@ def get_wait_message(
 
     return "Near typical"
 
-
-# --------------------------------------------------
-# Recommendation engine
-# --------------------------------------------------
 
 def rank_attractions(
     current_attraction,
@@ -595,6 +645,7 @@ def rank_attractions(
             wait_minutes = float(
                 wait_minutes
             )
+
         except (TypeError, ValueError):
             continue
 
@@ -605,10 +656,6 @@ def rank_attractions(
 
         if wait_minutes < 0:
             continue
-
-        # ------------------------------------------
-        # Walking route
-        # ------------------------------------------
 
         route = calculate_walking_route(
             current_attraction,
@@ -634,10 +681,6 @@ def rank_attractions(
         routing_method = route[
             "routing_method"
         ]
-
-        # ------------------------------------------
-        # Historical wait
-        # ------------------------------------------
 
         typical_wait = None
         difference = None
@@ -733,10 +776,6 @@ def rank_attractions(
                         ),
                     )
 
-        # ------------------------------------------
-        # Priority
-        # ------------------------------------------
-
         priority = priorities.get(
             attraction,
             "If There's Time",
@@ -748,10 +787,6 @@ def rank_attractions(
                 0,
             )
         )
-
-        # ------------------------------------------
-        # Score
-        # ------------------------------------------
 
         base_total = (
             walking_minutes
