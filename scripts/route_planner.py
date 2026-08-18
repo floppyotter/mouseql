@@ -195,9 +195,7 @@ def get_park_graph():
         if (
             not from_node
             or not to_node
-            or not isfinite(
-                distance
-            )
+            or not isfinite(distance)
             or distance <= 0
         ):
             continue
@@ -329,12 +327,8 @@ def get_park_nodes():
             continue
 
         if not (
-            isfinite(
-                latitude
-            )
-            and isfinite(
-                longitude
-            )
+            isfinite(latitude)
+            and isfinite(longitude)
         ):
             continue
 
@@ -349,6 +343,12 @@ def get_park_nodes():
         }
 
     return park_nodes
+
+
+def clear_routing_cache():
+    get_park_graph.cache_clear()
+    get_attraction_nodes.cache_clear()
+    get_park_nodes.cache_clear()
 
 
 def get_route_coordinates(
@@ -504,15 +504,11 @@ def find_shortest_path(
             ):
                 distances[
                     neighbor
-                ] = (
-                    new_distance
-                )
+                ] = new_distance
 
                 previous[
                     neighbor
-                ] = (
-                    current_node
-                )
+                ] = current_node
 
                 heapq.heappush(
                     queue,
@@ -564,6 +560,187 @@ def find_shortest_path(
         ],
         path,
     )
+
+
+def get_routing_diagnostics(
+    current_attraction,
+    target_attraction,
+):
+    graph = (
+        get_park_graph()
+    )
+
+    attraction_nodes = (
+        get_attraction_nodes()
+    )
+
+    park_nodes = (
+        get_park_nodes()
+    )
+
+    current_clean = clean_name(
+        current_attraction
+    )
+
+    target_clean = clean_name(
+        target_attraction
+    )
+
+    current_key = normalize_key(
+        current_clean
+    )
+
+    target_key = normalize_key(
+        target_clean
+    )
+
+    start_node = (
+        attraction_nodes.get(
+            current_key
+        )
+    )
+
+    end_node = (
+        attraction_nodes.get(
+            target_key
+        )
+    )
+
+    route = None
+
+    if (
+        start_node
+        and end_node
+    ):
+        route = (
+            find_shortest_path(
+                start_node,
+                end_node,
+            )
+        )
+
+    if route is not None:
+        (
+            distance_miles,
+            path_nodes,
+        ) = route
+
+        walking_minutes = (
+            estimate_walking_time(
+                distance_miles
+            )
+        )
+
+    else:
+        distance_miles = None
+        path_nodes = []
+        walking_minutes = None
+
+    return {
+        "data_directory":
+            str(
+                DATA_DIR
+            ),
+
+        "park_paths_file":
+            str(
+                PATHS_FILE
+            ),
+
+        "park_paths_exists":
+            PATHS_FILE.exists(),
+
+        "attraction_nodes_file":
+            str(
+                NODES_FILE
+            ),
+
+        "attraction_nodes_exists":
+            NODES_FILE.exists(),
+
+        "park_nodes_file":
+            str(
+                PARK_NODES_FILE
+            ),
+
+        "park_nodes_exists":
+            PARK_NODES_FILE.exists(),
+
+        "graph_nodes_loaded":
+            len(
+                graph
+            ),
+
+        "attraction_mappings_loaded":
+            len(
+                attraction_nodes
+            ),
+
+        "park_node_coordinates_loaded":
+            len(
+                park_nodes
+            ),
+
+        "current_attraction":
+            current_clean,
+
+        "current_normalized":
+            current_key,
+
+        "target_attraction":
+            target_clean,
+
+        "target_normalized":
+            target_key,
+
+        "start_node":
+            start_node,
+
+        "end_node":
+            end_node,
+
+        "start_node_in_graph":
+            (
+                start_node in graph
+                if start_node
+                else False
+            ),
+
+        "end_node_in_graph":
+            (
+                end_node in graph
+                if end_node
+                else False
+            ),
+
+        "route_found":
+            route is not None,
+
+        "path_nodes":
+            path_nodes,
+
+        "distance_miles":
+            (
+                round(
+                    distance_miles,
+                    3,
+                )
+                if distance_miles
+                is not None
+                else None
+            ),
+
+        "walking_minutes":
+            (
+                round(
+                    walking_minutes,
+                    1,
+                )
+                if walking_minutes
+                is not None
+                else None
+            ),
+    }
 
 
 def calculate_coordinate_route(
@@ -652,18 +829,10 @@ def calculate_coordinate_route(
         return None
 
     if not (
-        isfinite(
-            current_lat
-        )
-        and isfinite(
-            current_lon
-        )
-        and isfinite(
-            target_lat
-        )
-        and isfinite(
-            target_lon
-        )
+        isfinite(current_lat)
+        and isfinite(current_lon)
+        and isfinite(target_lat)
+        and isfinite(target_lon)
     ):
         return None
 
@@ -926,7 +1095,6 @@ def rank_attractions(
                 normalize_key
             )
         )
-
     else:
         history_names = None
 
@@ -1035,16 +1203,13 @@ def rank_attractions(
             "Not enough history"
         )
 
-        history_adjustment = (
-            0.0
-        )
+        history_adjustment = 0.0
 
         if (
             historical_waits
             is not None
             and not historical_waits.empty
-            and history_names
-            is not None
+            and history_names is not None
         ):
             history_row = (
                 historical_waits[
