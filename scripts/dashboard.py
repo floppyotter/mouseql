@@ -8,7 +8,6 @@ import streamlit as st
 
 from route_planner import (
     rank_attractions,
-    get_route_coordinates,
 )
 
 from itinerary_planner import (
@@ -93,6 +92,7 @@ render_html(
         margin-bottom: 2.2rem;
         border-radius: 28px;
         border: 1px solid rgba(191, 179, 220, 0.22);
+
         background:
             radial-gradient(
                 circle at 88% 10%,
@@ -109,6 +109,7 @@ render_html(
                 rgba(25, 32, 56, 0.98),
                 rgba(13, 18, 34, 0.98)
             );
+
         box-shadow:
             0 26px 65px
             rgba(0, 0, 0, 0.30);
@@ -136,12 +137,14 @@ render_html(
 
     .mouseql-title {
         color: #f7f3eb;
+
         font-size:
             clamp(
                 3rem,
                 7vw,
                 5rem
             );
+
         line-height: 0.96;
         font-weight: 790;
         letter-spacing: -0.06em;
@@ -183,12 +186,14 @@ render_html(
 
     .mouseql-section-title {
         color: #f3efe7;
+
         font-size:
             clamp(
                 1.7rem,
                 4vw,
                 2.3rem
             );
+
         letter-spacing: -0.04em;
         font-weight: 710;
         line-height: 1.12;
@@ -207,6 +212,7 @@ render_html(
         border-radius: 22px;
         margin: 1.3rem 0 1.2rem;
         border: 1px solid rgba(195, 182, 225, 0.27);
+
         background:
             radial-gradient(
                 circle at 90% 15%,
@@ -218,6 +224,7 @@ render_html(
                 rgba(38, 43, 69, 0.94),
                 rgba(21, 27, 47, 0.95)
             );
+
         box-shadow:
             0 16px 40px
             rgba(0, 0, 0, 0.18);
@@ -234,12 +241,14 @@ render_html(
 
     .mouseql-best-name {
         color: #f6f2ea;
+
         font-size:
             clamp(
                 1.8rem,
                 4.6vw,
                 2.6rem
             );
+
         font-weight: 740;
         line-height: 1.1;
         letter-spacing: -0.04em;
@@ -262,6 +271,7 @@ render_html(
         margin-bottom: 0.75rem;
         border-radius: 16px;
         border: 1px solid rgba(184, 174, 215, 0.13);
+
         background:
             linear-gradient(
                 135deg,
@@ -276,9 +286,11 @@ render_html(
         top: 1rem;
         width: 2rem;
         height: 2rem;
+
         display: flex;
         align-items: center;
         justify-content: center;
+
         border-radius: 999px;
         color: #171b2a;
         background: #c5b8da;
@@ -364,9 +376,11 @@ render_html(
                 rgba(23, 30, 51, 0.92),
                 rgba(18, 24, 42, 0.92)
             );
+
         border: 1px solid rgba(184, 174, 215, 0.15);
         border-radius: 17px;
         padding: 1rem 1.1rem;
+
         box-shadow:
             0 12px 30px
             rgba(0, 0, 0, 0.13);
@@ -403,6 +417,7 @@ render_html(
         border-radius: 20px;
         overflow: hidden;
         border: 1px solid rgba(184, 174, 215, 0.15);
+
         box-shadow:
             0 16px 42px
             rgba(0, 0, 0, 0.16);
@@ -561,6 +576,7 @@ def load_data():
 
             if not db_waits.empty:
                 db_waits["source"] = "SQLite"
+
                 frames.append(
                     db_waits
                 )
@@ -580,6 +596,7 @@ def load_data():
 
             if not csv_waits.empty:
                 csv_waits["source"] = "CSV"
+
                 frames.append(
                     csv_waits
                 )
@@ -835,6 +852,9 @@ def get_attraction_coordinate(
     locations,
     attraction,
 ):
+    if not attraction:
+        return None
+
     match = (
         locations[
             locations["attraction"]
@@ -857,119 +877,61 @@ def get_attraction_coordinate(
     ]
 
 
-def build_map_route(
+def build_display_route(
     locations,
+    current_attraction,
     itinerary,
 ):
-    route_segments = []
+    if not itinerary:
+        return []
+
+    coordinates = []
+
+    current_coordinate = (
+        get_attraction_coordinate(
+            locations,
+            current_attraction,
+        )
+    )
+
+    if current_coordinate is not None:
+        coordinates.append(
+            current_coordinate
+        )
 
     for stop in itinerary:
-        from_attraction = (
-            stop.get(
-                "from_attraction"
-            )
-        )
-
-        to_attraction = (
-            stop.get(
-                "attraction"
-            )
-        )
-
-        start_coordinate = (
+        stop_coordinate = (
             get_attraction_coordinate(
                 locations,
-                from_attraction,
+                stop["attraction"],
             )
         )
 
-        end_coordinate = (
-            get_attraction_coordinate(
-                locations,
-                to_attraction,
-            )
-        )
-
-        path_nodes = (
-            stop.get(
-                "path_nodes",
-                [],
-            )
-        )
-
-        routing_method = (
-            stop.get(
-                "routing_method"
-            )
-        )
-
-        coordinates = []
-
-        if start_coordinate is not None:
-            coordinates.append(
-                start_coordinate
-            )
-
-        if (
-            routing_method
-            == "Park path"
-            and path_nodes
-        ):
-            node_coordinates = (
-                get_route_coordinates(
-                    path_nodes
-                )
-            )
-
-            for coordinate in (
-                node_coordinates
-            ):
-                if (
-                    not coordinates
-                    or coordinate
-                    != coordinates[-1]
-                ):
-                    coordinates.append(
-                        coordinate
-                    )
-
-        if end_coordinate is not None:
+        if stop_coordinate is not None:
             if (
                 not coordinates
-                or end_coordinate
+                or stop_coordinate
                 != coordinates[-1]
             ):
                 coordinates.append(
-                    end_coordinate
+                    stop_coordinate
                 )
 
-        if (
-            len(coordinates)
-            >= 2
-        ):
-            route_segments.append(
-                {
-                    "path":
-                        coordinates,
+    if len(coordinates) < 2:
+        return []
 
-                    "step":
-                        str(
-                            stop["step"]
-                        ),
-
-                    "routing_method":
-                        routing_method,
-                }
-            )
-
-    return route_segments
+    return [
+        {
+            "path":
+                coordinates
+        }
+    ]
 
 
 def get_map_view_state(
     locations,
     current_attraction,
     itinerary,
-    route_segments,
 ):
     focus_coordinates = []
 
@@ -998,11 +960,6 @@ def get_map_view_state(
                 coordinate
             )
 
-    for segment in route_segments:
-        focus_coordinates.extend(
-            segment["path"]
-        )
-
     if not focus_coordinates:
         return pdk.ViewState(
             latitude=(
@@ -1013,19 +970,19 @@ def get_map_view_state(
                 locations["longitude"]
                 .mean()
             ),
-            zoom=15.3,
+            zoom=15.1,
             pitch=0,
         )
 
     longitudes = [
-        point[0]
-        for point
+        coordinate[0]
+        for coordinate
         in focus_coordinates
     ]
 
     latitudes = [
-        point[1]
-        for point
+        coordinate[1]
+        for coordinate
         in focus_coordinates
     ]
 
@@ -1055,25 +1012,38 @@ def get_map_view_state(
         + max_lat
     ) / 2
 
-    span = max(
-        max_lon - min_lon,
-        max_lat - min_lat,
+    lon_span = (
+        max_lon
+        - min_lon
     )
 
-    if span < 0.002:
-        zoom = 16.8
+    lat_span = (
+        max_lat
+        - min_lat
+    )
 
-    elif span < 0.004:
-        zoom = 16.1
+    span = max(
+        lon_span,
+        lat_span,
+    )
 
-    elif span < 0.007:
-        zoom = 15.5
+    if span < 0.0015:
+        zoom = 17.1
 
-    elif span < 0.011:
-        zoom = 15.0
+    elif span < 0.003:
+        zoom = 16.5
+
+    elif span < 0.005:
+        zoom = 16.0
+
+    elif span < 0.008:
+        zoom = 15.4
+
+    elif span < 0.012:
+        zoom = 14.9
 
     else:
-        zoom = 14.5
+        zoom = 14.4
 
     return pdk.ViewState(
         latitude=center_lat,
@@ -1136,14 +1106,14 @@ def render_park_map(
         .astype(str)
     )
 
-    map_data["marker_size"] = 62
+    map_data["marker_size"] = 46
 
     map_data["marker_color"] = [
         [
+            91,
             96,
-            101,
-            122,
-            100,
+            118,
+            60,
         ]
         for _ in range(
             len(map_data)
@@ -1151,6 +1121,18 @@ def render_park_map(
     ]
 
     map_data["plan_stop"] = ""
+
+    active_attractions = set()
+
+    if current_attraction:
+        active_attractions.add(
+            current_attraction
+        )
+
+    for stop in itinerary:
+        active_attractions.add(
+            stop["attraction"]
+        )
 
     if current_attraction is not None:
         current_mask = (
@@ -1161,7 +1143,7 @@ def render_park_map(
         map_data.loc[
             current_mask,
             "marker_size",
-        ] = 155
+        ] = 165
 
         for index in map_data.index[
             current_mask
@@ -1173,7 +1155,7 @@ def render_park_map(
                 216,
                 197,
                 143,
-                250,
+                255,
             ]
 
     if itinerary:
@@ -1186,7 +1168,7 @@ def render_park_map(
             map_data.loc[
                 stop_mask,
                 "marker_size",
-            ] = 175
+            ] = 180
 
             map_data.loc[
                 stop_mask,
@@ -1205,7 +1187,7 @@ def render_park_map(
                     190,
                     177,
                     220,
-                    250,
+                    255,
                 ]
 
     elif recommendations:
@@ -1223,7 +1205,7 @@ def render_park_map(
         map_data.loc[
             best_mask,
             "marker_size",
-        ] = 175
+        ] = 180
 
         for index in map_data.index[
             best_mask
@@ -1235,34 +1217,55 @@ def render_park_map(
                 190,
                 177,
                 220,
-                250,
+                255,
             ]
-
-    route_segments = (
-        build_map_route(
-            locations,
-            itinerary,
-        )
-        if itinerary
-        else []
-    )
 
     layers = []
 
-    if route_segments:
+    route_data = (
+        build_display_route(
+            locations,
+            current_attraction,
+            itinerary,
+        )
+    )
+
+    if route_data:
+        route_shadow_layer = pdk.Layer(
+            "PathLayer",
+            data=route_data,
+            get_path="path",
+            get_width=12,
+            get_color=[
+                20,
+                24,
+                40,
+                210,
+            ],
+            width_min_pixels=8,
+            width_max_pixels=14,
+            joint_rounded=True,
+            cap_rounded=True,
+            pickable=False,
+        )
+
+        layers.append(
+            route_shadow_layer
+        )
+
         route_layer = pdk.Layer(
             "PathLayer",
-            data=route_segments,
+            data=route_data,
             get_path="path",
-            get_width=8,
+            get_width=7,
             get_color=[
-                188,
-                174,
-                218,
-                238,
+                190,
+                177,
+                220,
+                245,
             ],
             width_min_pixels=5,
-            width_max_pixels=10,
+            width_max_pixels=9,
             joint_rounded=True,
             cap_rounded=True,
             pickable=False,
@@ -1272,33 +1275,75 @@ def render_park_map(
             route_layer
         )
 
-    attraction_layer = pdk.Layer(
-        "ScatterplotLayer",
-        data=map_data,
-        get_position=[
-            "longitude",
-            "latitude",
-        ],
-        get_radius="marker_size",
-        get_fill_color="marker_color",
-        radius_min_pixels=4,
-        radius_max_pixels=15,
-        pickable=True,
-        auto_highlight=True,
-        opacity=0.92,
-        stroked=True,
-        get_line_color=[
-            243,
-            239,
-            230,
-            115,
-        ],
-        line_width_min_pixels=1,
+    inactive_data = (
+        map_data[
+            ~map_data["attraction"]
+            .isin(
+                active_attractions
+            )
+        ]
+        .copy()
     )
 
-    layers.append(
-        attraction_layer
+    active_data = (
+        map_data[
+            map_data["attraction"]
+            .isin(
+                active_attractions
+            )
+        ]
+        .copy()
     )
+
+    if not inactive_data.empty:
+        inactive_layer = pdk.Layer(
+            "ScatterplotLayer",
+            data=inactive_data,
+            get_position=[
+                "longitude",
+                "latitude",
+            ],
+            get_radius="marker_size",
+            get_fill_color="marker_color",
+            radius_min_pixels=3,
+            radius_max_pixels=6,
+            pickable=True,
+            opacity=0.55,
+            stroked=False,
+        )
+
+        layers.append(
+            inactive_layer
+        )
+
+    if not active_data.empty:
+        active_layer = pdk.Layer(
+            "ScatterplotLayer",
+            data=active_data,
+            get_position=[
+                "longitude",
+                "latitude",
+            ],
+            get_radius="marker_size",
+            get_fill_color="marker_color",
+            radius_min_pixels=10,
+            radius_max_pixels=17,
+            pickable=True,
+            auto_highlight=True,
+            opacity=0.98,
+            stroked=True,
+            get_line_color=[
+                245,
+                241,
+                233,
+                175,
+            ],
+            line_width_min_pixels=2,
+        )
+
+        layers.append(
+            active_layer
+        )
 
     stop_data = (
         map_data[
@@ -1339,7 +1384,6 @@ def render_park_map(
             locations,
             current_attraction,
             itinerary,
-            route_segments,
         )
         if itinerary
         else pdk.ViewState(
@@ -1351,7 +1395,7 @@ def render_park_map(
                 map_data["longitude"]
                 .mean()
             ),
-            zoom=15.3,
+            zoom=15.1,
             pitch=0,
         )
     )
@@ -1413,8 +1457,9 @@ def render_park_map(
         st.caption(
             "Gold marks your current location. "
             "Numbered lavender markers show your planned stops. "
-            "The lavender route follows the modeled park path network "
-            "and is anchored to each attraction."
+            "The line shows the order of your itinerary; "
+            "walking times are calculated separately using "
+            "MOUSEQL's modeled park-path network."
         )
 
     elif recommendations:
@@ -1888,9 +1933,8 @@ render_html(
         </div>
 
         <div class="mouseql-section-copy">
-            See where you are, your planned stops,
-            and the modeled park-path route between
-            each attraction.
+            See your current location and the order of
+            your planned stops at a glance.
         </div>
     </div>
     """
