@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+from textwrap import dedent
 
 import pandas as pd
 import pydeck as pdk
@@ -17,583 +18,346 @@ LOCATIONS_PATH = Path("data/attraction_locations.csv")
 
 st.set_page_config(
     page_title="MOUSEQL",
-    page_icon=None,
     layout="wide",
 )
 
 
-st.markdown(
+def render_html(html):
+    st.markdown(
+        dedent(html),
+        unsafe_allow_html=True,
+    )
+
+
+render_html(
     """
     <style>
+    :root {
+        --bg: #090d19;
+        --surface: #12192b;
+        --surface-2: #171f34;
+        --text: #f5f1e9;
+        --muted: #a4a9ba;
+        --lavender: #b9add5;
+        --gold: #d8c58f;
+        --border: rgba(188, 177, 218, 0.16);
+    }
 
-        :root {
-            --mouseql-bg: #090D19;
-            --mouseql-surface: #111729;
-            --mouseql-surface-2: #161D31;
-            --mouseql-border: rgba(184, 174, 215, 0.16);
-            --mouseql-border-strong: rgba(196, 184, 225, 0.28);
-            --mouseql-text: #F5F1E9;
-            --mouseql-muted: #A7ACBC;
-            --mouseql-lavender: #B7ACD4;
-            --mouseql-lavender-bright: #CDC1E5;
-            --mouseql-gold: #D8C58F;
-        }
+    .stApp {
+        background:
+            radial-gradient(
+                circle at 90% 0%,
+                rgba(125, 108, 168, 0.17),
+                transparent 28rem
+            ),
+            linear-gradient(
+                180deg,
+                #090d19 0%,
+                #0a0f1d 45%,
+                #0b1020 100%
+            );
+    }
 
+    [data-testid="stHeader"] {
+        background: rgba(9, 13, 25, 0.85);
+    }
 
-        .stApp {
-            background:
-                radial-gradient(
-                    circle at 90% 0%,
-                    rgba(125, 108, 168, 0.17),
-                    transparent 28rem
-                ),
-                radial-gradient(
-                    circle at 5% 24%,
-                    rgba(82, 91, 145, 0.08),
-                    transparent 27rem
-                ),
-                linear-gradient(
-                    180deg,
-                    #090D19 0%,
-                    #0A0F1D 40%,
-                    #0B1020 100%
-                );
-        }
+    .block-container {
+        max-width: 1180px;
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }
 
+    h1,
+    h2,
+    h3 {
+        color: var(--text);
+        letter-spacing: -0.025em;
+    }
 
-        [data-testid="stHeader"] {
-            background: rgba(9, 13, 25, 0.82);
-        }
+    hr {
+        border-color: rgba(188, 177, 218, 0.11);
+        margin: 2.6rem 0;
+    }
 
+    .mouseql-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 2.6rem 2.7rem 2.45rem;
+        margin-bottom: 2.2rem;
+        border-radius: 28px;
+        border: 1px solid rgba(191, 179, 220, 0.22);
 
-        [data-testid="stToolbar"] {
-            right: 1rem;
-        }
+        background:
+            radial-gradient(
+                circle at 88% 10%,
+                rgba(187, 167, 222, 0.22),
+                transparent 17rem
+            ),
+            radial-gradient(
+                circle at 75% 85%,
+                rgba(215, 195, 145, 0.07),
+                transparent 13rem
+            ),
+            linear-gradient(
+                135deg,
+                rgba(25, 32, 56, 0.98),
+                rgba(13, 18, 34, 0.98)
+            );
 
+        box-shadow:
+            0 26px 65px
+            rgba(0, 0, 0, 0.30);
+    }
 
+    .mouseql-hero::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: -80px;
+        top: -95px;
+        border-radius: 999px;
+        border: 1px solid rgba(215, 195, 145, 0.12);
+    }
+
+    .mouseql-eyebrow {
+        color: #c6b9da;
+        font-size: 0.72rem;
+        font-weight: 750;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+
+    .mouseql-title {
+        color: #f7f3eb;
+        font-size: clamp(3rem, 7vw, 5rem);
+        line-height: 0.96;
+        font-weight: 790;
+        letter-spacing: -0.06em;
+        margin: 0;
+    }
+
+    .mouseql-subtitle {
+        max-width: 660px;
+        color: #b4b8c8;
+        font-size: 1.03rem;
+        line-height: 1.65;
+        margin-top: 1rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .mouseql-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.52rem 0.82rem;
+        border-radius: 999px;
+        background: rgba(215, 195, 145, 0.08);
+        border: 1px solid rgba(215, 195, 145, 0.20);
+        color: #dacb9e;
+        font-size: 0.78rem;
+    }
+
+    .mouseql-section {
+        margin-bottom: 1.1rem;
+    }
+
+    .mouseql-kicker {
+        color: #afa2cc;
+        font-size: 0.69rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-weight: 750;
+        margin-bottom: 0.35rem;
+    }
+
+    .mouseql-section-title {
+        color: #f3efe7;
+        font-size: clamp(1.7rem, 4vw, 2.3rem);
+        letter-spacing: -0.04em;
+        font-weight: 710;
+        line-height: 1.12;
+        margin-bottom: 0.35rem;
+    }
+
+    .mouseql-section-copy {
+        color: #969caf;
+        font-size: 0.91rem;
+        line-height: 1.55;
+        max-width: 750px;
+    }
+
+    .mouseql-best-card {
+        padding: 1.6rem 1.7rem;
+        border-radius: 22px;
+        margin: 1.3rem 0 1.2rem;
+        border: 1px solid rgba(195, 182, 225, 0.27);
+
+        background:
+            radial-gradient(
+                circle at 90% 15%,
+                rgba(200, 184, 230, 0.13),
+                transparent 12rem
+            ),
+            linear-gradient(
+                135deg,
+                rgba(38, 43, 69, 0.94),
+                rgba(21, 27, 47, 0.95)
+            );
+
+        box-shadow:
+            0 16px 40px
+            rgba(0, 0, 0, 0.18);
+    }
+
+    .mouseql-best-label {
+        color: #beb0d7;
+        font-size: 0.68rem;
+        font-weight: 760;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        margin-bottom: 0.58rem;
+    }
+
+    .mouseql-best-name {
+        color: #f6f2ea;
+        font-size: clamp(1.8rem, 4.6vw, 2.6rem);
+        font-weight: 740;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+    }
+
+    .mouseql-best-total {
+        color: #d8c894;
+        font-size: 0.9rem;
+        margin-top: 0.7rem;
+    }
+
+    .mouseql-other-option {
+        padding: 0.9rem 1rem;
+        margin-bottom: 0.65rem;
+        border-radius: 14px;
+        border: 1px solid rgba(184, 174, 215, 0.11);
+        background: rgba(19, 25, 43, 0.60);
+    }
+
+    .mouseql-other-name {
+        color: #ece8e1;
+        font-weight: 650;
+        font-size: 0.96rem;
+    }
+
+    .mouseql-other-details {
+        color: #9298aa;
+        font-size: 0.79rem;
+        margin-top: 0.25rem;
+    }
+
+    [data-testid="stMetric"] {
+        background:
+            linear-gradient(
+                145deg,
+                rgba(23, 30, 51, 0.92),
+                rgba(18, 24, 42, 0.92)
+            );
+
+        border: 1px solid rgba(184, 174, 215, 0.15);
+        border-radius: 17px;
+        padding: 1rem 1.1rem;
+
+        box-shadow:
+            0 12px 30px
+            rgba(0, 0, 0, 0.13);
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #979daf;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #f5f1e9;
+        font-weight: 680;
+        letter-spacing: -0.03em;
+    }
+
+    div[data-baseweb="select"] > div {
+        background: rgba(21, 28, 48, 0.91);
+        border-color: rgba(184, 174, 215, 0.17);
+        border-radius: 12px;
+    }
+
+    div[data-baseweb="select"] > div:hover {
+        border-color: rgba(198, 185, 226, 0.32);
+    }
+
+    [data-baseweb="tag"] {
+        border-radius: 8px;
+    }
+
+    [data-testid="stExpander"] {
+        background: rgba(20, 27, 46, 0.65);
+        border: 1px solid rgba(184, 174, 215, 0.14);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    [data-testid="stAlert"] {
+        border-radius: 15px;
+        border: 1px solid rgba(184, 174, 215, 0.13);
+    }
+
+    [data-testid="stDataFrame"] {
+        border: 1px solid rgba(184, 174, 215, 0.10);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    [data-testid="stPydeckChart"] {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(184, 174, 215, 0.15);
+
+        box-shadow:
+            0 16px 42px
+            rgba(0, 0, 0, 0.16);
+    }
+
+    @media (max-width: 700px) {
         .block-container {
-            max-width: 1180px;
-            padding-top: 2rem;
-            padding-bottom: 5rem;
+            padding-top: 1.1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
-
-
-        h1,
-        h2,
-        h3 {
-            color: var(--mouseql-text);
-            letter-spacing: -0.025em;
-        }
-
-
-        h2 {
-            margin-top: 1.6rem;
-        }
-
-
-        p {
-            line-height: 1.65;
-        }
-
-
-        hr {
-            border-color: rgba(184, 174, 215, 0.11);
-            margin-top: 2.6rem;
-            margin-bottom: 2.6rem;
-        }
-
 
         .mouseql-hero {
-            position: relative;
-            overflow: hidden;
-
-            padding:
-                2.6rem
-                2.7rem
-                2.45rem
-                2.7rem;
-
-            margin-bottom: 2.1rem;
-
-            border-radius: 28px;
-
-            border:
-                1px solid
-                rgba(191, 179, 220, 0.22);
-
-            background:
-                radial-gradient(
-                    circle at 88% 10%,
-                    rgba(187, 167, 222, 0.22),
-                    transparent 17rem
-                ),
-                radial-gradient(
-                    circle at 75% 85%,
-                    rgba(215, 195, 145, 0.07),
-                    transparent 13rem
-                ),
-                linear-gradient(
-                    135deg,
-                    rgba(25, 32, 56, 0.98),
-                    rgba(13, 18, 34, 0.98)
-                );
-
-            box-shadow:
-                0 26px 65px
-                rgba(0, 0, 0, 0.30);
+            padding: 1.75rem 1.35rem 1.65rem;
+            border-radius: 21px;
+            margin-bottom: 1.7rem;
         }
-
-
-        .mouseql-hero::after {
-            content: "";
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            right: -80px;
-            top: -95px;
-
-            border-radius: 999px;
-
-            border:
-                1px solid
-                rgba(215, 195, 145, 0.12);
-        }
-
-
-        .mouseql-eyebrow {
-            color: #C6B9DA;
-
-            font-size: 0.72rem;
-            font-weight: 750;
-
-            letter-spacing: 0.17em;
-
-            text-transform: uppercase;
-
-            margin-bottom: 0.75rem;
-        }
-
-
-        .mouseql-title {
-            color: #F7F3EB;
-
-            font-size:
-                clamp(
-                    3rem,
-                    7vw,
-                    5rem
-                );
-
-            line-height: 0.96;
-
-            font-weight: 790;
-
-            letter-spacing: -0.06em;
-
-            margin: 0;
-        }
-
 
         .mouseql-subtitle {
-            max-width: 660px;
-
-            color: #B4B8C8;
-
-            font-size: 1.03rem;
-
-            line-height: 1.65;
-
-            margin-top: 1rem;
-            margin-bottom: 1.4rem;
+            font-size: 0.94rem;
+            line-height: 1.55;
         }
-
 
         .mouseql-status {
-            display: inline-flex;
-
-            align-items: center;
-
-            padding:
-                0.52rem
-                0.82rem;
-
-            border-radius: 999px;
-
-            background:
-                rgba(215, 195, 145, 0.08);
-
-            border:
-                1px solid
-                rgba(215, 195, 145, 0.20);
-
-            color: #DACB9E;
-
-            font-size: 0.78rem;
-
-            letter-spacing: 0.015em;
+            font-size: 0.72rem;
         }
-
-
-        .mouseql-section-kicker {
-            color: #AFA2CC;
-
-            font-size: 0.69rem;
-
-            text-transform: uppercase;
-
-            letter-spacing: 0.15em;
-
-            font-weight: 750;
-
-            margin-bottom: 0.35rem;
-        }
-
-
-        .mouseql-section-title {
-            color: #F3EFE7;
-
-            font-size:
-                clamp(
-                    1.65rem,
-                    4vw,
-                    2.25rem
-                );
-
-            letter-spacing: -0.04em;
-
-            font-weight: 710;
-
-            line-height: 1.1;
-
-            margin-bottom: 0.35rem;
-        }
-
-
-        .mouseql-section-copy {
-            color: #969CAF;
-
-            font-size: 0.91rem;
-
-            margin-bottom: 1.25rem;
-        }
-
 
         .mouseql-best-card {
-            padding:
-                1.55rem
-                1.65rem
-                1.6rem;
-
-            border-radius: 22px;
-
-            margin:
-                1.1rem
-                0
-                1.2rem;
-
-            border:
-                1px solid
-                rgba(195, 182, 225, 0.27);
-
-            background:
-                radial-gradient(
-                    circle at 90% 15%,
-                    rgba(200, 184, 230, 0.13),
-                    transparent 12rem
-                ),
-                linear-gradient(
-                    135deg,
-                    rgba(38, 43, 69, 0.94),
-                    rgba(21, 27, 47, 0.95)
-                );
-
-            box-shadow:
-                0 16px 40px
-                rgba(0, 0, 0, 0.18);
+            padding: 1.3rem;
+            border-radius: 18px;
         }
-
-
-        .mouseql-best-label {
-            color: #BEB0D7;
-
-            font-size: 0.68rem;
-
-            font-weight: 760;
-
-            text-transform: uppercase;
-
-            letter-spacing: 0.16em;
-
-            margin-bottom: 0.58rem;
-        }
-
-
-        .mouseql-best-name {
-            color: #F6F2EA;
-
-            font-size:
-                clamp(
-                    1.8rem,
-                    4.6vw,
-                    2.6rem
-                );
-
-            font-weight: 740;
-
-            line-height: 1.1;
-
-            letter-spacing: -0.04em;
-        }
-
-
-        .mouseql-best-total {
-            color: #D8C894;
-
-            font-size: 0.9rem;
-
-            margin-top: 0.7rem;
-        }
-
-
-        .mouseql-map-intro {
-            margin-bottom: 0.85rem;
-        }
-
 
         [data-testid="stMetric"] {
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(23, 30, 51, 0.92),
-                    rgba(18, 24, 42, 0.92)
-                );
-
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.15);
-
-            border-radius: 17px;
-
-            padding:
-                1rem
-                1.1rem;
-
-            box-shadow:
-                0 12px 30px
-                rgba(0, 0, 0, 0.13);
+            padding: 0.8rem 0.85rem;
         }
-
-
-        [data-testid="stMetricLabel"] {
-            color: #979DAF;
-        }
-
-
-        [data-testid="stMetricValue"] {
-            color: #F5F1E9;
-
-            font-weight: 680;
-
-            letter-spacing: -0.03em;
-        }
-
-
-        [data-testid="stMetricDelta"] {
-            font-size: 0.75rem;
-        }
-
-
-        div[data-baseweb="select"] > div {
-            background:
-                rgba(21, 28, 48, 0.91);
-
-            border-color:
-                rgba(184, 174, 215, 0.17);
-
-            border-radius: 12px;
-        }
-
-
-        div[data-baseweb="select"] > div:hover {
-            border-color:
-                rgba(198, 185, 226, 0.32);
-        }
-
-
-        div[data-baseweb="base-input"] {
-            background:
-                rgba(21, 28, 48, 0.91);
-
-            border-color:
-                rgba(184, 174, 215, 0.17);
-
-            border-radius: 12px;
-        }
-
-
-        [data-baseweb="tag"] {
-            border-radius: 8px;
-        }
-
-
-        [data-testid="stExpander"] {
-            background:
-                rgba(20, 27, 46, 0.65);
-
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.14);
-
-            border-radius: 15px;
-
-            overflow: hidden;
-        }
-
-
-        [data-testid="stExpander"] details {
-            border-radius: 15px;
-        }
-
-
-        [data-testid="stAlert"] {
-            border-radius: 15px;
-
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.13);
-        }
-
-
-        [data-testid="stDataFrame"] {
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.10);
-
-            border-radius: 15px;
-
-            overflow: hidden;
-        }
-
-
-        [data-testid="stPydeckChart"] {
-            border-radius: 20px;
-
-            overflow: hidden;
-
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.15);
-
-            box-shadow:
-                0 16px 42px
-                rgba(0, 0, 0, 0.16);
-        }
-
-
-        [data-testid="stPlotlyChart"],
-        [data-testid="stVegaLiteChart"] {
-            border-radius: 16px;
-        }
-
-
-        button[kind="secondary"] {
-            border-radius: 11px;
-        }
-
-
-        .mouseql-other-option {
-            padding:
-                0.85rem
-                1rem;
-
-            margin-bottom: 0.65rem;
-
-            border-radius: 14px;
-
-            border:
-                1px solid
-                rgba(184, 174, 215, 0.11);
-
-            background:
-                rgba(19, 25, 43, 0.60);
-        }
-
-
-        .mouseql-other-name {
-            color: #ECE8E1;
-
-            font-weight: 650;
-
-            font-size: 0.96rem;
-        }
-
-
-        .mouseql-other-details {
-            color: #9298AA;
-
-            font-size: 0.79rem;
-
-            margin-top: 0.25rem;
-        }
-
-
-        @media (max-width: 700px) {
-
-            .block-container {
-                padding-top: 1.15rem;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-
-            .mouseql-hero {
-                padding:
-                    1.75rem
-                    1.35rem
-                    1.65rem;
-
-                border-radius: 21px;
-
-                margin-bottom: 1.65rem;
-            }
-
-
-            .mouseql-subtitle {
-                font-size: 0.94rem;
-
-                line-height: 1.55;
-            }
-
-
-            .mouseql-status {
-                font-size: 0.72rem;
-            }
-
-
-            .mouseql-best-card {
-                padding: 1.25rem;
-
-                border-radius: 18px;
-            }
-
-
-            [data-testid="stMetric"] {
-                padding:
-                    0.8rem
-                    0.85rem;
-            }
-
-        }
-
+    }
     </style>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
-
-# --------------------------------------------------
-# Data
-# --------------------------------------------------
 
 @st.cache_data(ttl=300)
 def load_data():
@@ -617,7 +381,9 @@ def load_data():
     waits["recorded_at"] = pd.to_datetime(
         waits["recorded_at"],
         utc=True,
-    ).dt.tz_convert("America/New_York")
+    ).dt.tz_convert(
+        "America/New_York"
+    )
 
     return waits
 
@@ -628,18 +394,14 @@ def load_locations():
         LOCATIONS_PATH
     )
 
-    locations["latitude"] = (
-        pd.to_numeric(
-            locations["latitude"],
-            errors="coerce",
-        )
+    locations["latitude"] = pd.to_numeric(
+        locations["latitude"],
+        errors="coerce",
     )
 
-    locations["longitude"] = (
-        pd.to_numeric(
-            locations["longitude"],
-            errors="coerce",
-        )
+    locations["longitude"] = pd.to_numeric(
+        locations["longitude"],
+        errors="coerce",
     )
 
     return locations.dropna(
@@ -714,10 +476,6 @@ def build_historical_waits(
     )
 
 
-# --------------------------------------------------
-# Load data
-# --------------------------------------------------
-
 df = load_data()
 locations = load_locations()
 
@@ -725,7 +483,6 @@ if df.empty:
     st.warning(
         "No wait time data has been collected yet."
     )
-
     st.stop()
 
 
@@ -760,20 +517,16 @@ historical_waits = (
 )
 
 
-# --------------------------------------------------
-# Header
-# --------------------------------------------------
-
 latest_data_text = (
     latest_timestamp.strftime(
         "%B %d, %Y at %I:%M %p"
     )
 )
 
-st.markdown(
+
+render_html(
     f"""
     <div class="mouseql-hero">
-
         <div class="mouseql-eyebrow">
             Magic Kingdom park intelligence
         </div>
@@ -791,21 +544,15 @@ st.markdown(
         <div class="mouseql-status">
             Latest park data · {latest_data_text}
         </div>
-
     </div>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 
-# --------------------------------------------------
-# Park day
-# --------------------------------------------------
-
-st.markdown(
+render_html(
     """
-    <div>
-        <div class="mouseql-section-kicker">
+    <div class="mouseql-section">
+        <div class="mouseql-kicker">
             Park planner
         </div>
 
@@ -814,14 +561,12 @@ st.markdown(
         </div>
 
         <div class="mouseql-section-copy">
-            Tell MOUSEQL where you are and what you
-            still want to ride. It will weigh the walk,
-            current waits, historical patterns, and
-            your priorities.
+            Tell MOUSEQL where you are and what you still
+            want to ride. It weighs the walk, current waits,
+            historical patterns, and your priorities.
         </div>
     </div>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 
@@ -838,12 +583,10 @@ recommendations = []
 
 if location_choices:
 
-    current_attraction = (
-        st.selectbox(
-            "Current location",
-            location_choices,
-            key="current_location",
-        )
+    current_attraction = st.selectbox(
+        "Current location",
+        location_choices,
+        key="current_location",
     )
 
     ride_choices = [
@@ -854,12 +597,10 @@ if location_choices:
         != current_attraction
     ]
 
-    wanted_attractions = (
-        st.multiselect(
-            "Attractions you still want to ride",
-            ride_choices,
-            default=ride_choices,
-        )
+    wanted_attractions = st.multiselect(
+        "Attractions you still want to ride",
+        ride_choices,
+        default=ride_choices,
     )
 
     if wanted_attractions:
@@ -870,18 +611,16 @@ if location_choices:
         ):
 
             st.caption(
-                "Priority affects the recommendation "
-                "while walking time, current waits, "
-                "and historical waits are also considered."
+                "Priority affects the recommendation while "
+                "walking time, current waits, and historical "
+                "waits are also considered."
             )
 
-            must_do = (
-                st.multiselect(
-                    "Must Do",
-                    wanted_attractions,
-                    default=[],
-                    key="must_do_rides",
-                )
+            must_do = st.multiselect(
+                "Must Do",
+                wanted_attractions,
+                default=[],
+                key="must_do_rides",
             )
 
             remaining_after_must = [
@@ -892,13 +631,11 @@ if location_choices:
                 not in must_do
             ]
 
-            want_to_do = (
-                st.multiselect(
-                    "Want to Do",
-                    remaining_after_must,
-                    default=[],
-                    key="want_to_do_rides",
-                )
+            want_to_do = st.multiselect(
+                "Want to Do",
+                remaining_after_must,
+                default=[],
+                key="want_to_do_rides",
             )
 
             if_theres_time = [
@@ -933,87 +670,62 @@ if location_choices:
                 attraction
             ] = "If There's Time"
 
-        selected_locations = (
+        selected_locations = locations[
             locations[
-                locations[
-                    "attraction"
-                ].isin(
-                    wanted_attractions
-                    + [
-                        current_attraction
-                    ]
-                )
-            ].copy()
-        )
-
-        selected_waits = (
-            latest_waits[
-                latest_waits[
-                    "attraction"
-                ].isin(
-                    wanted_attractions
-                )
-            ].copy()
-        )
-
-        selected_history = (
-            historical_waits[
-                historical_waits[
-                    "attraction"
-                ].isin(
-                    wanted_attractions
-                )
-            ].copy()
-        )
-
-        recommendations = (
-            rank_attractions(
-                current_attraction,
-                selected_locations,
-                selected_waits,
-                selected_history,
-                priorities,
+                "attraction"
+            ].isin(
+                wanted_attractions
+                + [
+                    current_attraction
+                ]
             )
+        ].copy()
+
+        selected_waits = latest_waits[
+            latest_waits[
+                "attraction"
+            ].isin(
+                wanted_attractions
+            )
+        ].copy()
+
+        selected_history = historical_waits[
+            historical_waits[
+                "attraction"
+            ].isin(
+                wanted_attractions
+            )
+        ].copy()
+
+        recommendations = rank_attractions(
+            current_attraction,
+            selected_locations,
+            selected_waits,
+            selected_history,
+            priorities,
         )
 
         if recommendations:
 
-            best = (
-                recommendations[0]
-            )
+            best = recommendations[0]
 
-            best_total = (
-                best[
-                    "total_minutes"
-                ]
-            )
-
-            best_name = (
-                best[
-                    "attraction"
-                ]
-            )
-
-            st.markdown(
+            render_html(
                 f"""
                 <div class="mouseql-best-card">
-
                     <div class="mouseql-best-label">
                         Best next ride
                     </div>
 
                     <div class="mouseql-best-name">
-                        {best_name}
+                        {best["attraction"]}
                     </div>
 
                     <div class="mouseql-best-total">
-                        About {best_total} minutes
+                        About {best["total_minutes"]} minutes
                         including the walk and current wait
                     </div>
-
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             col1, col2, col3, col4 = (
@@ -1056,21 +768,18 @@ if location_choices:
                 )
 
                 if difference < 0:
-
                     comparison = (
                         f"{abs(difference):.1f} minutes "
                         "below typical"
                     )
 
                 elif difference > 0:
-
                     comparison = (
                         f"{difference:.1f} minutes "
                         "above typical"
                     )
 
                 else:
-
                     comparison = (
                         "at the typical wait"
                     )
@@ -1089,41 +798,35 @@ if location_choices:
                 )
 
             else:
-
                 st.caption(
                     "Not enough historical data "
                     "for a same-hour comparison yet."
                 )
 
-            if (
-                best.get(
-                    "path_nodes"
-                )
+            if best.get(
+                "path_nodes"
             ):
-
                 st.caption(
-                    "Walking route calculated "
-                    "using the Magic Kingdom "
-                    "park path network."
+                    "Walking route calculated using "
+                    "the Magic Kingdom park path network."
                 )
 
             else:
-
                 st.caption(
-                    "Walking route is currently "
-                    "estimated from attraction coordinates."
+                    "Walking route is currently estimated "
+                    "from attraction coordinates."
                 )
 
-            st.markdown(
+            render_html(
                 """
                 <div
-                    class="mouseql-section-kicker"
-                    style="margin-top: 1.9rem;"
+                    class="mouseql-kicker"
+                    style="margin-top: 2rem;
+                           margin-bottom: 0.8rem;"
                 >
                     Also worth considering
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             top_recommendations = (
@@ -1132,80 +835,43 @@ if location_choices:
                 ]
             )
 
-            if top_recommendations:
+            for number, ride in enumerate(
+                top_recommendations,
+                start=2,
+            ):
 
-                for number, ride in enumerate(
-                    top_recommendations,
-                    start=2,
+                details = (
+                    f"{ride['walking_minutes']} min walk"
+                    f" · {ride['wait_minutes']} min wait"
+                    f" · {ride['total_minutes']} min total"
+                )
+
+                if (
+                    ride[
+                        "priority"
+                    ]
+                    != "If There's Time"
                 ):
-
-                    details = (
-                        f"{ride['walking_minutes']} min walk"
-                        f" · {ride['wait_minutes']} min wait"
-                        f" · {ride['total_minutes']} min total"
-                    )
-
-                    if (
-                        ride[
+                    details += (
+                        " · "
+                        + ride[
                             "priority"
                         ]
-                        != "If There's Time"
-                    ):
-
-                        details += (
-                            " · "
-                            + ride[
-                                "priority"
-                            ]
-                        )
-
-                    st.markdown(
-                        f"""
-                        <div class="mouseql-other-option">
-
-                            <div class="mouseql-other-name">
-                                {number}. {ride['attraction']}
-                            </div>
-
-                            <div class="mouseql-other-details">
-                                {details}
-                            </div>
-
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
                     )
 
-                    if (
-                        ride[
-                            "typical_wait"
-                        ]
-                        is not None
-                        and ride[
-                            "confidence"
-                        ]
-                        != "Low"
-                    ):
+                render_html(
+                    f"""
+                    <div class="mouseql-other-option">
+                        <div class="mouseql-other-name">
+                            {number}. {ride["attraction"]}
+                        </div>
 
-                        difference = (
-                            ride[
-                                "difference"
-                            ]
-                        )
-
-                        if difference <= -5:
-
-                            st.caption(
-                                "Current wait is lower "
-                                "than typical."
-                            )
-
-                        elif difference >= 5:
-
-                            st.caption(
-                                "Current wait is higher "
-                                "than typical."
-                            )
+                        <div class="mouseql-other-details">
+                            {details}
+                        </div>
+                    </div>
+                    """
+                )
 
             with st.expander(
                 "View full recommendation table"
@@ -1222,37 +888,26 @@ if location_choices:
                         columns={
                             "attraction":
                                 "Attraction",
-
                             "priority":
                                 "Priority",
-
                             "walking_minutes":
                                 "Walk",
-
                             "wait_minutes":
                                 "Wait Now",
-
                             "typical_wait":
                                 "Typical",
-
                             "difference":
                                 "Difference",
-
                             "observations":
                                 "History",
-
                             "confidence":
                                 "Confidence",
-
                             "wait_message":
                                 "Wait Status",
-
                             "total_minutes":
                                 "Walk + Wait",
-
                             "routing_method":
                                 "Routing",
-
                             "recommendation_score":
                                 "Score",
                         }
@@ -1288,28 +943,19 @@ if location_choices:
                     hide_index=True,
                 )
 
-                st.caption(
-                    "Recommendations consider ride priority, "
-                    "walking time, current waits, and historical "
-                    "wait patterns when enough history is available."
-                )
-
         else:
-
             st.info(
                 "None of the selected attractions "
                 "currently have usable wait-time data."
             )
 
     else:
-
         st.info(
             "Choose at least one attraction "
             "you still want to ride."
         )
 
 else:
-
     current_attraction = None
 
     st.info(
@@ -1317,17 +963,13 @@ else:
     )
 
 
-# --------------------------------------------------
-# Interactive park map
-# --------------------------------------------------
-
 st.divider()
 
-st.markdown(
-    """
-    <div class="mouseql-map-intro">
 
-        <div class="mouseql-section-kicker">
+render_html(
+    """
+    <div class="mouseql-section">
+        <div class="mouseql-kicker">
             Park view
         </div>
 
@@ -1340,10 +982,8 @@ st.markdown(
             recommended path when park-network routing
             is available.
         </div>
-
     </div>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 
@@ -1427,13 +1067,9 @@ if not locations.empty:
             "marker_size",
         ] = 150
 
-        current_indices = (
-            map_data.index[
-                current_mask
-            ]
-        )
-
-        for index in current_indices:
+        for index in map_data.index[
+            current_mask
+        ]:
 
             map_data.at[
                 index,
@@ -1467,13 +1103,9 @@ if not locations.empty:
             "marker_size",
         ] = 180
 
-        best_indices = (
-            map_data.index[
-                best_mask
-            ]
-        )
-
-        for index in best_indices:
+        for index in map_data.index[
+            best_mask
+        ]:
 
             map_data.at[
                 index,
@@ -1485,30 +1117,28 @@ if not locations.empty:
                 245,
             ]
 
-    attraction_layer = (
-        pdk.Layer(
-            "ScatterplotLayer",
-            data=map_data,
-            get_position=[
-                "longitude",
-                "latitude",
-            ],
-            get_radius="marker_size",
-            get_fill_color="marker_color",
-            radius_min_pixels=5,
-            radius_max_pixels=14,
-            pickable=True,
-            auto_highlight=True,
-            opacity=0.9,
-            stroked=True,
-            get_line_color=[
-                243,
-                239,
-                230,
-                150,
-            ],
-            line_width_min_pixels=1,
-        )
+    attraction_layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=map_data,
+        get_position=[
+            "longitude",
+            "latitude",
+        ],
+        get_radius="marker_size",
+        get_fill_color="marker_color",
+        radius_min_pixels=5,
+        radius_max_pixels=14,
+        pickable=True,
+        auto_highlight=True,
+        opacity=0.9,
+        stroked=True,
+        get_line_color=[
+            243,
+            239,
+            230,
+            150,
+        ],
+        line_width_min_pixels=1,
     )
 
     layers = [
@@ -1556,42 +1186,34 @@ if not locations.empty:
                     )
                 )
 
-                route_layer = (
-                    pdk.Layer(
-                        "PathLayer",
-                        data=route_data,
-                        get_path="path",
-                        get_width=6,
-                        get_color=[
-                            173,
-                            164,
-                            204,
-                            220,
-                        ],
-                        width_min_pixels=4,
-                        pickable=False,
-                    )
+                route_layer = pdk.Layer(
+                    "PathLayer",
+                    data=route_data,
+                    get_path="path",
+                    get_width=6,
+                    get_color=[
+                        173,
+                        164,
+                        204,
+                        220,
+                    ],
+                    width_min_pixels=4,
+                    pickable=False,
                 )
 
                 layers.append(
                     route_layer
                 )
 
-    view_state = (
-        pdk.ViewState(
-            latitude=(
-                map_data[
-                    "latitude"
-                ].mean()
-            ),
-            longitude=(
-                map_data[
-                    "longitude"
-                ].mean()
-            ),
-            zoom=15.5,
-            pitch=0,
-        )
+    view_state = pdk.ViewState(
+        latitude=map_data[
+            "latitude"
+        ].mean(),
+        longitude=map_data[
+            "longitude"
+        ].mean(),
+        zoom=15.5,
+        pitch=0,
     )
 
     tooltip = {
@@ -1600,57 +1222,41 @@ if not locations.empty:
             padding: 6px;
             font-family: sans-serif;
         ">
-
             <div style="
                 font-size: 15px;
                 font-weight: 650;
                 margin-bottom: 6px;
-                color: #F3EFE6;
             ">
                 {attraction}
             </div>
 
-            <div style="
-                color: #B9BDCB;
-                margin-bottom: 2px;
-            ">
+            <div>
                 Current wait: {wait_display}
             </div>
 
-            <div style="
-                color: #B9BDCB;
-            ">
+            <div>
                 Status: {status}
             </div>
-
         </div>
         """,
 
         "style": {
             "backgroundColor":
                 "#12192B",
-
             "color":
                 "#F3EFE6",
-
             "fontSize":
                 "13px",
-
             "border":
                 "1px solid #383D55",
-
-            "borderRadius":
-                "10px",
         },
     }
 
-    deck = (
-        pdk.Deck(
-            layers=layers,
-            initial_view_state=view_state,
-            tooltip=tooltip,
-            map_style=None,
-        )
+    deck = pdk.Deck(
+        layers=layers,
+        initial_view_state=view_state,
+        tooltip=tooltip,
+        map_style=None,
     )
 
     st.pydeck_chart(
@@ -1665,22 +1271,18 @@ if not locations.empty:
     )
 
 else:
-
     st.info(
         "No attraction location data available."
     )
 
 
-# --------------------------------------------------
-# Data and history
-# --------------------------------------------------
-
 st.divider()
 
-st.markdown(
+
+render_html(
     """
-    <div>
-        <div class="mouseql-section-kicker">
+    <div class="mouseql-section">
+        <div class="mouseql-kicker">
             Park data
         </div>
 
@@ -1693,8 +1295,7 @@ st.markdown(
             and see how attraction waits change over time.
         </div>
     </div>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 
 
@@ -1719,10 +1320,6 @@ col3.metric(
     f"{df['wait_minutes'].mean():.1f} min",
 )
 
-
-# --------------------------------------------------
-# Attraction lookup
-# --------------------------------------------------
 
 st.subheader(
     "Attraction Lookup"
@@ -1783,10 +1380,6 @@ ride_data = (
     .copy()
 )
 
-
-# --------------------------------------------------
-# Date filtering
-# --------------------------------------------------
 
 if not ride_data.empty:
 
@@ -1903,11 +1496,6 @@ if not ride_data.empty:
         "in selected date range"
     )
 
-
-    # ----------------------------------------------
-    # Wait history
-    # ----------------------------------------------
-
     st.subheader(
         "Wait Time History"
     )
@@ -1927,11 +1515,6 @@ if not ride_data.empty:
     st.line_chart(
         history
     )
-
-
-    # ----------------------------------------------
-    # Best observed hour
-    # ----------------------------------------------
 
     ride_data[
         "hour"
@@ -1994,17 +1577,11 @@ if not ride_data.empty:
     )
 
 else:
-
     st.info(
-        "No observations are available for "
-        "this attraction during the selected "
-        "date range."
+        "No observations are available for this attraction "
+        "during the selected date range."
     )
 
-
-# --------------------------------------------------
-# Average wait by attraction
-# --------------------------------------------------
 
 st.divider()
 
@@ -2058,10 +1635,6 @@ st.dataframe(
 )
 
 
-# --------------------------------------------------
-# Highest average waits
-# --------------------------------------------------
-
 st.subheader(
     "Highest Average Waits"
 )
@@ -2078,10 +1651,6 @@ st.bar_chart(
     y="average_wait",
 )
 
-
-# --------------------------------------------------
-# Average wait by hour
-# --------------------------------------------------
 
 st.subheader(
     "Average Wait by Hour"
@@ -2137,10 +1706,6 @@ st.line_chart(
     y="average_wait",
 )
 
-
-# --------------------------------------------------
-# Latest observations
-# --------------------------------------------------
 
 st.subheader(
     "Latest Observations"
