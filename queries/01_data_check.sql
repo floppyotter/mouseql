@@ -3,8 +3,9 @@
 SELECT COUNT(*) AS total_records
 FROM wait_times;
 
+
 -- See which attractions are in the dataset
 
-SELECT DISTINCT attraction_name
-FROM attractions
-ORDER BY attraction_name;
+SELECT DISTINCT attraction
+FROM wait_times
+ORDER BY attraction;
