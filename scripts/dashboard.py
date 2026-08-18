@@ -14,9 +14,580 @@ from route_planner import (
 DB_PATH = Path("data/mouseql.db")
 LOCATIONS_PATH = Path("data/attraction_locations.csv")
 
+
 st.set_page_config(
     page_title="MOUSEQL",
+    page_icon=None,
     layout="wide",
+)
+
+
+st.markdown(
+    """
+    <style>
+
+        :root {
+            --mouseql-bg: #090D19;
+            --mouseql-surface: #111729;
+            --mouseql-surface-2: #161D31;
+            --mouseql-border: rgba(184, 174, 215, 0.16);
+            --mouseql-border-strong: rgba(196, 184, 225, 0.28);
+            --mouseql-text: #F5F1E9;
+            --mouseql-muted: #A7ACBC;
+            --mouseql-lavender: #B7ACD4;
+            --mouseql-lavender-bright: #CDC1E5;
+            --mouseql-gold: #D8C58F;
+        }
+
+
+        .stApp {
+            background:
+                radial-gradient(
+                    circle at 90% 0%,
+                    rgba(125, 108, 168, 0.17),
+                    transparent 28rem
+                ),
+                radial-gradient(
+                    circle at 5% 24%,
+                    rgba(82, 91, 145, 0.08),
+                    transparent 27rem
+                ),
+                linear-gradient(
+                    180deg,
+                    #090D19 0%,
+                    #0A0F1D 40%,
+                    #0B1020 100%
+                );
+        }
+
+
+        [data-testid="stHeader"] {
+            background: rgba(9, 13, 25, 0.82);
+        }
+
+
+        [data-testid="stToolbar"] {
+            right: 1rem;
+        }
+
+
+        .block-container {
+            max-width: 1180px;
+            padding-top: 2rem;
+            padding-bottom: 5rem;
+        }
+
+
+        h1,
+        h2,
+        h3 {
+            color: var(--mouseql-text);
+            letter-spacing: -0.025em;
+        }
+
+
+        h2 {
+            margin-top: 1.6rem;
+        }
+
+
+        p {
+            line-height: 1.65;
+        }
+
+
+        hr {
+            border-color: rgba(184, 174, 215, 0.11);
+            margin-top: 2.6rem;
+            margin-bottom: 2.6rem;
+        }
+
+
+        .mouseql-hero {
+            position: relative;
+            overflow: hidden;
+
+            padding:
+                2.6rem
+                2.7rem
+                2.45rem
+                2.7rem;
+
+            margin-bottom: 2.1rem;
+
+            border-radius: 28px;
+
+            border:
+                1px solid
+                rgba(191, 179, 220, 0.22);
+
+            background:
+                radial-gradient(
+                    circle at 88% 10%,
+                    rgba(187, 167, 222, 0.22),
+                    transparent 17rem
+                ),
+                radial-gradient(
+                    circle at 75% 85%,
+                    rgba(215, 195, 145, 0.07),
+                    transparent 13rem
+                ),
+                linear-gradient(
+                    135deg,
+                    rgba(25, 32, 56, 0.98),
+                    rgba(13, 18, 34, 0.98)
+                );
+
+            box-shadow:
+                0 26px 65px
+                rgba(0, 0, 0, 0.30);
+        }
+
+
+        .mouseql-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -80px;
+            top: -95px;
+
+            border-radius: 999px;
+
+            border:
+                1px solid
+                rgba(215, 195, 145, 0.12);
+        }
+
+
+        .mouseql-eyebrow {
+            color: #C6B9DA;
+
+            font-size: 0.72rem;
+            font-weight: 750;
+
+            letter-spacing: 0.17em;
+
+            text-transform: uppercase;
+
+            margin-bottom: 0.75rem;
+        }
+
+
+        .mouseql-title {
+            color: #F7F3EB;
+
+            font-size:
+                clamp(
+                    3rem,
+                    7vw,
+                    5rem
+                );
+
+            line-height: 0.96;
+
+            font-weight: 790;
+
+            letter-spacing: -0.06em;
+
+            margin: 0;
+        }
+
+
+        .mouseql-subtitle {
+            max-width: 660px;
+
+            color: #B4B8C8;
+
+            font-size: 1.03rem;
+
+            line-height: 1.65;
+
+            margin-top: 1rem;
+            margin-bottom: 1.4rem;
+        }
+
+
+        .mouseql-status {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding:
+                0.52rem
+                0.82rem;
+
+            border-radius: 999px;
+
+            background:
+                rgba(215, 195, 145, 0.08);
+
+            border:
+                1px solid
+                rgba(215, 195, 145, 0.20);
+
+            color: #DACB9E;
+
+            font-size: 0.78rem;
+
+            letter-spacing: 0.015em;
+        }
+
+
+        .mouseql-section-kicker {
+            color: #AFA2CC;
+
+            font-size: 0.69rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.15em;
+
+            font-weight: 750;
+
+            margin-bottom: 0.35rem;
+        }
+
+
+        .mouseql-section-title {
+            color: #F3EFE7;
+
+            font-size:
+                clamp(
+                    1.65rem,
+                    4vw,
+                    2.25rem
+                );
+
+            letter-spacing: -0.04em;
+
+            font-weight: 710;
+
+            line-height: 1.1;
+
+            margin-bottom: 0.35rem;
+        }
+
+
+        .mouseql-section-copy {
+            color: #969CAF;
+
+            font-size: 0.91rem;
+
+            margin-bottom: 1.25rem;
+        }
+
+
+        .mouseql-best-card {
+            padding:
+                1.55rem
+                1.65rem
+                1.6rem;
+
+            border-radius: 22px;
+
+            margin:
+                1.1rem
+                0
+                1.2rem;
+
+            border:
+                1px solid
+                rgba(195, 182, 225, 0.27);
+
+            background:
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(200, 184, 230, 0.13),
+                    transparent 12rem
+                ),
+                linear-gradient(
+                    135deg,
+                    rgba(38, 43, 69, 0.94),
+                    rgba(21, 27, 47, 0.95)
+                );
+
+            box-shadow:
+                0 16px 40px
+                rgba(0, 0, 0, 0.18);
+        }
+
+
+        .mouseql-best-label {
+            color: #BEB0D7;
+
+            font-size: 0.68rem;
+
+            font-weight: 760;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.16em;
+
+            margin-bottom: 0.58rem;
+        }
+
+
+        .mouseql-best-name {
+            color: #F6F2EA;
+
+            font-size:
+                clamp(
+                    1.8rem,
+                    4.6vw,
+                    2.6rem
+                );
+
+            font-weight: 740;
+
+            line-height: 1.1;
+
+            letter-spacing: -0.04em;
+        }
+
+
+        .mouseql-best-total {
+            color: #D8C894;
+
+            font-size: 0.9rem;
+
+            margin-top: 0.7rem;
+        }
+
+
+        .mouseql-map-intro {
+            margin-bottom: 0.85rem;
+        }
+
+
+        [data-testid="stMetric"] {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(23, 30, 51, 0.92),
+                    rgba(18, 24, 42, 0.92)
+                );
+
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.15);
+
+            border-radius: 17px;
+
+            padding:
+                1rem
+                1.1rem;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, 0.13);
+        }
+
+
+        [data-testid="stMetricLabel"] {
+            color: #979DAF;
+        }
+
+
+        [data-testid="stMetricValue"] {
+            color: #F5F1E9;
+
+            font-weight: 680;
+
+            letter-spacing: -0.03em;
+        }
+
+
+        [data-testid="stMetricDelta"] {
+            font-size: 0.75rem;
+        }
+
+
+        div[data-baseweb="select"] > div {
+            background:
+                rgba(21, 28, 48, 0.91);
+
+            border-color:
+                rgba(184, 174, 215, 0.17);
+
+            border-radius: 12px;
+        }
+
+
+        div[data-baseweb="select"] > div:hover {
+            border-color:
+                rgba(198, 185, 226, 0.32);
+        }
+
+
+        div[data-baseweb="base-input"] {
+            background:
+                rgba(21, 28, 48, 0.91);
+
+            border-color:
+                rgba(184, 174, 215, 0.17);
+
+            border-radius: 12px;
+        }
+
+
+        [data-baseweb="tag"] {
+            border-radius: 8px;
+        }
+
+
+        [data-testid="stExpander"] {
+            background:
+                rgba(20, 27, 46, 0.65);
+
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.14);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+        }
+
+
+        [data-testid="stExpander"] details {
+            border-radius: 15px;
+        }
+
+
+        [data-testid="stAlert"] {
+            border-radius: 15px;
+
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.13);
+        }
+
+
+        [data-testid="stDataFrame"] {
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.10);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+        }
+
+
+        [data-testid="stPydeckChart"] {
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.15);
+
+            box-shadow:
+                0 16px 42px
+                rgba(0, 0, 0, 0.16);
+        }
+
+
+        [data-testid="stPlotlyChart"],
+        [data-testid="stVegaLiteChart"] {
+            border-radius: 16px;
+        }
+
+
+        button[kind="secondary"] {
+            border-radius: 11px;
+        }
+
+
+        .mouseql-other-option {
+            padding:
+                0.85rem
+                1rem;
+
+            margin-bottom: 0.65rem;
+
+            border-radius: 14px;
+
+            border:
+                1px solid
+                rgba(184, 174, 215, 0.11);
+
+            background:
+                rgba(19, 25, 43, 0.60);
+        }
+
+
+        .mouseql-other-name {
+            color: #ECE8E1;
+
+            font-weight: 650;
+
+            font-size: 0.96rem;
+        }
+
+
+        .mouseql-other-details {
+            color: #9298AA;
+
+            font-size: 0.79rem;
+
+            margin-top: 0.25rem;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .block-container {
+                padding-top: 1.15rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+
+            .mouseql-hero {
+                padding:
+                    1.75rem
+                    1.35rem
+                    1.65rem;
+
+                border-radius: 21px;
+
+                margin-bottom: 1.65rem;
+            }
+
+
+            .mouseql-subtitle {
+                font-size: 0.94rem;
+
+                line-height: 1.55;
+            }
+
+
+            .mouseql-status {
+                font-size: 0.72rem;
+            }
+
+
+            .mouseql-best-card {
+                padding: 1.25rem;
+
+                border-radius: 18px;
+            }
+
+
+            [data-testid="stMetric"] {
+                padding:
+                    0.8rem
+                    0.85rem;
+            }
+
+        }
+
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 
@@ -53,20 +624,29 @@ def load_data():
 
 @st.cache_data(ttl=300)
 def load_locations():
-    locations = pd.read_csv(LOCATIONS_PATH)
-
-    locations["latitude"] = pd.to_numeric(
-        locations["latitude"],
-        errors="coerce",
+    locations = pd.read_csv(
+        LOCATIONS_PATH
     )
 
-    locations["longitude"] = pd.to_numeric(
-        locations["longitude"],
-        errors="coerce",
+    locations["latitude"] = (
+        pd.to_numeric(
+            locations["latitude"],
+            errors="coerce",
+        )
+    )
+
+    locations["longitude"] = (
+        pd.to_numeric(
+            locations["longitude"],
+            errors="coerce",
+        )
     )
 
     return locations.dropna(
-        subset=["latitude", "longitude"]
+        subset=[
+            "latitude",
+            "longitude",
+        ]
     )
 
 
@@ -85,17 +665,25 @@ def format_hour(hour):
     return f"{hour - 12} PM"
 
 
-def build_historical_waits(data, current_hour):
+def build_historical_waits(
+    data,
+    current_hour,
+):
     history = data.dropna(
-        subset=["wait_minutes"]
+        subset=[
+            "wait_minutes"
+        ]
     ).copy()
 
     history["hour"] = (
-        history["recorded_at"].dt.hour
+        history[
+            "recorded_at"
+        ].dt.hour
     )
 
     history = history[
-        history["hour"] == current_hour
+        history["hour"]
+        == current_hour
     ]
 
     if history.empty:
@@ -108,7 +696,8 @@ def build_historical_waits(data, current_hour):
         )
 
     return (
-        history.groupby(
+        history
+        .groupby(
             "attraction",
             as_index=False,
         )
@@ -136,11 +725,15 @@ if df.empty:
     st.warning(
         "No wait time data has been collected yet."
     )
+
     st.stop()
 
 
 latest_waits = (
-    df.sort_values("recorded_at")
+    df
+    .sort_values(
+        "recorded_at"
+    )
     .groupby(
         "attraction",
         as_index=False,
@@ -149,12 +742,21 @@ latest_waits = (
     .copy()
 )
 
-latest_timestamp = df["recorded_at"].max()
-current_hour = latest_timestamp.hour
+latest_timestamp = (
+    df[
+        "recorded_at"
+    ].max()
+)
 
-historical_waits = build_historical_waits(
-    df,
-    current_hour,
+current_hour = (
+    latest_timestamp.hour
+)
+
+historical_waits = (
+    build_historical_waits(
+        df,
+        current_hour,
+    )
 )
 
 
@@ -162,49 +764,102 @@ historical_waits = build_historical_waits(
 # Header
 # --------------------------------------------------
 
-st.title("MOUSEQL")
-st.subheader("Magic Kingdom Park Planner")
-
-st.caption(
-    "Latest data: "
-    f"{latest_timestamp.strftime('%B %d, %Y at %I:%M %p')}"
+latest_data_text = (
+    latest_timestamp.strftime(
+        "%B %d, %Y at %I:%M %p"
+    )
 )
 
-st.divider()
+st.markdown(
+    f"""
+    <div class="mouseql-hero">
+
+        <div class="mouseql-eyebrow">
+            Magic Kingdom park intelligence
+        </div>
+
+        <div class="mouseql-title">
+            MOUSEQL
+        </div>
+
+        <div class="mouseql-subtitle">
+            Make your next move using current waits,
+            walking distance, ride priorities, and
+            historical park data.
+        </div>
+
+        <div class="mouseql-status">
+            Latest park data · {latest_data_text}
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 
 # --------------------------------------------------
 # Park day
 # --------------------------------------------------
 
-st.header("Plan Your Next Ride")
+st.markdown(
+    """
+    <div>
+        <div class="mouseql-section-kicker">
+            Park planner
+        </div>
+
+        <div class="mouseql-section-title">
+            Where should you go next?
+        </div>
+
+        <div class="mouseql-section-copy">
+            Tell MOUSEQL where you are and what you
+            still want to ride. It will weigh the walk,
+            current waits, historical patterns, and
+            your priorities.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 location_choices = sorted(
-    locations["attraction"]
+    locations[
+        "attraction"
+    ]
     .dropna()
     .unique()
 )
 
 recommendations = []
 
+
 if location_choices:
 
-    current_attraction = st.selectbox(
-        "Current location",
-        location_choices,
-        key="current_location",
+    current_attraction = (
+        st.selectbox(
+            "Current location",
+            location_choices,
+            key="current_location",
+        )
     )
 
     ride_choices = [
         attraction
-        for attraction in location_choices
-        if attraction != current_attraction
+        for attraction
+        in location_choices
+        if attraction
+        != current_attraction
     ]
 
-    wanted_attractions = st.multiselect(
-        "Attractions you still want to ride",
-        ride_choices,
-        default=ride_choices,
+    wanted_attractions = (
+        st.multiselect(
+            "Attractions you still want to ride",
+            ride_choices,
+            default=ride_choices,
+        )
     )
 
     if wanted_attractions:
@@ -215,90 +870,150 @@ if location_choices:
         ):
 
             st.caption(
-                "Priority affects the recommendation while "
-                "still accounting for walking time and waits."
+                "Priority affects the recommendation "
+                "while walking time, current waits, "
+                "and historical waits are also considered."
             )
 
-            must_do = st.multiselect(
-                "Must Do",
-                wanted_attractions,
-                default=[],
-                key="must_do_rides",
+            must_do = (
+                st.multiselect(
+                    "Must Do",
+                    wanted_attractions,
+                    default=[],
+                    key="must_do_rides",
+                )
             )
 
             remaining_after_must = [
                 attraction
-                for attraction in wanted_attractions
-                if attraction not in must_do
+                for attraction
+                in wanted_attractions
+                if attraction
+                not in must_do
             ]
 
-            want_to_do = st.multiselect(
-                "Want to Do",
-                remaining_after_must,
-                default=[],
-                key="want_to_do_rides",
+            want_to_do = (
+                st.multiselect(
+                    "Want to Do",
+                    remaining_after_must,
+                    default=[],
+                    key="want_to_do_rides",
+                )
             )
 
             if_theres_time = [
                 attraction
-                for attraction in wanted_attractions
-                if attraction not in must_do
-                and attraction not in want_to_do
+                for attraction
+                in wanted_attractions
+                if attraction
+                not in must_do
+                and attraction
+                not in want_to_do
             ]
 
             st.caption(
-                f"If There's Time: "
+                "If There's Time: "
                 f"{len(if_theres_time)} attractions"
             )
 
         priorities = {}
 
         for attraction in must_do:
-            priorities[attraction] = "Must Do"
+            priorities[
+                attraction
+            ] = "Must Do"
 
         for attraction in want_to_do:
-            priorities[attraction] = "Want to Do"
+            priorities[
+                attraction
+            ] = "Want to Do"
 
         for attraction in if_theres_time:
-            priorities[attraction] = "If There's Time"
+            priorities[
+                attraction
+            ] = "If There's Time"
 
-        selected_locations = locations[
-            locations["attraction"].isin(
-                wanted_attractions
-                + [current_attraction]
+        selected_locations = (
+            locations[
+                locations[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                    + [
+                        current_attraction
+                    ]
+                )
+            ].copy()
+        )
+
+        selected_waits = (
+            latest_waits[
+                latest_waits[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                )
+            ].copy()
+        )
+
+        selected_history = (
+            historical_waits[
+                historical_waits[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                )
+            ].copy()
+        )
+
+        recommendations = (
+            rank_attractions(
+                current_attraction,
+                selected_locations,
+                selected_waits,
+                selected_history,
+                priorities,
             )
-        ].copy()
-
-        selected_waits = latest_waits[
-            latest_waits["attraction"].isin(
-                wanted_attractions
-            )
-        ].copy()
-
-        selected_history = historical_waits[
-            historical_waits["attraction"].isin(
-                wanted_attractions
-            )
-        ].copy()
-
-        recommendations = rank_attractions(
-            current_attraction,
-            selected_locations,
-            selected_waits,
-            selected_history,
-            priorities,
         )
 
         if recommendations:
 
-            best = recommendations[0]
+            best = (
+                recommendations[0]
+            )
 
-            st.divider()
+            best_total = (
+                best[
+                    "total_minutes"
+                ]
+            )
 
-            st.header("Best Next Ride")
+            best_name = (
+                best[
+                    "attraction"
+                ]
+            )
 
-            st.subheader(
-                best["attraction"]
+            st.markdown(
+                f"""
+                <div class="mouseql-best-card">
+
+                    <div class="mouseql-best-label">
+                        Best next ride
+                    </div>
+
+                    <div class="mouseql-best-name">
+                        {best_name}
+                    </div>
+
+                    <div class="mouseql-best-total">
+                        About {best_total} minutes
+                        including the walk and current wait
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
 
             col1, col2, col3, col4 = (
@@ -307,7 +1022,9 @@ if location_choices:
 
             col1.metric(
                 "Priority",
-                best["priority"],
+                best[
+                    "priority"
+                ],
             )
 
             col2.metric(
@@ -325,52 +1042,94 @@ if location_choices:
                 f"{best['total_minutes']} min",
             )
 
-            if best["typical_wait"] is not None:
+            if (
+                best[
+                    "typical_wait"
+                ]
+                is not None
+            ):
 
-                difference = best["difference"]
+                difference = (
+                    best[
+                        "difference"
+                    ]
+                )
 
                 if difference < 0:
+
                     comparison = (
                         f"{abs(difference):.1f} minutes "
                         "below typical"
                     )
 
                 elif difference > 0:
+
                     comparison = (
                         f"{difference:.1f} minutes "
                         "above typical"
                     )
 
                 else:
-                    comparison = "at the typical wait"
+
+                    comparison = (
+                        "at the typical wait"
+                    )
 
                 st.write(
-                    f"The current wait is **{comparison}** "
+                    "The current wait is "
+                    f"**{comparison}** "
                     f"for {format_hour(current_hour)}."
                 )
 
                 st.caption(
-                    f"Typical wait: "
+                    "Typical wait: "
                     f"{best['typical_wait']:.1f} min | "
                     f"{best['observations']} observations | "
                     f"{best['confidence']} confidence"
                 )
 
             else:
+
                 st.caption(
-                    "Not enough historical data for a "
-                    "same-hour comparison yet."
+                    "Not enough historical data "
+                    "for a same-hour comparison yet."
                 )
 
+            if (
+                best.get(
+                    "path_nodes"
+                )
+            ):
 
-            # ------------------------------------------
-            # Other recommendations
-            # ------------------------------------------
+                st.caption(
+                    "Walking route calculated "
+                    "using the Magic Kingdom "
+                    "park path network."
+                )
 
-            st.subheader("Other Options")
+            else:
+
+                st.caption(
+                    "Walking route is currently "
+                    "estimated from attraction coordinates."
+                )
+
+            st.markdown(
+                """
+                <div
+                    class="mouseql-section-kicker"
+                    style="margin-top: 1.9rem;"
+                >
+                    Also worth considering
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
             top_recommendations = (
-                recommendations[1:6]
+                recommendations[
+                    1:6
+                ]
             )
 
             if top_recommendations:
@@ -380,69 +1139,122 @@ if location_choices:
                     start=2,
                 ):
 
-                    st.markdown(
-                        f"**{number}. {ride['attraction']}**"
-                    )
-
                     details = (
-                        f"{ride['walking_minutes']} min walk | "
-                        f"{ride['wait_minutes']} min wait | "
-                        f"{ride['total_minutes']} min total"
+                        f"{ride['walking_minutes']} min walk"
+                        f" · {ride['wait_minutes']} min wait"
+                        f" · {ride['total_minutes']} min total"
                     )
-
-                    if ride["priority"] != "If There's Time":
-                        details += (
-                            f" | {ride['priority']}"
-                        )
-
-                    st.caption(details)
 
                     if (
-                        ride["typical_wait"] is not None
-                        and ride["confidence"] != "Low"
+                        ride[
+                            "priority"
+                        ]
+                        != "If There's Time"
                     ):
 
-                        difference = ride["difference"]
+                        details += (
+                            " · "
+                            + ride[
+                                "priority"
+                            ]
+                        )
+
+                    st.markdown(
+                        f"""
+                        <div class="mouseql-other-option">
+
+                            <div class="mouseql-other-name">
+                                {number}. {ride['attraction']}
+                            </div>
+
+                            <div class="mouseql-other-details">
+                                {details}
+                            </div>
+
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                    if (
+                        ride[
+                            "typical_wait"
+                        ]
+                        is not None
+                        and ride[
+                            "confidence"
+                        ]
+                        != "Low"
+                    ):
+
+                        difference = (
+                            ride[
+                                "difference"
+                            ]
+                        )
 
                         if difference <= -5:
+
                             st.caption(
                                 "Current wait is lower "
                                 "than typical."
                             )
 
                         elif difference >= 5:
+
                             st.caption(
                                 "Current wait is higher "
                                 "than typical."
                             )
 
-
-            # ------------------------------------------
-            # Full ranking
-            # ------------------------------------------
-
             with st.expander(
                 "View full recommendation table"
             ):
 
-                recommendations_df = pd.DataFrame(
-                    recommendations
+                recommendations_df = (
+                    pd.DataFrame(
+                        recommendations
+                    )
                 )
 
                 recommendations_df = (
                     recommendations_df.rename(
                         columns={
-                            "attraction": "Attraction",
-                            "priority": "Priority",
-                            "walking_minutes": "Walk",
-                            "wait_minutes": "Wait Now",
-                            "typical_wait": "Typical",
-                            "difference": "Difference",
-                            "observations": "History",
-                            "confidence": "Confidence",
-                            "wait_message": "Wait Status",
-                            "total_minutes": "Walk + Wait",
-                            "recommendation_score": "Score",
+                            "attraction":
+                                "Attraction",
+
+                            "priority":
+                                "Priority",
+
+                            "walking_minutes":
+                                "Walk",
+
+                            "wait_minutes":
+                                "Wait Now",
+
+                            "typical_wait":
+                                "Typical",
+
+                            "difference":
+                                "Difference",
+
+                            "observations":
+                                "History",
+
+                            "confidence":
+                                "Confidence",
+
+                            "wait_message":
+                                "Wait Status",
+
+                            "total_minutes":
+                                "Walk + Wait",
+
+                            "routing_method":
+                                "Routing",
+
+                            "recommendation_score":
+                                "Score",
                         }
                     )
                 )
@@ -456,13 +1268,21 @@ if location_choices:
                     "Difference",
                     "History",
                     "Confidence",
-                    "Wait Status",
+                    "Routing",
                     "Walk + Wait",
+                ]
+
+                available_columns = [
+                    column
+                    for column
+                    in display_columns
+                    if column
+                    in recommendations_df.columns
                 ]
 
                 st.dataframe(
                     recommendations_df[
-                        display_columns
+                        available_columns
                     ],
                     use_container_width=True,
                     hide_index=True,
@@ -475,17 +1295,21 @@ if location_choices:
                 )
 
         else:
+
             st.info(
-                "None of the selected attractions currently "
-                "have usable wait-time data."
+                "None of the selected attractions "
+                "currently have usable wait-time data."
             )
 
     else:
+
         st.info(
-            "Choose at least one attraction you still want to ride."
+            "Choose at least one attraction "
+            "you still want to ride."
         )
 
 else:
+
     current_attraction = None
 
     st.info(
@@ -498,24 +1322,54 @@ else:
 # --------------------------------------------------
 
 st.divider()
-st.header("Park Map")
+
+st.markdown(
+    """
+    <div class="mouseql-map-intro">
+
+        <div class="mouseql-section-kicker">
+            Park view
+        </div>
+
+        <div class="mouseql-section-title">
+            Your route through Magic Kingdom
+        </div>
+
+        <div class="mouseql-section-copy">
+            Explore attraction locations and see the
+            recommended path when park-network routing
+            is available.
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 if not locations.empty:
 
-    map_data = locations.merge(
-        latest_waits[
-            [
-                "attraction",
-                "wait_minutes",
-                "status",
-            ]
-        ],
-        on="attraction",
-        how="left",
-    ).copy()
+    map_data = (
+        locations.merge(
+            latest_waits[
+                [
+                    "attraction",
+                    "wait_minutes",
+                    "status",
+                ]
+            ],
+            on="attraction",
+            how="left",
+        )
+        .copy()
+    )
 
-    map_data["wait_display"] = (
-        map_data["wait_minutes"]
+    map_data[
+        "wait_display"
+    ] = (
+        map_data[
+            "wait_minutes"
+        ]
         .fillna(0)
         .astype(int)
         .astype(str)
@@ -523,30 +1377,48 @@ if not locations.empty:
     )
 
     map_data.loc[
-        map_data["wait_minutes"].isna(),
+        map_data[
+            "wait_minutes"
+        ].isna(),
         "wait_display",
     ] = "No current wait"
 
-    map_data["status"] = (
-        map_data["status"]
-        .fillna("Unknown")
+    map_data[
+        "status"
+    ] = (
+        map_data[
+            "status"
+        ]
+        .fillna(
+            "Unknown"
+        )
         .astype(str)
     )
 
-    # Default map marker
-    map_data["marker_size"] = 90
+    map_data[
+        "marker_size"
+    ] = 90
 
-    # Muted lavender marker
-    map_data["marker_color"] = [
-        [139, 131, 168, 185]
-        for _ in range(len(map_data))
+    map_data[
+        "marker_color"
+    ] = [
+        [
+            139,
+            131,
+            168,
+            185,
+        ]
+        for _ in range(
+            len(map_data)
+        )
     ]
 
-    # Current location
     if current_attraction is not None:
 
         current_mask = (
-            map_data["attraction"]
+            map_data[
+                "attraction"
+            ]
             == current_attraction
         )
 
@@ -555,25 +1427,38 @@ if not locations.empty:
             "marker_size",
         ] = 150
 
-        current_indices = map_data.index[
-            current_mask
-        ]
+        current_indices = (
+            map_data.index[
+                current_mask
+            ]
+        )
 
         for index in current_indices:
+
             map_data.at[
                 index,
                 "marker_color",
-            ] = [215, 195, 145, 230]
+            ] = [
+                215,
+                195,
+                145,
+                230,
+            ]
 
-    # Best recommendation
     if recommendations:
 
         best_attraction = (
-            recommendations[0]["attraction"]
+            recommendations[
+                0
+            ][
+                "attraction"
+            ]
         )
 
         best_mask = (
-            map_data["attraction"]
+            map_data[
+                "attraction"
+            ]
             == best_attraction
         )
 
@@ -582,38 +1467,48 @@ if not locations.empty:
             "marker_size",
         ] = 180
 
-        best_indices = map_data.index[
-            best_mask
-        ]
+        best_indices = (
+            map_data.index[
+                best_mask
+            ]
+        )
 
         for index in best_indices:
+
             map_data.at[
                 index,
                 "marker_color",
-            ] = [173, 164, 204, 245]
+            ] = [
+                173,
+                164,
+                204,
+                245,
+            ]
 
-    attraction_layer = pdk.Layer(
-        "ScatterplotLayer",
-        data=map_data,
-        get_position=[
-            "longitude",
-            "latitude",
-        ],
-        get_radius="marker_size",
-        get_fill_color="marker_color",
-        radius_min_pixels=5,
-        radius_max_pixels=14,
-        pickable=True,
-        auto_highlight=True,
-        opacity=0.9,
-        stroked=True,
-        get_line_color=[
-            243,
-            239,
-            230,
-            150,
-        ],
-        line_width_min_pixels=1,
+    attraction_layer = (
+        pdk.Layer(
+            "ScatterplotLayer",
+            data=map_data,
+            get_position=[
+                "longitude",
+                "latitude",
+            ],
+            get_radius="marker_size",
+            get_fill_color="marker_color",
+            radius_min_pixels=5,
+            radius_max_pixels=14,
+            pickable=True,
+            auto_highlight=True,
+            opacity=0.9,
+            stroked=True,
+            get_line_color=[
+                243,
+                239,
+                230,
+                150,
+            ],
+            line_width_min_pixels=1,
+        )
     )
 
     layers = [
@@ -622,11 +1517,17 @@ if not locations.empty:
 
     if recommendations:
 
-        best_route = recommendations[0]
+        best_route = (
+            recommendations[
+                0
+            ]
+        )
 
-        path_nodes = best_route.get(
-            "path_nodes",
-            [],
+        path_nodes = (
+            best_route.get(
+                "path_nodes",
+                [],
+            )
         )
 
         if path_nodes:
@@ -637,82 +1538,119 @@ if not locations.empty:
                 )
             )
 
-            if len(route_coordinates) >= 2:
+            if (
+                len(
+                    route_coordinates
+                )
+                >= 2
+            ):
 
-                route_data = pd.DataFrame(
-                    [
-                        {
-                            "path": route_coordinates
-                        }
-                    ]
+                route_data = (
+                    pd.DataFrame(
+                        [
+                            {
+                                "path":
+                                    route_coordinates
+                            }
+                        ]
+                    )
                 )
 
-                route_layer = pdk.Layer(
-                    "PathLayer",
-                    data=route_data,
-                    get_path="path",
-                    get_width=6,
-                    get_color=[
-                        173,
-                        164,
-                        204,
-                        220,
-                    ],
-                    width_min_pixels=4,
-                    pickable=False,
+                route_layer = (
+                    pdk.Layer(
+                        "PathLayer",
+                        data=route_data,
+                        get_path="path",
+                        get_width=6,
+                        get_color=[
+                            173,
+                            164,
+                            204,
+                            220,
+                        ],
+                        width_min_pixels=4,
+                        pickable=False,
+                    )
                 )
 
                 layers.append(
                     route_layer
                 )
 
-    view_state = pdk.ViewState(
-        latitude=map_data[
-            "latitude"
-        ].mean(),
-        longitude=map_data[
-            "longitude"
-        ].mean(),
-        zoom=15.5,
-        pitch=0,
+    view_state = (
+        pdk.ViewState(
+            latitude=(
+                map_data[
+                    "latitude"
+                ].mean()
+            ),
+            longitude=(
+                map_data[
+                    "longitude"
+                ].mean()
+            ),
+            zoom=15.5,
+            pitch=0,
+        )
     )
 
     tooltip = {
         "html": """
         <div style="
-            padding: 4px;
+            padding: 6px;
             font-family: sans-serif;
         ">
+
             <div style="
                 font-size: 15px;
-                font-weight: 600;
-                margin-bottom: 5px;
+                font-weight: 650;
+                margin-bottom: 6px;
+                color: #F3EFE6;
             ">
                 {attraction}
             </div>
 
-            <div>
+            <div style="
+                color: #B9BDCB;
+                margin-bottom: 2px;
+            ">
                 Current wait: {wait_display}
             </div>
 
-            <div>
+            <div style="
+                color: #B9BDCB;
+            ">
                 Status: {status}
             </div>
+
         </div>
         """,
+
         "style": {
-            "backgroundColor": "#151B2E",
-            "color": "#F3EFE6",
-            "fontSize": "13px",
-            "border": "1px solid #383D55",
+            "backgroundColor":
+                "#12192B",
+
+            "color":
+                "#F3EFE6",
+
+            "fontSize":
+                "13px",
+
+            "border":
+                "1px solid #383D55",
+
+            "borderRadius":
+                "10px",
         },
     }
 
-    deck = pdk.Deck(
-        layers=layers,
-        initial_view_state=view_state,
-        tooltip=tooltip,
-        map_style=None,
+    deck = (
+        pdk.Deck(
+            layers=layers,
+            initial_view_state=view_state,
+            tooltip=tooltip,
+            map_style=None,
+        )
     )
 
     st.pydeck_chart(
@@ -721,12 +1659,13 @@ if not locations.empty:
     )
 
     st.caption(
-        "Hover over an attraction to see its current wait "
-        "and operating status. Your current location and "
-        "best next ride use larger markers."
+        "Hover over an attraction to see its current "
+        "wait and operating status. Your current location "
+        "and best next ride use larger markers."
     )
 
 else:
+
     st.info(
         "No attraction location data available."
     )
@@ -737,9 +1676,31 @@ else:
 # --------------------------------------------------
 
 st.divider()
-st.header("Data & History")
 
-col1, col2, col3 = st.columns(3)
+st.markdown(
+    """
+    <div>
+        <div class="mouseql-section-kicker">
+            Park data
+        </div>
+
+        <div class="mouseql-section-title">
+            Wait intelligence
+        </div>
+
+        <div class="mouseql-section-copy">
+            Explore the history behind the recommendations
+            and see how attraction waits change over time.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+col1, col2, col3 = (
+    st.columns(3)
+)
 
 col1.metric(
     "Observations",
@@ -748,7 +1709,9 @@ col1.metric(
 
 col2.metric(
     "Attractions",
-    df["attraction"].nunique(),
+    df[
+        "attraction"
+    ].nunique(),
 )
 
 col3.metric(
@@ -761,45 +1724,62 @@ col3.metric(
 # Attraction lookup
 # --------------------------------------------------
 
-st.subheader("Attraction Lookup")
+st.subheader(
+    "Attraction Lookup"
+)
 
 attractions = sorted(
-    df["attraction"]
+    df[
+        "attraction"
+    ]
     .dropna()
     .unique()
 )
 
-selected_attraction = st.selectbox(
-    "Choose an attraction",
-    attractions,
-    index=(
-        attractions.index(
+selected_attraction = (
+    st.selectbox(
+        "Choose an attraction",
+        attractions,
+        index=(
+            attractions.index(
+                "TRON Lightcycle / Run"
+            )
+            if
             "TRON Lightcycle / Run"
-        )
-        if "TRON Lightcycle / Run" in attractions
-        else 0
-    ),
+            in attractions
+            else 0
+        ),
+    )
 )
 
-date_range = st.selectbox(
-    "Date range",
-    [
-        "Today",
-        "Last 7 days",
-        "Last 30 days",
-        "All data",
-    ],
+date_range = (
+    st.selectbox(
+        "Date range",
+        [
+            "Today",
+            "Last 7 days",
+            "Last 30 days",
+            "All data",
+        ],
+    )
 )
+
 
 ride_data = (
     df[
-        df["attraction"]
+        df[
+            "attraction"
+        ]
         == selected_attraction
     ]
     .dropna(
-        subset=["wait_minutes"]
+        subset=[
+            "wait_minutes"
+        ]
     )
-    .sort_values("recorded_at")
+    .sort_values(
+        "recorded_at"
+    )
     .copy()
 )
 
@@ -810,49 +1790,71 @@ ride_data = (
 
 if not ride_data.empty:
 
-    today = latest_timestamp.date()
+    today = (
+        latest_timestamp.date()
+    )
 
     if date_range == "Today":
 
-        ride_data = ride_data[
+        ride_data = (
             ride_data[
-                "recorded_at"
-            ].dt.date
-            == today
-        ]
+                ride_data[
+                    "recorded_at"
+                ].dt.date
+                == today
+            ]
+        )
 
     elif date_range == "Last 7 days":
 
         cutoff = (
             latest_timestamp
-            - pd.Timedelta(days=7)
+            - pd.Timedelta(
+                days=7
+            )
         )
 
-        ride_data = ride_data[
-            ride_data["recorded_at"]
-            >= cutoff
-        ]
+        ride_data = (
+            ride_data[
+                ride_data[
+                    "recorded_at"
+                ]
+                >= cutoff
+            ]
+        )
 
     elif date_range == "Last 30 days":
 
         cutoff = (
             latest_timestamp
-            - pd.Timedelta(days=30)
+            - pd.Timedelta(
+                days=30
+            )
         )
 
-        ride_data = ride_data[
-            ride_data["recorded_at"]
-            >= cutoff
-        ]
+        ride_data = (
+            ride_data[
+                ride_data[
+                    "recorded_at"
+                ]
+                >= cutoff
+            ]
+        )
 
 
 if not ride_data.empty:
 
-    latest = ride_data.iloc[-1]
+    latest = (
+        ride_data.iloc[
+            -1
+        ]
+    )
 
-    latest_wait = latest[
-        "wait_minutes"
-    ]
+    latest_wait = (
+        latest[
+            "wait_minutes"
+        ]
+    )
 
     average_wait = (
         ride_data[
@@ -898,7 +1900,7 @@ if not ride_data.empty:
 
     st.caption(
         f"{len(ride_data)} observations "
-        f"in selected date range"
+        "in selected date range"
     )
 
 
@@ -931,14 +1933,17 @@ if not ride_data.empty:
     # Best observed hour
     # ----------------------------------------------
 
-    ride_data["hour"] = (
+    ride_data[
+        "hour"
+    ] = (
         ride_data[
             "recorded_at"
         ].dt.hour
     )
 
     ride_hourly = (
-        ride_data.groupby(
+        ride_data
+        .groupby(
             "hour",
             as_index=False,
         )
@@ -974,23 +1979,26 @@ if not ride_data.empty:
                 False,
             ],
         )
-        .iloc[0]
+        .iloc[
+            0
+        ]
     )
 
     st.write(
-        f"Best observed hour: "
+        "Best observed hour: "
         f"**{format_hour(best_hour['hour'])}** "
-        f"with an average wait of "
+        "with an average wait of "
         f"**{best_hour['average_wait']:.1f} minutes** "
-        f"across "
+        "across "
         f"**{int(best_hour['observations'])} observations**."
     )
 
 else:
 
     st.info(
-        "No observations are available for this attraction "
-        "during the selected date range."
+        "No observations are available for "
+        "this attraction during the selected "
+        "date range."
     )
 
 
@@ -999,13 +2007,17 @@ else:
 # --------------------------------------------------
 
 st.divider()
+
 st.subheader(
     "Average Wait by Attraction"
 )
 
 attraction_summary = (
-    df.dropna(
-        subset=["wait_minutes"]
+    df
+    .dropna(
+        subset=[
+            "wait_minutes"
+        ]
     )
     .groupby(
         "attraction",
@@ -1076,20 +2088,26 @@ st.subheader(
 )
 
 hourly = (
-    df.dropna(
-        subset=["wait_minutes"]
+    df
+    .dropna(
+        subset=[
+            "wait_minutes"
+        ]
     )
     .copy()
 )
 
-hourly["hour"] = (
+hourly[
+    "hour"
+] = (
     hourly[
         "recorded_at"
     ].dt.hour
 )
 
 hourly_summary = (
-    hourly.groupby(
+    hourly
+    .groupby(
         "hour",
         as_index=False,
     )
@@ -1129,7 +2147,8 @@ st.subheader(
 )
 
 latest = (
-    df.sort_values(
+    df
+    .sort_values(
         "recorded_at",
         ascending=False,
     )
@@ -1137,7 +2156,9 @@ latest = (
     .copy()
 )
 
-latest["recorded_at"] = (
+latest[
+    "recorded_at"
+] = (
     latest[
         "recorded_at"
     ]
