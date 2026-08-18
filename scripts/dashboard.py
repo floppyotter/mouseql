@@ -110,7 +110,7 @@ col3.metric(
 )
 
 
-# Latest wait for every attraction
+# Latest wait for each attraction
 
 latest_waits = (
     df.sort_values("recorded_at")
@@ -156,13 +156,13 @@ else:
     )
 
 
-# What should I ride next?
+# Route planner
 
 st.header("What Should I Ride Next?")
 
 st.write(
-    "Choose where you are now to compare nearby attractions "
-    "using walking time and the latest posted wait."
+    "Choose where you are now and the attractions "
+    "you still want to ride."
 )
 
 location_choices = sorted(
@@ -179,55 +179,103 @@ if location_choices:
         key="current_location",
     )
 
-    recommendations = rank_attractions(
-        current_attraction,
-        locations,
-        latest_waits,
+    ride_choices = [
+        attraction
+        for attraction in location_choices
+        if attraction != current_attraction
+    ]
+
+    wanted_attractions = st.multiselect(
+        "What do you still want to ride?",
+        ride_choices,
+        default=ride_choices,
     )
 
-    if recommendations:
+    if wanted_attractions:
 
-        recommendations_df = pd.DataFrame(
-            recommendations
-        )
-
-        recommendations_df = (
-            recommendations_df.rename(
-                columns={
-                    "attraction": "Attraction",
-                    "distance_miles": "Distance (mi)",
-                    "walking_minutes": "Walk (min)",
-                    "wait_minutes": "Wait (min)",
-                    "total_minutes": "Total (min)",
-                }
+        selected_locations = locations[
+            locations["attraction"].isin(
+                wanted_attractions
+                + [current_attraction]
             )
+        ].copy()
+
+        selected_waits = latest_waits[
+            latest_waits["attraction"].isin(
+                wanted_attractions
+            )
+        ].copy()
+
+        recommendations = rank_attractions(
+            current_attraction,
+            selected_locations,
+            selected_waits,
         )
 
-        st.subheader("Best Options")
+        if recommendations:
 
-        st.dataframe(
-            recommendations_df.head(10),
-            use_container_width=True,
-            hide_index=True,
-        )
+            recommendations_df = pd.DataFrame(
+                recommendations
+            )
 
-        best = recommendations[0]
+            recommendations_df = (
+                recommendations_df.rename(
+                    columns={
+                        "attraction": "Attraction",
+                        "distance_miles": "Distance (mi)",
+                        "walking_minutes": "Walk (min)",
+                        "wait_minutes": "Wait (min)",
+                        "total_minutes": "Total (min)",
+                    }
+                )
+            )
 
-        st.write(
-            f"Best option right now: "
-            f"**{best['attraction']}** — "
-            f"about **{best['walking_minutes']} min** walking "
-            f"plus a **{best['wait_minutes']} min** wait."
-        )
+            st.subheader("Best Options")
 
-        st.caption(
-            "Walking time is currently estimated from attraction "
-            "coordinates. Actual park walking routes will be added later."
-        )
+            st.dataframe(
+                recommendations_df.head(10),
+                use_container_width=True,
+                hide_index=True,
+            )
+
+            best = recommendations[0]
+
+            col1, col2, col3 = st.columns(3)
+
+            col1.metric(
+                "Best Next Ride",
+                best["attraction"],
+            )
+
+            col2.metric(
+                "Estimated Walk",
+                f"{best['walking_minutes']} min",
+            )
+
+            col3.metric(
+                "Current Wait",
+                f"{best['wait_minutes']} min",
+            )
+
+            st.write(
+                f"Estimated walk + wait: "
+                f"**{best['total_minutes']} minutes**"
+            )
+
+            st.caption(
+                "Walking time is currently estimated from "
+                "attraction coordinates."
+            )
+
+        else:
+            st.info(
+                "None of the selected attractions currently "
+                "have usable wait-time data."
+            )
 
     else:
         st.info(
-            "Not enough current wait data to make a recommendation."
+            "Choose at least one attraction you still want to ride."
         )
 
 else:
@@ -286,18 +334,13 @@ ride_data = (
 
 if not ride_data.empty:
 
-    latest_timestamp = (
-        df["recorded_at"].max()
-    )
-
+    latest_timestamp = df["recorded_at"].max()
     today = latest_timestamp.date()
 
     if date_range == "Today":
 
         ride_data = ride_data[
-            ride_data[
-                "recorded_at"
-            ].dt.date
+            ride_data["recorded_at"].dt.date
             == today
         ]
 
@@ -330,31 +373,21 @@ if not ride_data.empty:
 
     latest = ride_data.iloc[-1]
 
-    latest_wait = (
-        latest["wait_minutes"]
-    )
+    latest_wait = latest["wait_minutes"]
 
     average_wait = (
-        ride_data[
-            "wait_minutes"
-        ].mean()
+        ride_data["wait_minutes"].mean()
     )
 
     lowest_wait = (
-        ride_data[
-            "wait_minutes"
-        ].min()
+        ride_data["wait_minutes"].min()
     )
 
     highest_wait = (
-        ride_data[
-            "wait_minutes"
-        ].max()
+        ride_data["wait_minutes"].max()
     )
 
-    col1, col2, col3, col4 = (
-        st.columns(4)
-    )
+    col1, col2, col3, col4 = st.columns(4)
 
     col1.metric(
         "Latest Wait",
@@ -384,9 +417,7 @@ if not ride_data.empty:
 
     # Wait history
 
-    st.subheader(
-        "Wait Time History"
-    )
+    st.subheader("Wait Time History")
 
     history = (
         ride_data[
@@ -395,22 +426,16 @@ if not ride_data.empty:
                 "wait_minutes",
             ]
         ]
-        .set_index(
-            "recorded_at"
-        )
+        .set_index("recorded_at")
     )
 
-    st.line_chart(
-        history
-    )
+    st.line_chart(history)
 
 
     # Best observed hour
 
     ride_data["hour"] = (
-        ride_data[
-            "recorded_at"
-        ].dt.hour
+        ride_data["recorded_at"].dt.hour
     )
 
     ride_hourly = (
@@ -430,12 +455,8 @@ if not ride_data.empty:
         )
     )
 
-    ride_hourly[
-        "average_wait"
-    ] = (
-        ride_hourly[
-            "average_wait"
-        ].round(1)
+    ride_hourly["average_wait"] = (
+        ride_hourly["average_wait"].round(1)
     )
 
     best_hour = (
@@ -465,17 +486,14 @@ if not ride_data.empty:
 else:
 
     st.info(
-        "No observations are available "
-        "for this attraction during the "
-        "selected date range."
+        "No observations are available for this attraction "
+        "during the selected date range."
     )
 
 
 # Average wait by attraction
 
-st.header(
-    "Average Wait by Attraction"
-)
+st.header("Average Wait by Attraction")
 
 attraction_summary = (
     df.dropna(
@@ -497,12 +515,8 @@ attraction_summary = (
     )
 )
 
-attraction_summary[
-    "average_wait"
-] = (
-    attraction_summary[
-        "average_wait"
-    ].round(1)
+attraction_summary["average_wait"] = (
+    attraction_summary["average_wait"].round(1)
 )
 
 attraction_summary = (
@@ -522,9 +536,7 @@ st.dataframe(
 
 # Highest average waits
 
-st.header(
-    "Highest Average Waits"
-)
+st.header("Highest Average Waits")
 
 top_attractions = (
     attraction_summary
@@ -541,9 +553,7 @@ st.bar_chart(
 
 # Average wait by hour
 
-st.header(
-    "Average Wait by Hour"
-)
+st.header("Average Wait by Hour")
 
 hourly = (
     df.dropna(
@@ -553,9 +563,7 @@ hourly = (
 )
 
 hourly["hour"] = (
-    hourly[
-        "recorded_at"
-    ].dt.hour
+    hourly["recorded_at"].dt.hour
 )
 
 hourly_summary = (
@@ -575,12 +583,8 @@ hourly_summary = (
     )
 )
 
-hourly_summary[
-    "average_wait"
-] = (
-    hourly_summary[
-        "average_wait"
-    ].round(1)
+hourly_summary["average_wait"] = (
+    hourly_summary["average_wait"].round(1)
 )
 
 st.line_chart(
@@ -592,9 +596,7 @@ st.line_chart(
 
 # Latest observations
 
-st.header(
-    "Latest Observations"
-)
+st.header("Latest Observations")
 
 latest = (
     df.sort_values(
@@ -606,9 +608,8 @@ latest = (
 )
 
 latest["recorded_at"] = (
-    latest[
-        "recorded_at"
-    ].dt.strftime(
+    latest["recorded_at"]
+    .dt.strftime(
         "%B %d, %Y %I:%M %p"
     )
 )
