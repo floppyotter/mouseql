@@ -8,6 +8,7 @@ import streamlit as st
 
 from route_planner import (
     rank_attractions,
+    build_itinerary,
     get_route_coordinates,
 )
 
@@ -58,7 +59,8 @@ render_html(
     }
 
     [data-testid="stHeader"] {
-        background: rgba(9, 13, 25, 0.85);
+        background:
+            rgba(9, 13, 25, 0.85);
     }
 
     .block-container {
@@ -75,16 +77,26 @@ render_html(
     }
 
     hr {
-        border-color: rgba(188, 177, 218, 0.11);
-        margin: 2.6rem 0;
+        border-color:
+            rgba(188, 177, 218, 0.11);
+
+        margin:
+            2.6rem 0;
     }
 
     .mouseql-hero {
         position: relative;
         overflow: hidden;
-        padding: 2.6rem 2.7rem 2.45rem;
+
+        padding:
+            2.6rem
+            2.7rem
+            2.45rem;
+
         margin-bottom: 2.2rem;
+
         border-radius: 28px;
+
         border:
             1px solid
             rgba(191, 179, 220, 0.22);
@@ -113,12 +125,17 @@ render_html(
 
     .mouseql-hero::after {
         content: "";
+
         position: absolute;
+
         width: 220px;
         height: 220px;
+
         right: -80px;
         top: -95px;
+
         border-radius: 999px;
+
         border:
             1px solid
             rgba(215, 195, 145, 0.12);
@@ -126,49 +143,69 @@ render_html(
 
     .mouseql-eyebrow {
         color: #c6b9da;
+
         font-size: 0.72rem;
         font-weight: 750;
+
         letter-spacing: 0.17em;
+
         text-transform: uppercase;
+
         margin-bottom: 0.75rem;
     }
 
     .mouseql-title {
         color: #f7f3eb;
+
         font-size:
             clamp(
                 3rem,
                 7vw,
                 5rem
             );
+
         line-height: 0.96;
+
         font-weight: 790;
+
         letter-spacing: -0.06em;
+
         margin: 0;
     }
 
     .mouseql-subtitle {
         max-width: 660px;
+
         color: #b4b8c8;
+
         font-size: 1.03rem;
+
         line-height: 1.65;
+
         margin-top: 1rem;
         margin-bottom: 1.4rem;
     }
 
     .mouseql-status {
         display: inline-flex;
+
         align-items: center;
+
         padding:
             0.52rem
             0.82rem;
+
         border-radius: 999px;
+
         background:
             rgba(215, 195, 145, 0.08);
+
         border:
             1px solid
             rgba(215, 195, 145, 0.20);
+
         color: #dacb9e;
+
         font-size: 0.78rem;
     }
 
@@ -178,31 +215,44 @@ render_html(
 
     .mouseql-kicker {
         color: #afa2cc;
+
         font-size: 0.69rem;
+
         text-transform: uppercase;
+
         letter-spacing: 0.15em;
+
         font-weight: 750;
+
         margin-bottom: 0.35rem;
     }
 
     .mouseql-section-title {
         color: #f3efe7;
+
         font-size:
             clamp(
                 1.7rem,
                 4vw,
                 2.3rem
             );
+
         letter-spacing: -0.04em;
+
         font-weight: 710;
+
         line-height: 1.12;
+
         margin-bottom: 0.35rem;
     }
 
     .mouseql-section-copy {
         color: #969caf;
+
         font-size: 0.91rem;
+
         line-height: 1.55;
+
         max-width: 750px;
     }
 
@@ -210,11 +260,14 @@ render_html(
         padding:
             1.6rem
             1.7rem;
+
         border-radius: 22px;
+
         margin:
             1.3rem
             0
             1.2rem;
+
         border:
             1px solid
             rgba(195, 182, 225, 0.27);
@@ -238,54 +291,181 @@ render_html(
 
     .mouseql-best-label {
         color: #beb0d7;
+
         font-size: 0.68rem;
+
         font-weight: 760;
+
         text-transform: uppercase;
+
         letter-spacing: 0.16em;
+
         margin-bottom: 0.58rem;
     }
 
     .mouseql-best-name {
         color: #f6f2ea;
+
         font-size:
             clamp(
                 1.8rem,
                 4.6vw,
                 2.6rem
             );
+
         font-weight: 740;
+
         line-height: 1.1;
+
         letter-spacing: -0.04em;
     }
 
     .mouseql-best-total {
         color: #d8c894;
+
         font-size: 0.9rem;
+
         margin-top: 0.7rem;
+    }
+
+    .mouseql-itinerary {
+        position: relative;
+
+        margin:
+            1.2rem
+            0;
+    }
+
+    .mouseql-step {
+        position: relative;
+
+        padding:
+            1rem
+            1rem
+            1rem
+            3.7rem;
+
+        margin-bottom: 0.75rem;
+
+        border-radius: 16px;
+
+        border:
+            1px solid
+            rgba(184, 174, 215, 0.13);
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(23, 30, 52, 0.86),
+                rgba(17, 23, 40, 0.86)
+            );
+    }
+
+    .mouseql-step-number {
+        position: absolute;
+
+        left: 1rem;
+        top: 1rem;
+
+        width: 2rem;
+        height: 2rem;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 999px;
+
+        color: #171b2a;
+
+        background:
+            #c5b8da;
+
+        font-size: 0.78rem;
+
+        font-weight: 800;
+    }
+
+    .mouseql-step-name {
+        color: #f2eee7;
+
+        font-size: 1rem;
+
+        font-weight: 680;
+
+        line-height: 1.3;
+    }
+
+    .mouseql-step-details {
+        color: #979eaf;
+
+        font-size: 0.8rem;
+
+        line-height: 1.5;
+
+        margin-top: 0.3rem;
+    }
+
+    .mouseql-step-time {
+        color: #d6c58f;
+
+        font-size: 0.76rem;
+
+        margin-top: 0.35rem;
+    }
+
+    .mouseql-plan-summary {
+        padding:
+            1rem
+            1.1rem;
+
+        margin-top: 0.9rem;
+
+        border-radius: 15px;
+
+        background:
+            rgba(215, 195, 145, 0.06);
+
+        border:
+            1px solid
+            rgba(215, 195, 145, 0.15);
+
+        color: #cfc4a5;
+
+        font-size: 0.84rem;
     }
 
     .mouseql-other-option {
         padding:
             0.9rem
             1rem;
+
         margin-bottom: 0.65rem;
+
         border-radius: 14px;
+
         border:
             1px solid
             rgba(184, 174, 215, 0.11);
+
         background:
             rgba(19, 25, 43, 0.60);
     }
 
     .mouseql-other-name {
         color: #ece8e1;
+
         font-weight: 650;
+
         font-size: 0.96rem;
     }
 
     .mouseql-other-details {
         color: #9298aa;
+
         font-size: 0.79rem;
+
         margin-top: 0.25rem;
     }
 
@@ -293,13 +473,17 @@ render_html(
         padding:
             1.1rem
             1.15rem;
+
         border-radius: 16px;
+
         margin:
             1.2rem
             0
             0.5rem;
+
         background:
             rgba(24, 43, 69, 0.68);
+
         border:
             1px solid
             rgba(117, 164, 214, 0.20);
@@ -307,14 +491,19 @@ render_html(
 
     .mouseql-unavailable-title {
         color: #d9e3f1;
+
         font-size: 0.95rem;
+
         font-weight: 650;
+
         margin-bottom: 0.3rem;
     }
 
     .mouseql-unavailable-copy {
         color: #9eabbc;
+
         font-size: 0.83rem;
+
         line-height: 1.5;
     }
 
@@ -325,13 +514,17 @@ render_html(
                 rgba(23, 30, 51, 0.92),
                 rgba(18, 24, 42, 0.92)
             );
+
         border:
             1px solid
             rgba(184, 174, 215, 0.15);
+
         border-radius: 17px;
+
         padding:
             1rem
             1.1rem;
+
         box-shadow:
             0 12px 30px
             rgba(0, 0, 0, 0.13);
@@ -343,15 +536,19 @@ render_html(
 
     [data-testid="stMetricValue"] {
         color: #f5f1e9;
+
         font-weight: 680;
+
         letter-spacing: -0.03em;
     }
 
     div[data-baseweb="select"] > div {
         background:
             rgba(21, 28, 48, 0.91);
+
         border-color:
             rgba(184, 174, 215, 0.17);
+
         border-radius: 12px;
     }
 
@@ -367,15 +564,19 @@ render_html(
     [data-testid="stExpander"] {
         background:
             rgba(20, 27, 46, 0.65);
+
         border:
             1px solid
             rgba(184, 174, 215, 0.14);
+
         border-radius: 15px;
+
         overflow: hidden;
     }
 
     [data-testid="stAlert"] {
         border-radius: 15px;
+
         border:
             1px solid
             rgba(184, 174, 215, 0.13);
@@ -385,16 +586,21 @@ render_html(
         border:
             1px solid
             rgba(184, 174, 215, 0.10);
+
         border-radius: 15px;
+
         overflow: hidden;
     }
 
     [data-testid="stPydeckChart"] {
         border-radius: 20px;
+
         overflow: hidden;
+
         border:
             1px solid
             rgba(184, 174, 215, 0.15);
+
         box-shadow:
             0 16px 42px
             rgba(0, 0, 0, 0.16);
@@ -412,12 +618,15 @@ render_html(
                 1.4rem
                 1.25rem
                 1.35rem;
+
             border-radius: 20px;
+
             margin-bottom: 1.55rem;
         }
 
         .mouseql-eyebrow {
             font-size: 0.62rem;
+
             margin-bottom: 0.55rem;
         }
 
@@ -427,13 +636,16 @@ render_html(
 
         .mouseql-subtitle {
             font-size: 0.9rem;
+
             line-height: 1.5;
+
             margin-top: 0.75rem;
             margin-bottom: 1rem;
         }
 
         .mouseql-status {
             font-size: 0.68rem;
+
             padding:
                 0.45rem
                 0.65rem;
@@ -445,7 +657,21 @@ render_html(
 
         .mouseql-best-card {
             padding: 1.3rem;
+
             border-radius: 18px;
+        }
+
+        .mouseql-step {
+            padding:
+                0.9rem
+                0.9rem
+                0.9rem
+                3.4rem;
+        }
+
+        .mouseql-step-number {
+            left: 0.85rem;
+            top: 0.9rem;
         }
 
         [data-testid="stMetric"] {
@@ -546,6 +772,40 @@ def format_hour(hour):
     )
 
 
+def format_duration(minutes):
+    minutes = int(
+        round(minutes)
+    )
+
+    hours = (
+        minutes
+        // 60
+    )
+
+    remaining = (
+        minutes
+        % 60
+    )
+
+    if hours == 0:
+        return (
+            f"{remaining} min"
+        )
+
+    if remaining == 0:
+        return (
+            f"{hours} hr"
+            if hours == 1
+            else f"{hours} hrs"
+        )
+
+    return (
+        f"{hours} hr {remaining} min"
+        if hours == 1
+        else f"{hours} hrs {remaining} min"
+    )
+
+
 def build_historical_waits(
     data,
     current_hour,
@@ -614,6 +874,7 @@ def render_park_map(
         st.info(
             "No attraction location data available."
         )
+
         return
 
     if recommendations is None:
@@ -927,6 +1188,7 @@ def render_park_map(
             "The larger lavender marker is "
             "MOUSEQL's best next ride."
         )
+
     else:
         st.caption(
             "Explore attraction locations and "
@@ -943,6 +1205,7 @@ if df.empty:
     st.warning(
         "No wait time data has been collected yet."
     )
+
     st.stop()
 
 
@@ -1025,9 +1288,8 @@ render_html(
 
         <div class="mouseql-section-copy">
             Choose the attractions you're considering
-            right now. MOUSEQL will compare the walk,
-            current waits, historical patterns, and
-            your priorities.
+            and how much park time you want MOUSEQL
+            to plan.
         </div>
     </div>
     """
@@ -1044,11 +1306,14 @@ location_choices = sorted(
 
 
 recommendations = []
+itinerary = []
 wanted_attractions = []
 current_attraction = None
+priorities = {}
 
 
 if location_choices:
+
     current_attraction = (
         st.selectbox(
             "Current location",
@@ -1078,11 +1343,30 @@ if location_choices:
         "You can add or remove them anytime."
     )
 
+    time_budget_minutes = (
+        st.slider(
+            "How much time do you want to plan?",
+            min_value=60,
+            max_value=240,
+            value=120,
+            step=30,
+            format="%d min",
+        )
+    )
+
+    st.caption(
+        "MOUSEQL will stop adding rides when "
+        "the next option would push the plan "
+        "past your time budget."
+    )
+
     if wanted_attractions:
+
         with st.expander(
             "Ride priorities",
             expanded=False,
         ):
+
             st.caption(
                 "Priority affects the recommendation "
                 "while walking time, current waits, "
@@ -1190,6 +1474,32 @@ if location_choices:
                 selected_waits,
                 selected_history,
                 priorities,
+            )
+        )
+
+        itinerary = (
+            build_itinerary(
+                current_attraction=(
+                    current_attraction
+                ),
+                wanted_attractions=(
+                    wanted_attractions
+                ),
+                locations=(
+                    selected_locations
+                ),
+                latest_waits=(
+                    selected_waits
+                ),
+                historical_waits=(
+                    selected_history
+                ),
+                priorities=(
+                    priorities
+                ),
+                time_budget_minutes=(
+                    time_budget_minutes
+                ),
             )
         )
 
@@ -1322,10 +1632,10 @@ if wanted_attractions:
                 </div>
 
                 <div class="mouseql-unavailable-copy">
-                    The rides you selected do not currently have
-                    usable live wait-time data. You can still
-                    explore the park map and historical wait
-                    patterns below.
+                    The rides you selected do not currently
+                    have usable live wait-time data. You can
+                    still explore the park map and historical
+                    wait patterns below.
                 </div>
             </div>
             """
@@ -1375,6 +1685,122 @@ render_park_map(
 )
 
 
+if itinerary:
+
+    st.divider()
+
+    render_html(
+        f"""
+        <div class="mouseql-section">
+            <div class="mouseql-kicker">
+                Game plan
+            </div>
+
+            <div class="mouseql-section-title">
+                Your next {format_duration(time_budget_minutes)}
+            </div>
+
+            <div class="mouseql-section-copy">
+                MOUSEQL recalculates each leg from the ride
+                before it, so every stop becomes the starting
+                point for the next decision.
+            </div>
+        </div>
+        """
+    )
+
+    itinerary_html = (
+        '<div class="mouseql-itinerary">'
+    )
+
+    for stop in itinerary:
+
+        itinerary_html += f"""
+        <div class="mouseql-step">
+
+            <div class="mouseql-step-number">
+                {stop["step"]}
+            </div>
+
+            <div class="mouseql-step-name">
+                {stop["attraction"]}
+            </div>
+
+            <div class="mouseql-step-details">
+                {stop["walking_minutes"]} min walk
+                · {stop["wait_minutes"]} min wait
+                · {stop["segment_minutes"]} min for this stop
+            </div>
+
+            <div class="mouseql-step-time">
+                {stop["cumulative_minutes"]} minutes into your plan
+            </div>
+
+        </div>
+        """
+
+    itinerary_html += (
+        "</div>"
+    )
+
+    render_html(
+        itinerary_html
+    )
+
+    total_planned = (
+        itinerary[
+            -1
+        ][
+            "cumulative_minutes"
+        ]
+    )
+
+    time_remaining = (
+        max(
+            0,
+            time_budget_minutes
+            - total_planned,
+        )
+    )
+
+    rides_planned = (
+        len(
+            itinerary
+        )
+    )
+
+    render_html(
+        f"""
+        <div class="mouseql-plan-summary">
+            {rides_planned} rides fit into the plan
+            · {total_planned} minutes scheduled
+            · {time_remaining} minutes left
+        </div>
+        """
+    )
+
+elif wanted_attractions:
+
+    render_html(
+        """
+        <div
+            class="mouseql-unavailable"
+            style="margin-top: 2rem;"
+        >
+            <div class="mouseql-unavailable-title">
+                Your game plan will appear when live waits are available
+            </div>
+
+            <div class="mouseql-unavailable-copy">
+                MOUSEQL already has your time budget, ride
+                choices, and priorities. Once usable live wait
+                data returns, it can build the multi-ride plan.
+            </div>
+        </div>
+        """
+    )
+
+
 if recommendations:
 
     st.divider()
@@ -1410,6 +1836,7 @@ if recommendations:
             top_recommendations,
             start=2,
         ):
+
             details = (
                 f"{ride['walking_minutes']} min walk"
                 f" · {ride['wait_minutes']} min wait"
