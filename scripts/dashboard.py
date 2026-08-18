@@ -251,6 +251,59 @@ if location_choices:
 
     if wanted_attractions:
 
+        # Ride priorities
+
+        st.subheader("Ride Priorities")
+
+        st.caption(
+            "Put the attractions you care about most in Must Do. "
+            "Priority affects the recommendation while MOUSEQL "
+            "still considers walking time and current waits."
+        )
+
+        must_do = st.multiselect(
+            "Must Do",
+            wanted_attractions,
+            default=[],
+            key="must_do_rides",
+        )
+
+        remaining_after_must = [
+            attraction
+            for attraction in wanted_attractions
+            if attraction not in must_do
+        ]
+
+        want_to_do = st.multiselect(
+            "Want to Do",
+            remaining_after_must,
+            default=[],
+            key="want_to_do_rides",
+        )
+
+        if_theres_time = [
+            attraction
+            for attraction in wanted_attractions
+            if attraction not in must_do
+            and attraction not in want_to_do
+        ]
+
+        st.caption(
+            f"If There's Time: "
+            f"{len(if_theres_time)} attractions"
+        )
+
+        priorities = {}
+
+        for attraction in must_do:
+            priorities[attraction] = "Must Do"
+
+        for attraction in want_to_do:
+            priorities[attraction] = "Want to Do"
+
+        for attraction in if_theres_time:
+            priorities[attraction] = "If There's Time"
+
         selected_locations = locations[
             locations["attraction"].isin(
                 wanted_attractions
@@ -275,6 +328,7 @@ if location_choices:
             selected_locations,
             selected_waits,
             selected_history,
+            priorities,
         )
 
         if recommendations:
@@ -287,6 +341,7 @@ if location_choices:
                 recommendations_df.rename(
                     columns={
                         "attraction": "Attraction",
+                        "priority": "Priority",
                         "walking_minutes": "Walk",
                         "wait_minutes": "Wait Now",
                         "typical_wait": "Typical",
@@ -302,6 +357,7 @@ if location_choices:
 
             display_columns = [
                 "Attraction",
+                "Priority",
                 "Walk",
                 "Wait Now",
                 "Typical",
@@ -324,7 +380,9 @@ if location_choices:
 
             best = recommendations[0]
 
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = (
+                st.columns(4)
+            )
 
             col1.metric(
                 "Best Next Ride",
@@ -332,11 +390,16 @@ if location_choices:
             )
 
             col2.metric(
+                "Priority",
+                best["priority"],
+            )
+
+            col3.metric(
                 "Estimated Walk",
                 f"{best['walking_minutes']} min",
             )
 
-            col3.metric(
+            col4.metric(
                 "Current Wait",
                 f"{best['wait_minutes']} min",
             )
@@ -373,8 +436,10 @@ if location_choices:
                 st.caption(
                     f"Typical wait: "
                     f"{best['typical_wait']:.1f} min • "
-                    f"History: {best['observations']} observations • "
-                    f"Confidence: {best['confidence']}"
+                    f"History: "
+                    f"{best['observations']} observations • "
+                    f"Confidence: "
+                    f"{best['confidence']}"
                 )
 
             else:
@@ -385,9 +450,9 @@ if location_choices:
                 )
 
             st.caption(
-                "Walking time is still estimated from attraction "
-                "coordinates. Historical wait data only affects "
-                "ranking after enough observations have been collected."
+                "Recommendations consider ride priority, "
+                "walking time, current waits, and historical "
+                "wait patterns when enough history is available."
             )
 
         else:
