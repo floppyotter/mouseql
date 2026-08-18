@@ -20,6 +20,8 @@ DB_PATH = Path("data/mouseql.db")
 WAITS_CSV_PATH = Path("data/magic_kingdom_waits.csv")
 LOCATIONS_PATH = Path("data/attraction_locations.csv")
 
+MIN_USABLE_WAITS_PER_SNAPSHOT = 3
+
 
 st.set_page_config(
     page_title="MOUSEQL",
@@ -63,8 +65,7 @@ render_html(
     }
 
     [data-testid="stHeader"] {
-        background:
-            rgba(9, 13, 25, 0.85);
+        background: rgba(9, 13, 25, 0.85);
     }
 
     .block-container {
@@ -81,11 +82,8 @@ render_html(
     }
 
     hr {
-        border-color:
-            rgba(188, 177, 218, 0.11);
-
-        margin:
-            2.6rem 0;
+        border-color: rgba(188, 177, 218, 0.11);
+        margin: 2.6rem 0;
     }
 
     .mouseql-hero {
@@ -129,7 +127,6 @@ render_html(
 
     .mouseql-hero::after {
         content: "";
-
         position: absolute;
 
         width: 220px;
@@ -147,14 +144,10 @@ render_html(
 
     .mouseql-eyebrow {
         color: #c6b9da;
-
         font-size: 0.72rem;
         font-weight: 750;
-
         letter-spacing: 0.17em;
-
         text-transform: uppercase;
-
         margin-bottom: 0.75rem;
     }
 
@@ -169,30 +162,22 @@ render_html(
             );
 
         line-height: 0.96;
-
         font-weight: 790;
-
         letter-spacing: -0.06em;
-
         margin: 0;
     }
 
     .mouseql-subtitle {
         max-width: 660px;
-
         color: #b4b8c8;
-
         font-size: 1.03rem;
-
         line-height: 1.65;
-
         margin-top: 1rem;
         margin-bottom: 1.4rem;
     }
 
     .mouseql-status {
         display: inline-flex;
-
         align-items: center;
 
         padding:
@@ -209,7 +194,6 @@ render_html(
             rgba(215, 195, 145, 0.20);
 
         color: #dacb9e;
-
         font-size: 0.78rem;
     }
 
@@ -219,15 +203,10 @@ render_html(
 
     .mouseql-kicker {
         color: #afa2cc;
-
         font-size: 0.69rem;
-
         text-transform: uppercase;
-
         letter-spacing: 0.15em;
-
         font-weight: 750;
-
         margin-bottom: 0.35rem;
     }
 
@@ -242,21 +221,15 @@ render_html(
             );
 
         letter-spacing: -0.04em;
-
         font-weight: 710;
-
         line-height: 1.12;
-
         margin-bottom: 0.35rem;
     }
 
     .mouseql-section-copy {
         color: #969caf;
-
         font-size: 0.91rem;
-
         line-height: 1.55;
-
         max-width: 750px;
     }
 
@@ -295,15 +268,10 @@ render_html(
 
     .mouseql-best-label {
         color: #beb0d7;
-
         font-size: 0.68rem;
-
         font-weight: 760;
-
         text-transform: uppercase;
-
         letter-spacing: 0.16em;
-
         margin-bottom: 0.58rem;
     }
 
@@ -318,17 +286,13 @@ render_html(
             );
 
         font-weight: 740;
-
         line-height: 1.1;
-
         letter-spacing: -0.04em;
     }
 
     .mouseql-best-total {
         color: #d8c894;
-
         font-size: 0.9rem;
-
         margin-top: 0.7rem;
     }
 
@@ -375,47 +339,35 @@ render_html(
         height: 2rem;
 
         display: flex;
-
         align-items: center;
         justify-content: center;
 
         border-radius: 999px;
 
         color: #171b2a;
-
-        background:
-            #c5b8da;
+        background: #c5b8da;
 
         font-size: 0.78rem;
-
         font-weight: 800;
     }
 
     .mouseql-step-name {
         color: #f2eee7;
-
         font-size: 1rem;
-
         font-weight: 680;
-
         line-height: 1.3;
     }
 
     .mouseql-step-details {
         color: #979eaf;
-
         font-size: 0.8rem;
-
         line-height: 1.5;
-
         margin-top: 0.3rem;
     }
 
     .mouseql-step-time {
         color: #d6c58f;
-
         font-size: 0.76rem;
-
         margin-top: 0.35rem;
     }
 
@@ -436,7 +388,6 @@ render_html(
             rgba(215, 195, 145, 0.15);
 
         color: #cfc4a5;
-
         font-size: 0.84rem;
     }
 
@@ -459,17 +410,13 @@ render_html(
 
     .mouseql-other-name {
         color: #ece8e1;
-
         font-weight: 650;
-
         font-size: 0.96rem;
     }
 
     .mouseql-other-details {
         color: #9298aa;
-
         font-size: 0.79rem;
-
         margin-top: 0.25rem;
     }
 
@@ -495,19 +442,14 @@ render_html(
 
     .mouseql-unavailable-title {
         color: #d9e3f1;
-
         font-size: 0.95rem;
-
         font-weight: 650;
-
         margin-bottom: 0.3rem;
     }
 
     .mouseql-unavailable-copy {
         color: #9eabbc;
-
         font-size: 0.83rem;
-
         line-height: 1.5;
     }
 
@@ -540,9 +482,7 @@ render_html(
 
     [data-testid="stMetricValue"] {
         color: #f5f1e9;
-
         font-weight: 680;
-
         letter-spacing: -0.03em;
     }
 
@@ -574,7 +514,6 @@ render_html(
             rgba(184, 174, 215, 0.14);
 
         border-radius: 15px;
-
         overflow: hidden;
     }
 
@@ -592,13 +531,11 @@ render_html(
             rgba(184, 174, 215, 0.10);
 
         border-radius: 15px;
-
         overflow: hidden;
     }
 
     [data-testid="stPydeckChart"] {
         border-radius: 20px;
-
         overflow: hidden;
 
         border:
@@ -630,7 +567,6 @@ render_html(
 
         .mouseql-eyebrow {
             font-size: 0.62rem;
-
             margin-bottom: 0.55rem;
         }
 
@@ -640,9 +576,7 @@ render_html(
 
         .mouseql-subtitle {
             font-size: 0.9rem;
-
             line-height: 1.5;
-
             margin-top: 0.75rem;
             margin-bottom: 1rem;
         }
@@ -661,7 +595,6 @@ render_html(
 
         .mouseql-best-card {
             padding: 1.3rem;
-
             border-radius: 18px;
         }
 
@@ -689,6 +622,24 @@ render_html(
 )
 
 
+def normalize_attraction_name(value):
+    if value is None:
+        return ""
+
+    value = str(value).strip()
+
+    while (
+        len(value) >= 2
+        and value[0] == '"'
+        and value[-1] == '"'
+    ):
+        value = value[
+            1:-1
+        ].strip()
+
+    return value
+
+
 def normalize_wait_data(data):
     if data is None:
         return pd.DataFrame()
@@ -705,7 +656,9 @@ def normalize_wait_data(data):
 
     for column in required_columns:
         if column not in data.columns:
-            data[column] = None
+            data[
+                column
+            ] = None
 
     data = data[
         required_columns
@@ -736,8 +689,9 @@ def normalize_wait_data(data):
         data[
             "attraction"
         ]
-        .astype(str)
-        .str.strip()
+        .map(
+            normalize_attraction_name
+        )
     )
 
     data[
@@ -751,15 +705,25 @@ def normalize_wait_data(data):
         )
         .astype(str)
         .str.strip()
+        .str.upper()
     )
 
     data = (
         data.dropna(
             subset=[
                 "recorded_at",
-                "attraction",
             ]
         )
+        .copy()
+    )
+
+    data = (
+        data[
+            data[
+                "attraction"
+            ]
+            != ""
+        ]
         .copy()
     )
 
@@ -777,7 +741,7 @@ def normalize_wait_data(data):
     return data
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=120)
 def load_data():
     frames = []
 
@@ -811,6 +775,10 @@ def load_data():
             )
 
             if not db_waits.empty:
+                db_waits[
+                    "source"
+                ] = "SQLite"
+
                 frames.append(
                     db_waits
                 )
@@ -833,6 +801,10 @@ def load_data():
             )
 
             if not csv_waits.empty:
+                csv_waits[
+                    "source"
+                ] = "CSV"
+
                 frames.append(
                     csv_waits
                 )
@@ -847,14 +819,13 @@ def load_data():
                 "attraction",
                 "wait_minutes",
                 "status",
+                "source",
             ]
         )
 
-    waits = (
-        pd.concat(
-            frames,
-            ignore_index=True,
-        )
+    waits = pd.concat(
+        frames,
+        ignore_index=True,
     )
 
     waits = (
@@ -867,10 +838,7 @@ def load_data():
             ],
             keep="last",
         )
-    )
-
-    waits = (
-        waits.sort_values(
+        .sort_values(
             "recorded_at"
         )
         .reset_index(
@@ -885,6 +853,17 @@ def load_data():
 def load_locations():
     locations = pd.read_csv(
         LOCATIONS_PATH
+    )
+
+    locations[
+        "attraction"
+    ] = (
+        locations[
+            "attraction"
+        ]
+        .map(
+            normalize_attraction_name
+        )
     )
 
     locations[
@@ -913,14 +892,127 @@ def load_locations():
     )
 
 
+def select_latest_usable_snapshot(
+    data
+):
+    if data.empty:
+        return (
+            pd.DataFrame(),
+            None,
+        )
+
+    candidates = (
+        data[
+            data[
+                "wait_minutes"
+            ].notna()
+            & (
+                data[
+                    "wait_minutes"
+                ]
+                >= 0
+            )
+            & (
+                data[
+                    "status"
+                ]
+                == "OPERATING"
+            )
+        ]
+        .copy()
+    )
+
+    if candidates.empty:
+        return (
+            pd.DataFrame(),
+            None,
+        )
+
+    snapshot_counts = (
+        candidates
+        .groupby(
+            "recorded_at"
+        )
+        .size()
+        .reset_index(
+            name="usable_waits"
+        )
+        .sort_values(
+            "recorded_at",
+            ascending=False,
+        )
+    )
+
+    healthy_snapshots = (
+        snapshot_counts[
+            snapshot_counts[
+                "usable_waits"
+            ]
+            >= MIN_USABLE_WAITS_PER_SNAPSHOT
+        ]
+    )
+
+    if not healthy_snapshots.empty:
+        selected_timestamp = (
+            healthy_snapshots.iloc[
+                0
+            ][
+                "recorded_at"
+            ]
+        )
+
+    else:
+        selected_timestamp = (
+            snapshot_counts.iloc[
+                0
+            ][
+                "recorded_at"
+            ]
+        )
+
+    selected_snapshot = (
+        candidates[
+            candidates[
+                "recorded_at"
+            ]
+            == selected_timestamp
+        ]
+        .copy()
+    )
+
+    selected_snapshot = (
+        selected_snapshot
+        .sort_values(
+            "recorded_at"
+        )
+        .groupby(
+            "attraction",
+            as_index=False,
+        )
+        .tail(1)
+        .reset_index(
+            drop=True
+        )
+    )
+
+    return (
+        selected_snapshot,
+        selected_timestamp,
+    )
+
+
 def format_hour(hour):
-    hour = int(hour)
+    hour = int(
+        hour
+    )
 
     if hour == 0:
         return "12 AM"
 
     if hour < 12:
-        return f"{hour} AM"
+        return (
+            f"{hour} AM"
+        )
 
     if hour == 12:
         return "12 PM"
@@ -930,9 +1022,13 @@ def format_hour(hour):
     )
 
 
-def format_duration(minutes):
+def format_duration(
+    minutes
+):
     minutes = int(
-        round(minutes)
+        round(
+            minutes
+        )
     )
 
     hours = (
@@ -951,16 +1047,20 @@ def format_duration(minutes):
         )
 
     if remaining == 0:
+        if hours == 1:
+            return "1 hr"
+
         return (
-            f"{hours} hr"
-            if hours == 1
-            else f"{hours} hrs"
+            f"{hours} hrs"
+        )
+
+    if hours == 1:
+        return (
+            f"1 hr {remaining} min"
         )
 
     return (
-        f"{hours} hr {remaining} min"
-        if hours == 1
-        else f"{hours} hrs {remaining} min"
+        f"{hours} hrs {remaining} min"
     )
 
 
@@ -1059,9 +1159,15 @@ def render_park_map(
         map_data[
             "wait_minutes"
         ]
-        .fillna(0)
-        .astype(int)
-        .astype(str)
+        .fillna(
+            0
+        )
+        .astype(
+            int
+        )
+        .astype(
+            str
+        )
         + " min"
     )
 
@@ -1083,7 +1189,9 @@ def render_park_map(
         .fillna(
             "Unknown"
         )
-        .astype(str)
+        .astype(
+            str
+        )
     )
 
     map_data[
@@ -1367,50 +1475,24 @@ if df.empty:
     st.stop()
 
 
-latest_timestamp = (
-    df[
-        "recorded_at"
-    ].max()
+(
+    latest_waits,
+    live_timestamp,
+) = select_latest_usable_snapshot(
+    df
 )
 
 
-latest_snapshot = (
-    df[
+if live_timestamp is None:
+    latest_timestamp = (
         df[
             "recorded_at"
-        ]
-        == latest_timestamp
-    ]
-    .copy()
-)
-
-
-if latest_snapshot.empty:
-    latest_waits = (
-        df
-        .sort_values(
-            "recorded_at"
-        )
-        .groupby(
-            "attraction",
-            as_index=False,
-        )
-        .tail(1)
-        .copy()
+        ].max()
     )
 
 else:
-    latest_waits = (
-        latest_snapshot
-        .sort_values(
-            "recorded_at"
-        )
-        .groupby(
-            "attraction",
-            as_index=False,
-        )
-        .tail(1)
-        .copy()
+    latest_timestamp = (
+        live_timestamp
     )
 
 
@@ -1452,7 +1534,7 @@ render_html(
         </div>
 
         <div class="mouseql-status">
-            Latest park data · {latest_data_text}
+            Latest usable park data · {latest_data_text}
         </div>
     </div>
     """
@@ -1813,14 +1895,13 @@ if wanted_attractions:
             """
             <div class="mouseql-unavailable">
                 <div class="mouseql-unavailable-title">
-                    Live recommendations aren't available right now
+                    No usable recommendation for these rides
                 </div>
 
                 <div class="mouseql-unavailable-copy">
-                    The rides you selected do not currently
-                    have usable live wait-time data. You can
-                    still explore the park map and historical
-                    wait patterns below.
+                    MOUSEQL found live park data, but none of
+                    the selected attractions currently have
+                    usable operating wait times.
                 </div>
             </div>
             """
@@ -1973,13 +2054,13 @@ elif wanted_attractions:
             style="margin-top: 2rem;"
         >
             <div class="mouseql-unavailable-title">
-                Your game plan will appear when live waits are available
+                No multi-ride game plan is available yet
             </div>
 
             <div class="mouseql-unavailable-copy">
-                MOUSEQL already has your time budget, ride
-                choices, and priorities. Once usable live wait
-                data returns, it can build the multi-ride plan.
+                MOUSEQL needs at least one selected attraction
+                with a usable operating wait before it can
+                build the itinerary.
             </div>
         </div>
         """
@@ -2369,11 +2450,9 @@ if not ride_data.empty:
         "in selected date range"
     )
 
-
     st.subheader(
         "Wait Time History"
     )
-
 
     history = (
         ride_data[
@@ -2387,11 +2466,9 @@ if not ride_data.empty:
         )
     )
 
-
     st.line_chart(
         history
     )
-
 
     ride_data[
         "hour"
@@ -2400,7 +2477,6 @@ if not ride_data.empty:
             "recorded_at"
         ].dt.hour
     )
-
 
     ride_hourly = (
         ride_data
@@ -2420,15 +2496,15 @@ if not ride_data.empty:
         )
     )
 
-
     ride_hourly[
         "average_wait"
     ] = (
         ride_hourly[
             "average_wait"
-        ].round(1)
+        ].round(
+            1
+        )
     )
-
 
     best_hour = (
         ride_hourly
@@ -2446,7 +2522,6 @@ if not ride_data.empty:
             0
         ]
     )
-
 
     st.write(
         "Best observed hour: "
@@ -2504,7 +2579,9 @@ attraction_summary[
 ] = (
     attraction_summary[
         "average_wait"
-    ].round(1)
+    ].round(
+        1
+    )
 )
 
 
@@ -2531,7 +2608,9 @@ st.subheader(
 
 top_attractions = (
     attraction_summary
-    .head(10)
+    .head(
+        10
+    )
     .copy()
 )
 
@@ -2592,7 +2671,9 @@ hourly_summary[
 ] = (
     hourly_summary[
         "average_wait"
-    ].round(1)
+    ].round(
+        1
+    )
 )
 
 
@@ -2614,7 +2695,9 @@ latest = (
         "recorded_at",
         ascending=False,
     )
-    .head(25)
+    .head(
+        25
+    )
     .copy()
 )
 
@@ -2631,8 +2714,28 @@ latest[
 )
 
 
+latest_display_columns = [
+    "recorded_at",
+    "attraction",
+    "wait_minutes",
+    "status",
+    "source",
+]
+
+
+latest_display_columns = [
+    column
+    for column
+    in latest_display_columns
+    if column
+    in latest.columns
+]
+
+
 st.dataframe(
-    latest,
+    latest[
+        latest_display_columns
+    ],
     width="stretch",
     hide_index=True,
 )
