@@ -9,7 +9,6 @@ import streamlit as st
 from route_planner import (
     rank_attractions,
     get_route_coordinates,
-    get_routing_diagnostics,
 )
 
 from itinerary_planner import (
@@ -682,6 +681,7 @@ def load_data():
 
             if not db_waits.empty:
                 db_waits["source"] = "SQLite"
+
                 frames.append(
                     db_waits
                 )
@@ -701,6 +701,7 @@ def load_data():
 
             if not csv_waits.empty:
                 csv_waits["source"] = "CSV"
+
                 frames.append(
                     csv_waits
                 )
@@ -957,6 +958,7 @@ def render_park_map(
     latest_waits,
     current_attraction=None,
     recommendations=None,
+    itinerary=None,
 ):
     if locations.empty:
         st.info(
@@ -966,6 +968,9 @@ def render_park_map(
 
     if recommendations is None:
         recommendations = []
+
+    if itinerary is None:
+        itinerary = []
 
     map_data = (
         locations.merge(
@@ -1001,19 +1006,21 @@ def render_park_map(
         .astype(str)
     )
 
-    map_data["marker_size"] = 90
+    map_data["marker_size"] = 80
 
     map_data["marker_color"] = [
         [
-            139,
-            131,
-            168,
-            185,
+            106,
+            111,
+            134,
+            150,
         ]
         for _ in range(
             len(map_data)
         )
     ]
+
+    map_data["plan_stop"] = ""
 
     if current_attraction is not None:
         current_mask = (
@@ -1033,13 +1040,53 @@ def render_park_map(
                 index,
                 "marker_color",
             ] = [
-                215,
-                195,
-                145,
-                230,
+                216,
+                197,
+                143,
+                245,
             ]
 
-    if recommendations:
+    if itinerary:
+        for stop in itinerary:
+            stop_attraction = (
+                stop["attraction"]
+            )
+
+            stop_number = int(
+                stop["step"]
+            )
+
+            stop_mask = (
+                map_data["attraction"]
+                == stop_attraction
+            )
+
+            map_data.loc[
+                stop_mask,
+                "marker_size",
+            ] = 170
+
+            map_data.loc[
+                stop_mask,
+                "plan_stop",
+            ] = str(
+                stop_number
+            )
+
+            for index in map_data.index[
+                stop_mask
+            ]:
+                map_data.at[
+                    index,
+                    "marker_color",
+                ] = [
+                    190,
+                    177,
+                    220,
+                    245,
+                ]
+
+    elif recommendations:
         best_attraction = (
             recommendations[0][
                 "attraction"
@@ -1063,9 +1110,9 @@ def render_park_map(
                 index,
                 "marker_color",
             ] = [
-                173,
-                164,
-                204,
+                190,
+                177,
+                220,
                 245,
             ]
 
@@ -1079,70 +1126,167 @@ def render_park_map(
         get_radius="marker_size",
         get_fill_color="marker_color",
         radius_min_pixels=5,
-        radius_max_pixels=14,
+        radius_max_pixels=15,
         pickable=True,
         auto_highlight=True,
-        opacity=0.9,
+        opacity=0.92,
         stroked=True,
         get_line_color=[
             243,
             239,
             230,
-            150,
+            145,
         ],
         line_width_min_pixels=1,
     )
 
-    layers = [
-        attraction_layer
-    ]
+    layers = []
 
-    if recommendations:
-        best_route = recommendations[0]
+    route_segments = []
 
-        path_nodes = best_route.get(
-            "path_nodes",
-            [],
+    if itinerary:
+        for stop in itinerary:
+            path_nodes = (
+                stop.get(
+                    "path_nodes",
+                    [],
+                )
+            )
+
+            routing_method = (
+                stop.get(
+                    "routing_method"
+                )
+            )
+
+            if (
+                routing_method == "Park path"
+                and path_nodes
+            ):
+                coordinates = (
+                    get_route_coordinates(
+                        path_nodes
+                    )
+                )
+
+                if (
+                    len(coordinates)
+                    >= 2
+                ):
+                    route_segments.append(
+                        {
+                            "path":
+                                coordinates,
+
+                            "step":
+                                str(
+                                    stop["step"]
+                                ),
+                        }
+                    )
+
+    elif recommendations:
+        best_route = (
+            recommendations[0]
         )
 
-        if path_nodes:
-            route_coordinates = (
+        path_nodes = (
+            best_route.get(
+                "path_nodes",
+                [],
+            )
+        )
+
+        routing_method = (
+            best_route.get(
+                "routing_method"
+            )
+        )
+
+        if (
+            routing_method == "Park path"
+            and path_nodes
+        ):
+            coordinates = (
                 get_route_coordinates(
                     path_nodes
                 )
             )
 
             if (
-                len(route_coordinates)
+                len(coordinates)
                 >= 2
             ):
-                route_data = pd.DataFrame(
-                    [
-                        {
-                            "path":
-                                route_coordinates
-                        }
-                    ]
+                route_segments.append(
+                    {
+                        "path":
+                            coordinates,
+
+                        "step":
+                            "1",
+                    }
                 )
 
-                route_layer = pdk.Layer(
-                    "PathLayer",
-                    data=route_data,
-                    get_path="path",
-                    get_width=6,
-                    get_color=[
-                        173,
-                        164,
-                        204,
-                        220,
-                    ],
-                    width_min_pixels=4,
-                    pickable=False,
-                )
+    if route_segments:
+        route_layer = pdk.Layer(
+            "PathLayer",
+            data=route_segments,
+            get_path="path",
+            get_width=7,
+            get_color=[
+                188,
+                174,
+                218,
+                235,
+            ],
+            width_min_pixels=4,
+            width_max_pixels=9,
+            joint_rounded=True,
+            cap_rounded=True,
+            pickable=False,
+        )
 
-                layers.append(
-                    route_layer
-                )
+        layers.append(
+            route_layer
+        )
+
+    layers.append(
+        attraction_layer
+    )
+
+    stop_data = (
+        map_data[
+            map_data["plan_stop"]
+            != ""
+        ]
+        .copy()
+    )
+
+    if not stop_data.empty:
+        stop_text_layer = pdk.Layer(
+            "TextLayer",
+            data=stop_data,
+            get_position=[
+                "longitude",
+                "latitude",
+            ],
+            get_text="plan_stop",
+            get_size=17,
+            get_color=[
+                16,
+                20,
+                34,
+                255,
+            ],
+            get_text_anchor='"middle"',
+            get_alignment_baseline='"center"',
+            billboard=True,
+            pickable=False,
+        )
+
+        layers.append(
+            stop_text_layer
+        )
 
     view_state = pdk.ViewState(
         latitude=(
@@ -1210,17 +1354,59 @@ def render_park_map(
         width="stretch",
     )
 
-    if recommendations:
+    if itinerary:
+        park_path_legs = sum(
+            1
+            for stop in itinerary
+            if (
+                stop.get(
+                    "routing_method"
+                )
+                == "Park path"
+                and stop.get(
+                    "path_nodes"
+                )
+            )
+        )
+
+        total_legs = len(
+            itinerary
+        )
+
+        if (
+            park_path_legs
+            == total_legs
+        ):
+            st.caption(
+                "Gold marks your current location. "
+                "Numbered lavender markers show your planned stops. "
+                "Route lines follow the modeled Magic Kingdom park path network."
+            )
+
+        elif park_path_legs > 0:
+            st.caption(
+                "Gold marks your current location. "
+                "Numbered lavender markers show your planned stops. "
+                "Only itinerary legs with a modeled park-path route are drawn."
+            )
+
+        else:
+            st.caption(
+                "Gold marks your current location. "
+                "Numbered lavender markers show your planned stops. "
+                "No modeled park-path route is available for these itinerary legs."
+            )
+
+    elif recommendations:
         st.caption(
             "Gold marks your current location. "
-            "The larger lavender marker is "
-            "MOUSEQL's best next ride."
+            "The larger lavender marker is MOUSEQL's best next ride."
         )
+
     else:
         st.caption(
-            "Explore attraction locations and "
-            "hover over markers for the latest "
-            "available wait and status."
+            "Explore attraction locations and hover over markers "
+            "for the latest available wait and status."
         )
 
 
@@ -1248,10 +1434,14 @@ if live_timestamp is None:
         df["recorded_at"].max()
     )
 else:
-    latest_timestamp = live_timestamp
+    latest_timestamp = (
+        live_timestamp
+    )
 
 
-current_hour = latest_timestamp.hour
+current_hour = (
+    latest_timestamp.hour
+)
 
 
 historical_waits = (
@@ -1318,7 +1508,10 @@ render_html(
 location_choices = sorted(
     locations["attraction"]
     .dropna()
-    .unique()
+    .unique(),
+    key=lambda name: str(
+        name
+    ).casefold(),
 )
 
 
@@ -1332,22 +1525,35 @@ time_budget_minutes = 120
 
 if location_choices:
 
-    current_attraction = st.selectbox(
-        "Current location",
-        location_choices,
-        key="current_location",
+    current_attraction = (
+        st.selectbox(
+            "Current location",
+            location_choices,
+            key="current_location",
+        )
     )
 
-    ride_choices = [
-        attraction
-        for attraction in location_choices
-        if attraction != current_attraction
-    ]
+    ride_choices = sorted(
+        [
+            attraction
+            for attraction
+            in location_choices
+            if (
+                attraction
+                != current_attraction
+            )
+        ],
+        key=lambda name: str(
+            name
+        ).casefold(),
+    )
 
-    wanted_attractions = st.multiselect(
-        "Attractions you're considering",
-        ride_choices,
-        default=[],
+    wanted_attractions = (
+        st.multiselect(
+            "Attractions you're considering",
+            ride_choices,
+            default=[],
+        )
     )
 
     st.caption(
@@ -1355,13 +1561,15 @@ if location_choices:
         "You can add or remove them anytime."
     )
 
-    time_budget_minutes = st.slider(
-        "How much time do you want to plan?",
-        min_value=60,
-        max_value=240,
-        value=120,
-        step=30,
-        format="%d min",
+    time_budget_minutes = (
+        st.slider(
+            "How much time do you want to plan?",
+            min_value=60,
+            max_value=240,
+            value=120,
+            step=30,
+            format="%d min",
+        )
     )
 
     st.caption(
@@ -1383,33 +1591,40 @@ if location_choices:
                 "and historical waits are also considered."
             )
 
-            must_do = st.multiselect(
-                "Must Do",
-                wanted_attractions,
-                default=[],
-                key="must_do_rides",
+            must_do = (
+                st.multiselect(
+                    "Must Do",
+                    wanted_attractions,
+                    default=[],
+                    key="must_do_rides",
+                )
             )
 
             remaining_after_must = [
                 attraction
                 for attraction
                 in wanted_attractions
-                if attraction not in must_do
+                if attraction
+                not in must_do
             ]
 
-            want_to_do = st.multiselect(
-                "Want to Do",
-                remaining_after_must,
-                default=[],
-                key="want_to_do_rides",
+            want_to_do = (
+                st.multiselect(
+                    "Want to Do",
+                    remaining_after_must,
+                    default=[],
+                    key="want_to_do_rides",
+                )
             )
 
             if_theres_time = [
                 attraction
                 for attraction
                 in wanted_attractions
-                if attraction not in must_do
-                and attraction not in want_to_do
+                if attraction
+                not in must_do
+                and attraction
+                not in want_to_do
             ]
 
             st.caption(
@@ -1504,43 +1719,13 @@ if location_choices:
         )
 
 
-if (
-    current_attraction
-    and wanted_attractions
-):
-    diagnostic_target = (
-        "Haunted Mansion"
-        if "Haunted Mansion"
-        in wanted_attractions
-        else wanted_attractions[0]
-    )
-
-    diagnostics = (
-        get_routing_diagnostics(
-            current_attraction,
-            diagnostic_target,
-        )
-    )
-
-    with st.expander(
-        "Routing diagnostics",
-        expanded=False,
-    ):
-        st.write(
-            f"Testing **{current_attraction} → "
-            f"{diagnostic_target}**"
-        )
-
-        st.json(
-            diagnostics
-        )
-
-
 if wanted_attractions:
 
     if recommendations:
 
-        best = recommendations[0]
+        best = (
+            recommendations[0]
+        )
 
         render_html(
             f"""
@@ -1589,9 +1774,9 @@ if wanted_attractions:
             best["typical_wait"]
             is not None
         ):
-            difference = best[
-                "difference"
-            ]
+            difference = (
+                best["difference"]
+            )
 
             if difference < 0:
                 comparison = (
@@ -1623,8 +1808,14 @@ if wanted_attractions:
                 f"{best['confidence']} confidence"
             )
 
-        if best.get(
-            "path_nodes"
+        if (
+            best.get(
+                "routing_method"
+            )
+            == "Park path"
+            and best.get(
+                "path_nodes"
+            )
         ):
             st.caption(
                 "Walking route calculated using "
@@ -1677,9 +1868,9 @@ render_html(
         </div>
 
         <div class="mouseql-section-copy">
-            See where you are, where MOUSEQL recommends
-            going next, and the park-network route when
-            one is available.
+            See where you are, your planned stops,
+            and the modeled park-path route between
+            each attraction when available.
         </div>
     </div>
     """
@@ -1694,6 +1885,9 @@ render_park_map(
     ),
     recommendations=(
         recommendations
+    ),
+    itinerary=(
+        itinerary
     ),
 )
 
@@ -1772,8 +1966,10 @@ if itinerary:
         - total_planned,
     )
 
-    rides_planned = len(
-        itinerary
+    rides_planned = (
+        len(
+            itinerary
+        )
     )
 
     render_html(
@@ -1915,33 +2111,40 @@ st.subheader(
 attractions = sorted(
     df["attraction"]
     .dropna()
-    .unique()
+    .unique(),
+    key=lambda name: str(
+        name
+    ).casefold(),
 )
 
 
-selected_attraction = st.selectbox(
-    "Choose an attraction",
-    attractions,
-    index=(
-        attractions.index(
+selected_attraction = (
+    st.selectbox(
+        "Choose an attraction",
+        attractions,
+        index=(
+            attractions.index(
+                "TRON Lightcycle / Run"
+            )
+            if
             "TRON Lightcycle / Run"
-        )
-        if
-        "TRON Lightcycle / Run"
-        in attractions
-        else 0
-    ),
+            in attractions
+            else 0
+        ),
+    )
 )
 
 
-date_range = st.selectbox(
-    "Date range",
-    [
-        "Today",
-        "Last 7 days",
-        "Last 30 days",
-        "All data",
-    ],
+date_range = (
+    st.selectbox(
+        "Date range",
+        [
+            "Today",
+            "Last 7 days",
+            "Last 30 days",
+            "All data",
+        ],
+    )
 )
 
 
@@ -1969,13 +2172,18 @@ if not ride_data.empty:
     )
 
     if date_range == "Today":
-        ride_data = ride_data[
-            ride_data["recorded_at"]
-            .dt.date
-            == today
-        ]
+        ride_data = (
+            ride_data[
+                ride_data["recorded_at"]
+                .dt.date
+                == today
+            ]
+        )
 
-    elif date_range == "Last 7 days":
+    elif (
+        date_range
+        == "Last 7 days"
+    ):
         cutoff = (
             latest_timestamp
             - pd.Timedelta(
@@ -1983,12 +2191,17 @@ if not ride_data.empty:
             )
         )
 
-        ride_data = ride_data[
-            ride_data["recorded_at"]
-            >= cutoff
-        ]
+        ride_data = (
+            ride_data[
+                ride_data["recorded_at"]
+                >= cutoff
+            ]
+        )
 
-    elif date_range == "Last 30 days":
+    elif (
+        date_range
+        == "Last 30 days"
+    ):
         cutoff = (
             latest_timestamp
             - pd.Timedelta(
@@ -1996,15 +2209,19 @@ if not ride_data.empty:
             )
         )
 
-        ride_data = ride_data[
-            ride_data["recorded_at"]
-            >= cutoff
-        ]
+        ride_data = (
+            ride_data[
+                ride_data["recorded_at"]
+                >= cutoff
+            ]
+        )
 
 
 if not ride_data.empty:
 
-    latest = ride_data.iloc[-1]
+    latest = (
+        ride_data.iloc[-1]
+    )
 
     col1, col2, col3, col4 = (
         st.columns(4)
