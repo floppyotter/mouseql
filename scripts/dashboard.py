@@ -80,11 +80,58 @@ def format_hour(hour):
     return f"{hour - 12} PM"
 
 
+def build_historical_waits(data, current_hour):
+    """
+    Calculate the typical wait for each attraction
+    during the current hour.
+    """
+
+    history = data.dropna(
+        subset=["wait_minutes"]
+    ).copy()
+
+    history["hour"] = (
+        history["recorded_at"].dt.hour
+    )
+
+    history = history[
+        history["hour"] == current_hour
+    ]
+
+    if history.empty:
+        return pd.DataFrame(
+            columns=[
+                "attraction",
+                "typical_wait",
+                "observations",
+            ]
+        )
+
+    return (
+        history.groupby(
+            "attraction",
+            as_index=False,
+        )
+        .agg(
+            typical_wait=(
+                "wait_minutes",
+                "mean",
+            ),
+            observations=(
+                "wait_minutes",
+                "count",
+            ),
+        )
+    )
+
+
 df = load_data()
 locations = load_locations()
 
 if df.empty:
-    st.warning("No wait time data has been collected yet.")
+    st.warning(
+        "No wait time data has been collected yet."
+    )
     st.stop()
 
 
@@ -114,9 +161,20 @@ col3.metric(
 
 latest_waits = (
     df.sort_values("recorded_at")
-    .groupby("attraction", as_index=False)
+    .groupby(
+        "attraction",
+        as_index=False,
+    )
     .tail(1)
     .copy()
+)
+
+latest_timestamp = df["recorded_at"].max()
+current_hour = latest_timestamp.hour
+
+historical_waits = build_historical_waits(
+    df,
+    current_hour,
 )
 
 
@@ -206,10 +264,17 @@ if location_choices:
             )
         ].copy()
 
+        selected_history = historical_waits[
+            historical_waits["attraction"].isin(
+                wanted_attractions
+            )
+        ].copy()
+
         recommendations = rank_attractions(
             current_attraction,
             selected_locations,
             selected_waits,
+            selected_history,
         )
 
         if recommendations:
@@ -222,18 +287,37 @@ if location_choices:
                 recommendations_df.rename(
                     columns={
                         "attraction": "Attraction",
-                        "distance_miles": "Distance (mi)",
-                        "walking_minutes": "Walk (min)",
-                        "wait_minutes": "Wait (min)",
-                        "total_minutes": "Total (min)",
+                        "walking_minutes": "Walk",
+                        "wait_minutes": "Wait Now",
+                        "typical_wait": "Typical",
+                        "difference": "Difference",
+                        "observations": "History",
+                        "confidence": "Confidence",
+                        "wait_message": "Wait Status",
+                        "total_minutes": "Walk + Wait",
+                        "recommendation_score": "Score",
                     }
                 )
             )
 
+            display_columns = [
+                "Attraction",
+                "Walk",
+                "Wait Now",
+                "Typical",
+                "Difference",
+                "History",
+                "Confidence",
+                "Wait Status",
+                "Walk + Wait",
+            ]
+
             st.subheader("Best Options")
 
             st.dataframe(
-                recommendations_df.head(10),
+                recommendations_df[
+                    display_columns
+                ].head(10),
                 use_container_width=True,
                 hide_index=True,
             )
@@ -262,9 +346,48 @@ if location_choices:
                 f"**{best['total_minutes']} minutes**"
             )
 
+            if best["typical_wait"] is not None:
+
+                difference = best["difference"]
+
+                if difference < 0:
+                    comparison = (
+                        f"{abs(difference):.1f} minutes "
+                        f"below typical"
+                    )
+
+                elif difference > 0:
+                    comparison = (
+                        f"{difference:.1f} minutes "
+                        f"above typical"
+                    )
+
+                else:
+                    comparison = "right at typical"
+
+                st.write(
+                    f"Current wait is **{comparison}** "
+                    f"for {format_hour(current_hour)}."
+                )
+
+                st.caption(
+                    f"Typical wait: "
+                    f"{best['typical_wait']:.1f} min • "
+                    f"History: {best['observations']} observations • "
+                    f"Confidence: {best['confidence']}"
+                )
+
+            else:
+
+                st.caption(
+                    "Not enough historical data for a "
+                    "same-hour comparison yet."
+                )
+
             st.caption(
-                "Walking time is currently estimated from "
-                "attraction coordinates."
+                "Walking time is still estimated from attraction "
+                "coordinates. Historical wait data only affects "
+                "ranking after enough observations have been collected."
             )
 
         else:
