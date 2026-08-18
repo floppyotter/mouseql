@@ -1,22 +1,20 @@
 from math import radians, sin, cos, sqrt, atan2, isfinite
 
-# Average walking speed in miles per hour
-WALKING_SPEED_MPH = 3.0
 
-# Temporary adjustment because park walking
-# is not a perfect straight line
+WALKING_SPEED_MPH = 3.0
 WALKING_DISTANCE_MULTIPLIER = 1.25
 
-# Historical data needs at least this many observations
-# before it starts affecting the recommendation score
 MIN_HISTORY_OBSERVATIONS = 5
-
-# Once we have this many observations, history gets full weight
 FULL_HISTORY_OBSERVATIONS = 20
-
-# Maximum number of minutes that historical performance
-# can change the recommendation score
 MAX_HISTORY_ADJUSTMENT = 10
+
+# Priority changes the ranking score without changing
+# the actual walk + wait time shown to the user.
+PRIORITY_ADJUSTMENTS = {
+    "Must Do": -15,
+    "Want to Do": -7,
+    "If There's Time": 0,
+}
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -71,8 +69,7 @@ def estimate_walking_time(distance_miles):
 
 def get_history_confidence(observations):
     """
-    Return a simple confidence label based on the
-    number of historical observations available.
+    Return confidence based on the amount of history available.
     """
 
     if observations < MIN_HISTORY_OBSERVATIONS:
@@ -86,10 +83,7 @@ def get_history_confidence(observations):
 
 def get_history_weight(observations):
     """
-    Return how strongly historical data should affect
-    the recommendation.
-
-    Very small samples receive no weight.
+    Control how strongly historical data affects ranking.
     """
 
     if observations < MIN_HISTORY_OBSERVATIONS:
@@ -108,8 +102,7 @@ def get_history_weight(observations):
 
 def get_wait_message(difference):
     """
-    Turn the current-vs-typical difference into
-    something readable in the dashboard.
+    Describe how the current wait compares with typical.
     """
 
     if difference <= -10:
@@ -132,17 +125,19 @@ def rank_attractions(
     locations,
     latest_waits,
     historical_waits=None,
+    priorities=None,
 ):
     """
     Rank attractions using:
 
-    - estimated walking time
-    - latest posted wait
-    - historical wait for the same hour
-
-    Historical data only affects the score when
-    enough observations are available.
+    - walking time
+    - current wait
+    - historical wait performance
+    - user priority
     """
+
+    if priorities is None:
+        priorities = {}
 
     current_location = locations[
         locations["attraction"]
@@ -266,10 +261,7 @@ def rank_attractions(
                         history_row["observations"]
                     )
 
-                except (
-                    TypeError,
-                    ValueError,
-                ):
+                except (TypeError, ValueError):
                     typical_wait = None
                     observations = 0
 
@@ -301,11 +293,6 @@ def rank_attractions(
                         )
                     )
 
-                    # Positive difference means the ride
-                    # is currently worse than typical.
-                    #
-                    # Negative difference means it is
-                    # currently better than typical.
                     raw_adjustment = (
                         difference
                         * history_weight
@@ -319,19 +306,40 @@ def rank_attractions(
                         ),
                     )
 
+        # Get the user's priority for this attraction.
+        # If none was supplied, treat it as "If There's Time".
+        priority = priorities.get(
+            attraction,
+            "If There's Time",
+        )
+
+        priority_adjustment = (
+            PRIORITY_ADJUSTMENTS.get(
+                priority,
+                0,
+            )
+        )
+
+        # Actual amount of time the attraction costs right now.
         base_total = (
             walking_minutes
             + wait_minutes
         )
 
+        # Ranking score is separate from actual time.
+        #
+        # Lower score = better recommendation.
         recommendation_score = (
             base_total
             + history_adjustment
+            + priority_adjustment
         )
 
         results.append(
             {
                 "attraction": attraction,
+
+                "priority": priority,
 
                 "distance_miles": round(
                     distance,
@@ -366,6 +374,15 @@ def rank_attractions(
 
                 "total_minutes": round(
                     base_total
+                ),
+
+                "history_adjustment": round(
+                    history_adjustment,
+                    1,
+                ),
+
+                "priority_adjustment": (
+                    priority_adjustment
                 ),
 
                 "recommendation_score": round(
