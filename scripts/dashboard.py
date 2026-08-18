@@ -555,7 +555,6 @@ def load_data():
 
             if not db_waits.empty:
                 db_waits["source"] = "SQLite"
-
                 frames.append(
                     db_waits
                 )
@@ -575,7 +574,6 @@ def load_data():
 
             if not csv_waits.empty:
                 csv_waits["source"] = "CSV"
-
                 frames.append(
                     csv_waits
                 )
@@ -1133,6 +1131,10 @@ def render_park_map(
                 255,
             ]
 
+    show_stop_labels = (
+        len(itinerary) < 4
+    )
+
     if itinerary:
         for stop in itinerary:
             stop_mask = (
@@ -1152,13 +1154,13 @@ def render_park_map(
                 stop["step"]
             )
 
-            map_data.loc[
-                stop_mask,
-                "map_label",
-            ] = (
-                f'{stop["step"]}  '
-                f'{stop["attraction"]}'
-            )
+            if show_stop_labels:
+                map_data.loc[
+                    stop_mask,
+                    "map_label",
+                ] = stop[
+                    "attraction"
+                ]
 
             for index in map_data.index[
                 stop_mask
@@ -1384,7 +1386,7 @@ def render_park_map(
                 "latitude",
             ],
             get_text="map_label",
-            get_size=13,
+            get_size=11,
             get_color=[
                 245,
                 241,
@@ -1395,7 +1397,7 @@ def render_park_map(
             get_alignment_baseline='"bottom"',
             get_pixel_offset=[
                 0,
-                -24,
+                -30,
             ],
             billboard=True,
             pickable=False,
