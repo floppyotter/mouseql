@@ -3,7 +3,7 @@
 WITH hourly_waits AS (
     SELECT
         attraction,
-        CAST(strftime('%H', recorded_at) AS INTEGER) AS hour_of_day,
+        CAST(strftime('%H', recorded_at, 'localtime') AS INTEGER) AS hour_of_day,
         ROUND(AVG(wait_minutes), 1) AS avg_wait,
         COUNT(*) AS observations
     FROM wait_times
