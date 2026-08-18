@@ -15,9 +15,10 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("MOUSEQL")
-st.write("Magic Kingdom wait time data")
 
+# --------------------------------------------------
+# Data
+# --------------------------------------------------
 
 @st.cache_data(ttl=300)
 def load_data():
@@ -81,11 +82,6 @@ def format_hour(hour):
 
 
 def build_historical_waits(data, current_hour):
-    """
-    Calculate the typical wait for each attraction
-    during the current hour.
-    """
-
     history = data.dropna(
         subset=["wait_minutes"]
     ).copy()
@@ -135,30 +131,6 @@ if df.empty:
     st.stop()
 
 
-# Dataset
-
-st.header("Dataset")
-
-col1, col2, col3 = st.columns(3)
-
-col1.metric(
-    "Observations",
-    f"{len(df):,}",
-)
-
-col2.metric(
-    "Attractions",
-    df["attraction"].nunique(),
-)
-
-col3.metric(
-    "Average Wait",
-    f"{df['wait_minutes'].mean():.1f} min",
-)
-
-
-# Latest wait for each attraction
-
 latest_waits = (
     df.sort_values("recorded_at")
     .groupby(
@@ -178,50 +150,26 @@ historical_waits = build_historical_waits(
 )
 
 
-# Park map
+# --------------------------------------------------
+# Header
+# --------------------------------------------------
 
-st.header("Park Map")
+st.title("MOUSEQL")
+st.subheader("Magic Kingdom Park Planner")
 
-if not locations.empty:
-
-    map_data = locations.merge(
-        latest_waits[
-            [
-                "attraction",
-                "wait_minutes",
-                "status",
-            ]
-        ],
-        on="attraction",
-        how="left",
-    )
-
-    st.map(
-        map_data,
-        latitude="latitude",
-        longitude="longitude",
-        size=20,
-        use_container_width=True,
-    )
-
-    st.caption(
-        f"{len(map_data)} attraction locations"
-    )
-
-else:
-    st.info(
-        "No attraction location data available."
-    )
-
-
-# Route planner
-
-st.header("What Should I Ride Next?")
-
-st.write(
-    "Choose where you are now and the attractions "
-    "you still want to ride."
+st.caption(
+    "Latest data: "
+    f"{latest_timestamp.strftime('%B %d, %Y at %I:%M %p')}"
 )
+
+st.divider()
+
+
+# --------------------------------------------------
+# Park day
+# --------------------------------------------------
+
+st.header("Plan Your Next Ride")
 
 location_choices = sorted(
     locations["attraction"]
@@ -244,54 +192,54 @@ if location_choices:
     ]
 
     wanted_attractions = st.multiselect(
-        "What do you still want to ride?",
+        "Attractions you still want to ride",
         ride_choices,
         default=ride_choices,
     )
 
     if wanted_attractions:
 
-        # Ride priorities
+        with st.expander(
+            "Ride priorities",
+            expanded=False,
+        ):
 
-        st.subheader("Ride Priorities")
+            st.caption(
+                "Priority affects the recommendation while "
+                "still accounting for walking time and waits."
+            )
 
-        st.caption(
-            "Put the attractions you care about most in Must Do. "
-            "Priority affects the recommendation while MOUSEQL "
-            "still considers walking time and current waits."
-        )
+            must_do = st.multiselect(
+                "Must Do",
+                wanted_attractions,
+                default=[],
+                key="must_do_rides",
+            )
 
-        must_do = st.multiselect(
-            "Must Do",
-            wanted_attractions,
-            default=[],
-            key="must_do_rides",
-        )
+            remaining_after_must = [
+                attraction
+                for attraction in wanted_attractions
+                if attraction not in must_do
+            ]
 
-        remaining_after_must = [
-            attraction
-            for attraction in wanted_attractions
-            if attraction not in must_do
-        ]
+            want_to_do = st.multiselect(
+                "Want to Do",
+                remaining_after_must,
+                default=[],
+                key="want_to_do_rides",
+            )
 
-        want_to_do = st.multiselect(
-            "Want to Do",
-            remaining_after_must,
-            default=[],
-            key="want_to_do_rides",
-        )
+            if_theres_time = [
+                attraction
+                for attraction in wanted_attractions
+                if attraction not in must_do
+                and attraction not in want_to_do
+            ]
 
-        if_theres_time = [
-            attraction
-            for attraction in wanted_attractions
-            if attraction not in must_do
-            and attraction not in want_to_do
-        ]
-
-        st.caption(
-            f"If There's Time: "
-            f"{len(if_theres_time)} attractions"
-        )
+            st.caption(
+                f"If There's Time: "
+                f"{len(if_theres_time)} attractions"
+            )
 
         priorities = {}
 
@@ -333,80 +281,38 @@ if location_choices:
 
         if recommendations:
 
-            recommendations_df = pd.DataFrame(
-                recommendations
-            )
-
-            recommendations_df = (
-                recommendations_df.rename(
-                    columns={
-                        "attraction": "Attraction",
-                        "priority": "Priority",
-                        "walking_minutes": "Walk",
-                        "wait_minutes": "Wait Now",
-                        "typical_wait": "Typical",
-                        "difference": "Difference",
-                        "observations": "History",
-                        "confidence": "Confidence",
-                        "wait_message": "Wait Status",
-                        "total_minutes": "Walk + Wait",
-                        "recommendation_score": "Score",
-                    }
-                )
-            )
-
-            display_columns = [
-                "Attraction",
-                "Priority",
-                "Walk",
-                "Wait Now",
-                "Typical",
-                "Difference",
-                "History",
-                "Confidence",
-                "Wait Status",
-                "Walk + Wait",
-            ]
-
-            st.subheader("Best Options")
-
-            st.dataframe(
-                recommendations_df[
-                    display_columns
-                ].head(10),
-                use_container_width=True,
-                hide_index=True,
-            )
-
             best = recommendations[0]
+
+            st.divider()
+
+            st.header("Best Next Ride")
+
+            st.subheader(
+                best["attraction"]
+            )
 
             col1, col2, col3, col4 = (
                 st.columns(4)
             )
 
             col1.metric(
-                "Best Next Ride",
-                best["attraction"],
-            )
-
-            col2.metric(
                 "Priority",
                 best["priority"],
             )
 
-            col3.metric(
-                "Estimated Walk",
+            col2.metric(
+                "Walk",
                 f"{best['walking_minutes']} min",
             )
 
-            col4.metric(
+            col3.metric(
                 "Current Wait",
                 f"{best['wait_minutes']} min",
             )
 
-            st.write(
-                f"Estimated walk + wait: "
-                f"**{best['total_minutes']} minutes**"
+            col4.metric(
+                "Walk + Wait",
+                f"{best['total_minutes']} min",
             )
 
             if best["typical_wait"] is not None:
@@ -416,44 +322,147 @@ if location_choices:
                 if difference < 0:
                     comparison = (
                         f"{abs(difference):.1f} minutes "
-                        f"below typical"
+                        "below typical"
                     )
 
                 elif difference > 0:
                     comparison = (
                         f"{difference:.1f} minutes "
-                        f"above typical"
+                        "above typical"
                     )
 
                 else:
-                    comparison = "right at typical"
+                    comparison = "at the typical wait"
 
                 st.write(
-                    f"Current wait is **{comparison}** "
+                    f"The current wait is **{comparison}** "
                     f"for {format_hour(current_hour)}."
                 )
 
                 st.caption(
                     f"Typical wait: "
-                    f"{best['typical_wait']:.1f} min • "
-                    f"History: "
-                    f"{best['observations']} observations • "
-                    f"Confidence: "
-                    f"{best['confidence']}"
+                    f"{best['typical_wait']:.1f} min | "
+                    f"{best['observations']} observations | "
+                    f"{best['confidence']} confidence"
                 )
 
             else:
-
                 st.caption(
                     "Not enough historical data for a "
                     "same-hour comparison yet."
                 )
 
-            st.caption(
-                "Recommendations consider ride priority, "
-                "walking time, current waits, and historical "
-                "wait patterns when enough history is available."
+
+            # ------------------------------------------
+            # Other recommendations
+            # ------------------------------------------
+
+            st.subheader("Other Options")
+
+            top_recommendations = (
+                recommendations[1:6]
             )
+
+            if top_recommendations:
+
+                for number, ride in enumerate(
+                    top_recommendations,
+                    start=2,
+                ):
+
+                    st.markdown(
+                        f"**{number}. {ride['attraction']}**"
+                    )
+
+                    details = (
+                        f"{ride['walking_minutes']} min walk | "
+                        f"{ride['wait_minutes']} min wait | "
+                        f"{ride['total_minutes']} min total"
+                    )
+
+                    if ride["priority"] != "If There's Time":
+                        details += (
+                            f" | {ride['priority']}"
+                        )
+
+                    st.caption(details)
+
+                    if (
+                        ride["typical_wait"] is not None
+                        and ride["confidence"] != "Low"
+                    ):
+
+                        difference = ride["difference"]
+
+                        if difference <= -5:
+                            st.caption(
+                                "Current wait is lower "
+                                "than typical."
+                            )
+
+                        elif difference >= 5:
+                            st.caption(
+                                "Current wait is higher "
+                                "than typical."
+                            )
+
+
+            # ------------------------------------------
+            # Full ranking
+            # ------------------------------------------
+
+            with st.expander(
+                "View full recommendation table"
+            ):
+
+                recommendations_df = pd.DataFrame(
+                    recommendations
+                )
+
+                recommendations_df = (
+                    recommendations_df.rename(
+                        columns={
+                            "attraction": "Attraction",
+                            "priority": "Priority",
+                            "walking_minutes": "Walk",
+                            "wait_minutes": "Wait Now",
+                            "typical_wait": "Typical",
+                            "difference": "Difference",
+                            "observations": "History",
+                            "confidence": "Confidence",
+                            "wait_message": "Wait Status",
+                            "total_minutes": "Walk + Wait",
+                            "recommendation_score": "Score",
+                        }
+                    )
+                )
+
+                display_columns = [
+                    "Attraction",
+                    "Priority",
+                    "Walk",
+                    "Wait Now",
+                    "Typical",
+                    "Difference",
+                    "History",
+                    "Confidence",
+                    "Wait Status",
+                    "Walk + Wait",
+                ]
+
+                st.dataframe(
+                    recommendations_df[
+                        display_columns
+                    ],
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+                st.caption(
+                    "Recommendations consider ride priority, "
+                    "walking time, current waits, and historical "
+                    "wait patterns when enough history is available."
+                )
 
         else:
             st.info(
@@ -472,9 +481,75 @@ else:
     )
 
 
-# Attraction lookup
+# --------------------------------------------------
+# Park map
+# --------------------------------------------------
 
-st.header("Attraction Lookup")
+st.divider()
+st.header("Park Map")
+
+if not locations.empty:
+
+    map_data = locations.merge(
+        latest_waits[
+            [
+                "attraction",
+                "wait_minutes",
+                "status",
+            ]
+        ],
+        on="attraction",
+        how="left",
+    )
+
+    st.map(
+        map_data,
+        latitude="latitude",
+        longitude="longitude",
+        size=20,
+        use_container_width=True,
+    )
+
+    st.caption(
+        f"{len(map_data)} attraction locations"
+    )
+
+else:
+    st.info(
+        "No attraction location data available."
+    )
+
+
+# --------------------------------------------------
+# Data and history
+# --------------------------------------------------
+
+st.divider()
+st.header("Data & History")
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric(
+    "Observations",
+    f"{len(df):,}",
+)
+
+col2.metric(
+    "Attractions",
+    df["attraction"].nunique(),
+)
+
+col3.metric(
+    "Overall Average Wait",
+    f"{df['wait_minutes'].mean():.1f} min",
+)
+
+
+# --------------------------------------------------
+# Attraction lookup
+# --------------------------------------------------
+
+st.subheader("Attraction Lookup")
 
 attractions = sorted(
     df["attraction"]
@@ -504,7 +579,6 @@ date_range = st.selectbox(
     ],
 )
 
-
 ride_data = (
     df[
         df["attraction"]
@@ -518,11 +592,12 @@ ride_data = (
 )
 
 
+# --------------------------------------------------
 # Date filtering
+# --------------------------------------------------
 
 if not ride_data.empty:
 
-    latest_timestamp = df["recorded_at"].max()
     today = latest_timestamp.date()
 
     if date_range == "Today":
@@ -617,7 +692,9 @@ if not ride_data.empty:
         .set_index("recorded_at")
     )
 
-    st.line_chart(history)
+    st.line_chart(
+        history
+    )
 
 
     # Best observed hour
@@ -679,9 +756,12 @@ else:
     )
 
 
+# --------------------------------------------------
 # Average wait by attraction
+# --------------------------------------------------
 
-st.header("Average Wait by Attraction")
+st.divider()
+st.subheader("Average Wait by Attraction")
 
 attraction_summary = (
     df.dropna(
@@ -722,9 +802,11 @@ st.dataframe(
 )
 
 
+# --------------------------------------------------
 # Highest average waits
+# --------------------------------------------------
 
-st.header("Highest Average Waits")
+st.subheader("Highest Average Waits")
 
 top_attractions = (
     attraction_summary
@@ -739,9 +821,11 @@ st.bar_chart(
 )
 
 
+# --------------------------------------------------
 # Average wait by hour
+# --------------------------------------------------
 
-st.header("Average Wait by Hour")
+st.subheader("Average Wait by Hour")
 
 hourly = (
     df.dropna(
@@ -782,9 +866,11 @@ st.line_chart(
 )
 
 
+# --------------------------------------------------
 # Latest observations
+# --------------------------------------------------
 
-st.header("Latest Observations")
+st.subheader("Latest Observations")
 
 latest = (
     df.sort_values(
