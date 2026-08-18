@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **1050**
+- Observations: **1085**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 18, 2026 at 6:41 PM ET**
+- Latest observation: **August 18, 2026 at 7:36 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **12**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 53.8 min | 20 |
-| Seven Dwarfs Mine Train | 41.7 min | 21 |
-| Tiana's Bayou Adventure | 35.6 min | 17 |
-| Peter Pan's Flight | 35.0 min | 21 |
-| Buzz Lightyear’s Space Ranger Spin | 31.0 min | 20 |
-| Jungle Cruise | 27.8 min | 20 |
-| Big Thunder Mountain Railroad | 26.0 min | 20 |
-| Space Mountain | 25.7 min | 21 |
-| The Many Adventures of Winnie the Pooh | 24.7 min | 18 |
-| Haunted Mansion | 17.7 min | 20 |
+| TRON Lightcycle / Run | 52.6 min | 21 |
+| Seven Dwarfs Mine Train | 40.9 min | 22 |
+| Tiana's Bayou Adventure | 35.0 min | 18 |
+| Peter Pan's Flight | 34.5 min | 22 |
+| Buzz Lightyear’s Space Ranger Spin | 30.7 min | 21 |
+| Jungle Cruise | 26.9 min | 21 |
+| Space Mountain | 25.9 min | 22 |
+| Big Thunder Mountain Railroad | 25.5 min | 21 |
+| The Many Adventures of Winnie the Pooh | 24.2 min | 19 |
+| Haunted Mansion | 18.0 min | 21 |
 
 
 ## Best Time for Each Attraction
@@ -64,7 +64,7 @@ Because the dataset is still growing, results based on only a few observations s
 | The Barnstormer | 10 PM | 5.0 min | 1 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 3 |
 | The Many Adventures of Winnie the Pooh | 10 PM | 8.3 min | 3 |
-| Tiana's Bayou Adventure | 7 PM | 15.0 min | 1 |
+| Tiana's Bayou Adventure | 7 PM | 20.0 min | 2 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 1 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 3 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 3 |
