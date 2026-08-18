@@ -6,6 +6,7 @@ import streamlit as st
 
 
 DB_PATH = Path("data/mouseql.db")
+LOCATIONS_PATH = Path("data/attraction_locations.csv")
 
 st.set_page_config(
     page_title="MOUSEQL",
@@ -43,6 +44,25 @@ def load_data():
     return waits
 
 
+@st.cache_data(ttl=300)
+def load_locations():
+    locations = pd.read_csv(LOCATIONS_PATH)
+
+    locations["latitude"] = pd.to_numeric(
+        locations["latitude"],
+        errors="coerce",
+    )
+
+    locations["longitude"] = pd.to_numeric(
+        locations["longitude"],
+        errors="coerce",
+    )
+
+    return locations.dropna(
+        subset=["latitude", "longitude"]
+    )
+
+
 def format_hour(hour):
     hour = int(hour)
 
@@ -57,6 +77,7 @@ def format_hour(hour):
 
 
 df = load_data()
+locations = load_locations()
 
 if df.empty:
     st.warning("No wait time data has been collected yet.")
@@ -85,18 +106,62 @@ col3.metric(
 )
 
 
+# Park map
+
+st.header("Park Map")
+
+if not locations.empty:
+
+    latest_waits = (
+        df.sort_values("recorded_at")
+        .groupby("attraction", as_index=False)
+        .tail(1)
+    )
+
+    map_data = locations.merge(
+        latest_waits[
+            [
+                "attraction",
+                "wait_minutes",
+                "status",
+            ]
+        ],
+        on="attraction",
+        how="left",
+    )
+
+    st.map(
+        map_data,
+        latitude="latitude",
+        longitude="longitude",
+        size=40,
+        use_container_width=True,
+    )
+
+    st.caption(
+        f"{len(map_data)} attraction locations"
+    )
+
+else:
+    st.info("No attraction location data available.")
+
+
 # Attraction lookup
 
 st.header("Attraction Lookup")
 
-attractions = sorted(df["attraction"].dropna().unique())
+attractions = sorted(
+    df["attraction"].dropna().unique()
+)
 
 selected_attraction = st.selectbox(
     "Choose an attraction",
     attractions,
-    index=attractions.index("TRON Lightcycle / Run")
-    if "TRON Lightcycle / Run" in attractions
-    else 0,
+    index=(
+        attractions.index("TRON Lightcycle / Run")
+        if "TRON Lightcycle / Run" in attractions
+        else 0
+    ),
 )
 
 date_range = st.selectbox(
@@ -132,12 +197,14 @@ if not ride_data.empty:
 
     elif date_range == "Last 7 days":
         cutoff = latest_timestamp - pd.Timedelta(days=7)
+
         ride_data = ride_data[
             ride_data["recorded_at"] >= cutoff
         ]
 
     elif date_range == "Last 30 days":
         cutoff = latest_timestamp - pd.Timedelta(days=30)
+
         ride_data = ride_data[
             ride_data["recorded_at"] >= cutoff
         ]
@@ -184,7 +251,12 @@ if not ride_data.empty:
     st.subheader("Wait Time History")
 
     history = (
-        ride_data[["recorded_at", "wait_minutes"]]
+        ride_data[
+            [
+                "recorded_at",
+                "wait_minutes",
+            ]
+        ]
         .set_index("recorded_at")
     )
 
@@ -193,13 +265,24 @@ if not ride_data.empty:
 
     # Best observed hour
 
-    ride_data["hour"] = ride_data["recorded_at"].dt.hour
+    ride_data["hour"] = (
+        ride_data["recorded_at"].dt.hour
+    )
 
     ride_hourly = (
-        ride_data.groupby("hour", as_index=False)
+        ride_data.groupby(
+            "hour",
+            as_index=False,
+        )
         .agg(
-            average_wait=("wait_minutes", "mean"),
-            observations=("wait_minutes", "count"),
+            average_wait=(
+                "wait_minutes",
+                "mean",
+            ),
+            observations=(
+                "wait_minutes",
+                "count",
+            ),
         )
     )
 
@@ -207,17 +290,24 @@ if not ride_data.empty:
         ride_hourly["average_wait"].round(1)
     )
 
-    best_hour = ride_hourly.sort_values(
-        ["average_wait", "observations"],
-        ascending=[True, False],
-    ).iloc[0]
+    best_hour = (
+        ride_hourly.sort_values(
+            [
+                "average_wait",
+                "observations",
+            ],
+            ascending=[True, False],
+        )
+        .iloc[0]
+    )
 
     st.write(
         f"Best observed hour: "
         f"**{format_hour(best_hour['hour'])}** "
         f"with an average wait of "
         f"**{best_hour['average_wait']:.1f} minutes** "
-        f"across **{int(best_hour['observations'])} observations**."
+        f"across "
+        f"**{int(best_hour['observations'])} observations**."
     )
 
 else:
@@ -233,10 +323,19 @@ st.header("Average Wait by Attraction")
 
 attraction_summary = (
     df.dropna(subset=["wait_minutes"])
-    .groupby("attraction", as_index=False)
+    .groupby(
+        "attraction",
+        as_index=False,
+    )
     .agg(
-        average_wait=("wait_minutes", "mean"),
-        observations=("wait_minutes", "count"),
+        average_wait=(
+            "wait_minutes",
+            "mean",
+        ),
+        observations=(
+            "wait_minutes",
+            "count",
+        ),
     )
 )
 
@@ -244,9 +343,11 @@ attraction_summary["average_wait"] = (
     attraction_summary["average_wait"].round(1)
 )
 
-attraction_summary = attraction_summary.sort_values(
-    "average_wait",
-    ascending=False,
+attraction_summary = (
+    attraction_summary.sort_values(
+        "average_wait",
+        ascending=False,
+    )
 )
 
 st.dataframe(
@@ -260,7 +361,9 @@ st.dataframe(
 
 st.header("Highest Average Waits")
 
-top_attractions = attraction_summary.head(10).copy()
+top_attractions = (
+    attraction_summary.head(10).copy()
+)
 
 st.bar_chart(
     top_attractions,
@@ -273,15 +376,31 @@ st.bar_chart(
 
 st.header("Average Wait by Hour")
 
-hourly = df.dropna(subset=["wait_minutes"]).copy()
+hourly = (
+    df.dropna(
+        subset=["wait_minutes"]
+    )
+    .copy()
+)
 
-hourly["hour"] = hourly["recorded_at"].dt.hour
+hourly["hour"] = (
+    hourly["recorded_at"].dt.hour
+)
 
 hourly_summary = (
-    hourly.groupby("hour", as_index=False)
+    hourly.groupby(
+        "hour",
+        as_index=False,
+    )
     .agg(
-        average_wait=("wait_minutes", "mean"),
-        observations=("wait_minutes", "count"),
+        average_wait=(
+            "wait_minutes",
+            "mean",
+        ),
+        observations=(
+            "wait_minutes",
+            "count",
+        ),
     )
 )
 
@@ -301,13 +420,18 @@ st.line_chart(
 st.header("Latest Observations")
 
 latest = (
-    df.sort_values("recorded_at", ascending=False)
+    df.sort_values(
+        "recorded_at",
+        ascending=False,
+    )
     .head(25)
     .copy()
 )
 
-latest["recorded_at"] = latest["recorded_at"].dt.strftime(
-    "%B %d, %Y %I:%M %p"
+latest["recorded_at"] = (
+    latest["recorded_at"].dt.strftime(
+        "%B %d, %Y %I:%M %p"
+    )
 )
 
 st.dataframe(
