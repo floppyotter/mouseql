@@ -49,7 +49,7 @@ def clean_name(value):
 
     value = str(value).strip()
 
-    if (
+    while (
         len(value) >= 2
         and value[0] == value[-1]
         and value[0] in {'"', "'"}
@@ -59,6 +59,13 @@ def clean_name(value):
         ].strip()
 
     return value
+
+
+def normalize_key(value):
+    return (
+        clean_name(value)
+        .casefold()
+    )
 
 
 def calculate_distance(
@@ -95,14 +102,12 @@ def calculate_distance(
 
     a = (
         sin(
-            lat_difference
-            / 2
+            lat_difference / 2
         ) ** 2
         + cos(lat1)
         * cos(lat2)
         * sin(
-            lon_difference
-            / 2
+            lon_difference / 2
         ) ** 2
     )
 
@@ -163,9 +168,7 @@ def load_park_paths():
 
     graph = {}
 
-    for _, row in (
-        paths.iterrows()
-    ):
+    for _, row in paths.iterrows():
         from_node = clean_name(
             row[
                 "from_node"
@@ -246,9 +249,7 @@ def load_attraction_nodes():
 
     attraction_nodes = {}
 
-    for _, row in (
-        nodes.iterrows()
-    ):
+    for _, row in nodes.iterrows():
         attraction = clean_name(
             row[
                 "attraction"
@@ -268,7 +269,9 @@ def load_attraction_nodes():
             continue
 
         attraction_nodes[
-            attraction
+            normalize_key(
+                attraction
+            )
         ] = node
 
     return attraction_nodes
@@ -298,9 +301,7 @@ def load_park_nodes():
 
     park_nodes = {}
 
-    for _, row in (
-        nodes.iterrows()
-    ):
+    for _, row in nodes.iterrows():
         node = clean_name(
             row[
                 "node"
@@ -553,6 +554,18 @@ def find_shortest_path(
     )
 
 
+def find_attraction_node(
+    attraction
+):
+    return (
+        ATTRACTION_NODES.get(
+            normalize_key(
+                attraction
+            )
+        )
+    )
+
+
 def calculate_walking_route(
     current_attraction,
     target_attraction,
@@ -571,13 +584,13 @@ def calculate_walking_route(
     )
 
     start_node = (
-        ATTRACTION_NODES.get(
+        find_attraction_node(
             current_attraction
         )
     )
 
     end_node = (
-        ATTRACTION_NODES.get(
+        find_attraction_node(
             target_attraction
         )
     )
@@ -617,6 +630,12 @@ def calculate_walking_route(
 
                 "routing_method":
                     "Park path",
+
+                "start_node":
+                    start_node,
+
+                "end_node":
+                    end_node,
             }
 
     location_names = (
@@ -624,20 +643,26 @@ def calculate_walking_route(
             "attraction"
         ]
         .astype(str)
-        .map(clean_name)
+        .map(
+            normalize_key
+        )
     )
 
     current_location = (
         locations[
             location_names
-            == current_attraction
+            == normalize_key(
+                current_attraction
+            )
         ]
     )
 
     target_location = (
         locations[
             location_names
-            == target_attraction
+            == normalize_key(
+                target_attraction
+            )
         ]
     )
 
@@ -733,6 +758,12 @@ def calculate_walking_route(
 
         "routing_method":
             "Coordinate estimate",
+
+        "start_node":
+            None,
+
+        "end_node":
+            None,
     }
 
 
@@ -833,13 +864,17 @@ def rank_attractions(
             "attraction"
         ]
         .astype(str)
-        .map(clean_name)
+        .map(
+            normalize_key
+        )
     )
 
     current_location = (
         locations[
             location_names
-            == current_attraction
+            == normalize_key(
+                current_attraction
+            )
         ]
     )
 
@@ -848,9 +883,7 @@ def rank_attractions(
 
     results = []
 
-    for _, location in (
-        locations.iterrows()
-    ):
+    for _, location in locations.iterrows():
         attraction = clean_name(
             location[
                 "attraction"
@@ -858,8 +891,12 @@ def rank_attractions(
         )
 
         if (
-            attraction
-            == current_attraction
+            normalize_key(
+                attraction
+            )
+            == normalize_key(
+                current_attraction
+            )
         ):
             continue
 
@@ -868,13 +905,17 @@ def rank_attractions(
                 "attraction"
             ]
             .astype(str)
-            .map(clean_name)
+            .map(
+                normalize_key
+            )
         )
 
         wait_row = (
             latest_waits[
                 wait_names
-                == attraction
+                == normalize_key(
+                    attraction
+                )
             ]
         )
 
@@ -947,14 +988,10 @@ def rank_attractions(
         difference = None
         observations = 0
         confidence = "Low"
-
         wait_message = (
             "Not enough history"
         )
-
-        history_adjustment = (
-            0.0
-        )
+        history_adjustment = 0.0
 
         if (
             historical_waits
@@ -966,13 +1003,17 @@ def rank_attractions(
                     "attraction"
                 ]
                 .astype(str)
-                .map(clean_name)
+                .map(
+                    normalize_key
+                )
             )
 
             history_row = (
                 historical_waits[
                     history_names
-                    == attraction
+                    == normalize_key(
+                        attraction
+                    )
                 ]
             )
 
@@ -984,33 +1025,24 @@ def rank_attractions(
                 )
 
                 try:
-                    typical_wait = (
-                        float(
-                            history_row[
-                                "typical_wait"
-                            ]
-                        )
+                    typical_wait = float(
+                        history_row[
+                            "typical_wait"
+                        ]
                     )
 
-                    observations = (
-                        int(
-                            history_row[
-                                "observations"
-                            ]
-                        )
+                    observations = int(
+                        history_row[
+                            "observations"
+                        ]
                     )
 
                 except (
                     TypeError,
                     ValueError,
                 ):
-                    typical_wait = (
-                        None
-                    )
-
-                    observations = (
-                        0
-                    )
+                    typical_wait = None
+                    observations = 0
 
                 if (
                     typical_wait
@@ -1162,6 +1194,16 @@ def rank_attractions(
 
                 "routing_method":
                     routing_method,
+
+                "start_node":
+                    route.get(
+                        "start_node"
+                    ),
+
+                "end_node":
+                    route.get(
+                        "end_node"
+                    ),
             }
         )
 
@@ -1177,296 +1219,3 @@ def rank_attractions(
     )
 
     return results
-
-
-def build_itinerary(
-    current_attraction,
-    wanted_attractions,
-    locations,
-    latest_waits,
-    historical_waits=None,
-    priorities=None,
-    time_budget_minutes=120,
-):
-    if priorities is None:
-        priorities = {}
-
-    try:
-        time_budget_minutes = int(
-            time_budget_minutes
-        )
-
-    except (
-        TypeError,
-        ValueError,
-    ):
-        return []
-
-    if time_budget_minutes <= 0:
-        return []
-
-    if not current_attraction:
-        return []
-
-    if not wanted_attractions:
-        return []
-
-    remaining = [
-        clean_name(
-            attraction
-        )
-        for attraction
-        in wanted_attractions
-        if clean_name(
-            attraction
-        )
-        != clean_name(
-            current_attraction
-        )
-    ]
-
-    current_location = (
-        clean_name(
-            current_attraction
-        )
-    )
-
-    elapsed_minutes = 0
-
-    itinerary = []
-
-    step_number = 1
-
-    while remaining:
-        selected_names = (
-            set(
-                remaining
-                + [
-                    current_location
-                ]
-            )
-        )
-
-        location_mask = (
-            locations[
-                "attraction"
-            ]
-            .astype(str)
-            .map(clean_name)
-            .isin(
-                selected_names
-            )
-        )
-
-        selected_locations = (
-            locations[
-                location_mask
-            ]
-            .copy()
-        )
-
-        wait_mask = (
-            latest_waits[
-                "attraction"
-            ]
-            .astype(str)
-            .map(clean_name)
-            .isin(
-                remaining
-            )
-        )
-
-        selected_waits = (
-            latest_waits[
-                wait_mask
-            ]
-            .copy()
-        )
-
-        if (
-            historical_waits
-            is not None
-            and not historical_waits.empty
-        ):
-            history_mask = (
-                historical_waits[
-                    "attraction"
-                ]
-                .astype(str)
-                .map(clean_name)
-                .isin(
-                    remaining
-                )
-            )
-
-            selected_history = (
-                historical_waits[
-                    history_mask
-                ]
-                .copy()
-            )
-
-        else:
-            selected_history = (
-                pd.DataFrame()
-            )
-
-        rankings = (
-            rank_attractions(
-                current_location,
-                selected_locations,
-                selected_waits,
-                selected_history,
-                priorities,
-            )
-        )
-
-        if not rankings:
-            break
-
-        remaining_time = (
-            time_budget_minutes
-            - elapsed_minutes
-        )
-
-        chosen = None
-
-        for candidate in rankings:
-            candidate_time = int(
-                candidate[
-                    "total_minutes"
-                ]
-            )
-
-            if (
-                candidate_time
-                <= remaining_time
-            ):
-                chosen = candidate
-                break
-
-        if chosen is None:
-            break
-
-        segment_minutes = int(
-            chosen[
-                "total_minutes"
-            ]
-        )
-
-        arrival_elapsed = (
-            elapsed_minutes
-            + int(
-                chosen[
-                    "walking_minutes"
-                ]
-            )
-        )
-
-        elapsed_minutes += (
-            segment_minutes
-        )
-
-        itinerary.append(
-            {
-                "step":
-                    step_number,
-
-                "from_attraction":
-                    current_location,
-
-                "attraction":
-                    chosen[
-                        "attraction"
-                    ],
-
-                "priority":
-                    chosen[
-                        "priority"
-                    ],
-
-                "walking_minutes":
-                    chosen[
-                        "walking_minutes"
-                    ],
-
-                "wait_minutes":
-                    chosen[
-                        "wait_minutes"
-                    ],
-
-                "segment_minutes":
-                    segment_minutes,
-
-                "arrival_elapsed_minutes":
-                    arrival_elapsed,
-
-                "cumulative_minutes":
-                    elapsed_minutes,
-
-                "time_remaining_minutes":
-                    max(
-                        0,
-                        time_budget_minutes
-                        - elapsed_minutes,
-                    ),
-
-                "typical_wait":
-                    chosen[
-                        "typical_wait"
-                    ],
-
-                "difference":
-                    chosen[
-                        "difference"
-                    ],
-
-                "confidence":
-                    chosen[
-                        "confidence"
-                    ],
-
-                "wait_message":
-                    chosen[
-                        "wait_message"
-                    ],
-
-                "distance_miles":
-                    chosen[
-                        "distance_miles"
-                    ],
-
-                "path_nodes":
-                    chosen[
-                        "path_nodes"
-                    ],
-
-                "routing_method":
-                    chosen[
-                        "routing_method"
-                    ],
-
-                "recommendation_score":
-                    chosen[
-                        "recommendation_score"
-                    ],
-            }
-        )
-
-        current_location = (
-            chosen[
-                "attraction"
-            ]
-        )
-
-        remaining = [
-            attraction
-            for attraction
-            in remaining
-            if attraction
-            != current_location
-        ]
-
-        step_number += 1
-
-    return itinerary
