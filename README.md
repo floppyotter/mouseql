@@ -1,56 +1,72 @@
-# MOUSEQL 🐭🏰
+# MOUSEQL
 
-### Walt Disney World Wait-Time Intelligence Using SQL
+A SQL project using Walt Disney World attraction wait-time data.
 
-MOUSEQL is a SQL data analysis project exploring historical attraction wait times at Walt Disney World.
+I built this project to collect Magic Kingdom wait times over time and use SQL to look for patterns in the data. The database is updated automatically throughout the day, so the analysis gets more useful as more data is collected.
 
-The goal is simple:
+## What it does
 
-**Can historical wait-time data tell us when we should actually ride?**
+MOUSEQL collects current attraction wait times and stores them in a SQLite database.
 
-Rather than relying on general touring advice, MOUSEQL uses attraction data to identify patterns in wait times, downtime, and park operations and turn them into practical park strategies.
+The SQL queries look at things like:
 
-## 🎢 Phase 1: Magic Kingdom
+- average wait times
+- highest and lowest wait attractions
+- wait times by hour
+- wait times by day of the week
+- best observed time for each attraction
+- best observed time for an attraction on a specific day
+- large drops in posted wait times
+- attractions with the most wait-time changes
 
-The first phase focuses on Magic Kingdom and will explore questions such as:
+There is also an automatically generated Magic Kingdom report that summarizes the current dataset.
 
-- What time of day has the lowest average wait for each attraction?
-- Which attractions provide the biggest advantage at rope drop?
-- How quickly do attraction wait times increase after park opening?
-- Which attractions have the most volatile wait times?
-- What happens to nearby wait times when a major attraction goes down?
-- Which days of the week historically have lower waits?
-- Can historical data be used to build a more efficient touring strategy?
+## How it works
 
-## 🛠️ SQL Skills Demonstrated
+The project uses:
 
-This project will use:
+- Python for collecting and processing wait-time data
+- SQLite for storing the data
+- SQL for the analysis
+- GitHub Actions for automatic data collection and running the analysis
 
-- Joins
-- Aggregate functions
-- CTEs
-- Window functions
-- CASE expressions
-- Date and time analysis
-- Data cleaning and validation
-- Ranking and statistical analysis
-- Relational database design
+Wait-time data is collected on a schedule and added to the database. The analysis queries can then be run against everything collected so far.
 
-## 📊 Project Status
+## SQL analysis
 
-🚧 **Currently in development**
+The `queries` folder contains the SQL used for the project.
 
-Phase 1: Magic Kingdom database design and wait-time analysis.
+Current queries include:
 
-## 📁 Project Structure
+1. Data checks
+2. Wait-time summary
+3. Wait times by hour
+4. Best time by attraction
+5. Attraction comparison
+6. Wait-time drops
+7. Wait-time volatility
+8. Wait times by day of week
+9. Wait times by day and hour
+10. Best attraction time by day
 
-`/data` — source and cleaned datasets  
-`/schema` — database tables and relationships  
-`/queries` — SQL analysis  
-`/docs` — methodology and project documentation  
+Some of the analysis uses CTEs and window functions to rank wait times and compare observations.
 
-## 🎯 Project Goal
+## Reports
 
-MOUSEQL is being built as a hands-on SQL portfolio project focused on turning raw operational data into useful insights and recommendations.
+The generated report is located here:
 
-All analysis is independently created for educational and portfolio purposes. MOUSEQL is not affiliated with or endorsed by The Walt Disney Company.
+`reports/magic_kingdom_report.md`
+
+It includes basic dataset information, the current best overall time based on the data collected, attraction averages, and other wait-time analysis.
+
+## Data
+
+This is an ongoing dataset.
+
+Early results are based on a small number of observations and shouldn't be treated as established park trends yet. As the collector continues running, the historical comparisons should become more useful.
+
+## Why I built it
+
+I work with SQL regularly and wanted a project where I could use it on something I was actually interested in.
+
+Disney wait times gave me a dataset that changes constantly and plenty of questions to answer with SQL, so I started collecting the data instead of working from a static sample dataset.
