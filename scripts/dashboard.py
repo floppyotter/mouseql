@@ -8,8 +8,11 @@ import streamlit as st
 
 from route_planner import (
     rank_attractions,
-    build_itinerary,
     get_route_coordinates,
+)
+
+from itinerary_planner import (
+    build_itinerary,
 )
 
 
@@ -1179,7 +1182,7 @@ def render_park_map(
 
     st.pydeck_chart(
         deck,
-        use_container_width=True,
+        width="stretch",
     )
 
     if recommendations:
@@ -1310,6 +1313,7 @@ itinerary = []
 wanted_attractions = []
 current_attraction = None
 priorities = {}
+time_budget_minutes = 120
 
 
 if location_choices:
@@ -1947,7 +1951,7 @@ if recommendations:
             recommendations_df[
                 available_columns
             ],
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -2334,7 +2338,7 @@ attraction_summary = (
 
 st.dataframe(
     attraction_summary,
-    use_container_width=True,
+    width="stretch",
     hide_index=True,
 )
 
@@ -2448,6 +2452,6 @@ latest[
 
 st.dataframe(
     latest,
-    use_container_width=True,
+    width="stretch",
     hide_index=True,
 )
