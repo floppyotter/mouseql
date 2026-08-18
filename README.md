@@ -53,11 +53,11 @@ Some of the analysis uses CTEs and window functions to rank wait times and compa
 
 ## Reports
 
-The generated report is located here:
+The latest generated Magic Kingdom report is available here:
 
-`reports/magic_kingdom_report.md`
+[View the Magic Kingdom Wait Time Report](reports/magic_kingdom_report.md)
 
-It includes basic dataset information, the current best overall time based on the data collected, attraction averages, and other wait-time analysis.
+The report is regenerated from the latest data and includes current wait-time analysis and dataset statistics.
 
 ## Data
 
