@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **875**
+- Observations: **910**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 18, 2026 at 1:43 PM ET**
+- Latest observation: **August 18, 2026 at 2:56 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **12**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 55.3 min | 15 |
-| Seven Dwarfs Mine Train | 42.8 min | 16 |
-| Tiana's Bayou Adventure | 37.5 min | 12 |
-| Peter Pan's Flight | 35.3 min | 16 |
-| Buzz Lightyear’s Space Ranger Spin | 30.0 min | 16 |
-| Big Thunder Mountain Railroad | 28.7 min | 15 |
-| Jungle Cruise | 28.0 min | 15 |
-| Space Mountain | 25.6 min | 16 |
-| The Many Adventures of Winnie the Pooh | 24.3 min | 14 |
-| Haunted Mansion | 17.3 min | 15 |
+| TRON Lightcycle / Run | 54.1 min | 16 |
+| Seven Dwarfs Mine Train | 42.9 min | 17 |
+| Tiana's Bayou Adventure | 36.9 min | 13 |
+| Peter Pan's Flight | 35.9 min | 17 |
+| Buzz Lightyear’s Space Ranger Spin | 30.6 min | 17 |
+| Big Thunder Mountain Railroad | 28.4 min | 16 |
+| Jungle Cruise | 27.8 min | 16 |
+| Space Mountain | 25.3 min | 17 |
+| The Many Adventures of Winnie the Pooh | 24.7 min | 15 |
+| Haunted Mansion | 17.1 min | 16 |
 
 
 ## Best Time for Each Attraction
@@ -42,7 +42,7 @@ Because the dataset is still growing, results based on only a few observations s
 
 | Attraction | Best Time | Average Wait | Observations |
 |---|---:|---:|---:|
-| "it's a small world" | 6 PM | 5.0 min | 1 |
+| "it's a small world" | 2 PM | 0.0 min | 1 |
 | Astro Orbiter | 7 AM | 5.0 min | 1 |
 | Big Thunder Mountain Railroad | 10 PM | 13.3 min | 3 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 1 |
@@ -60,7 +60,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Seven Dwarfs Mine Train | 10 PM | 20.0 min | 3 |
 | Space Mountain | 10 PM | 6.7 min | 3 |
 | Swiss Family Treehouse | 5 PM | 5.0 min | 2 |
-| TRON Lightcycle / Run | 9 AM | 40.0 min | 2 |
+| TRON Lightcycle / Run | 2 PM | 35.0 min | 1 |
 | The Barnstormer | 10 PM | 5.0 min | 1 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 3 |
 | The Many Adventures of Winnie the Pooh | 10 PM | 8.3 min | 3 |
