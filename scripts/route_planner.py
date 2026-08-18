@@ -19,20 +19,28 @@ PRIORITY_ADJUSTMENTS = {
 }
 
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = (
+    Path(__file__).resolve().parent.parent / "data"
+)
 
 PATHS_FILE = DATA_DIR / "park_paths.csv"
 NODES_FILE = DATA_DIR / "attraction_nodes.csv"
 PARK_NODES_FILE = DATA_DIR / "park_nodes.csv"
 
 
-def calculate_distance(lat1, lon1, lat2, lon2):
-    """
-    Calculate straight-line distance between two points.
+def clean_name(value):
+    if value is None:
+        return ""
 
-    Returns distance in miles.
-    """
+    return str(value).strip().strip('"').strip("'")
 
+
+def calculate_distance(
+    lat1,
+    lon1,
+    lat2,
+    lon2,
+):
     earth_radius_miles = 3958.8
 
     lat1 = radians(float(lat1))
@@ -59,10 +67,6 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
 
 def estimate_walking_time(distance_miles):
-    """
-    Convert walking distance into estimated minutes.
-    """
-
     walking_distance = (
         distance_miles
         * WALKING_DISTANCE_MULTIPLIER
@@ -77,18 +81,13 @@ def estimate_walking_time(distance_miles):
 
 
 def load_park_paths():
-    """
-    Load the modeled Magic Kingdom walkway network.
-
-    Returns a dictionary where each node contains
-    connected nodes and their distances.
-    """
-
     if not PATHS_FILE.exists():
         return {}
 
     try:
-        paths = pd.read_csv(PATHS_FILE)
+        paths = pd.read_csv(
+            PATHS_FILE
+        )
     except Exception:
         return {}
 
@@ -107,19 +106,22 @@ def load_park_paths():
 
     for _, row in paths.iterrows():
 
-        from_node = str(
+        from_node = clean_name(
             row["from_node"]
-        ).strip()
+        )
 
-        to_node = str(
+        to_node = clean_name(
             row["to_node"]
-        ).strip()
+        )
 
         try:
             distance = float(
                 row["distance_miles"]
             )
-        except (TypeError, ValueError):
+        except (
+            TypeError,
+            ValueError,
+        ):
             continue
 
         if (
@@ -154,10 +156,6 @@ def load_park_paths():
 
 
 def load_attraction_nodes():
-    """
-    Load attraction -> park node relationships.
-    """
-
     if not NODES_FILE.exists():
         return {}
 
@@ -182,13 +180,13 @@ def load_attraction_nodes():
 
     for _, row in nodes.iterrows():
 
-        attraction = str(
+        attraction = clean_name(
             row["attraction"]
-        ).strip()
+        )
 
-        node = str(
+        node = clean_name(
             row["node"]
-        ).strip()
+        )
 
         if not attraction or not node:
             continue
@@ -201,10 +199,6 @@ def load_attraction_nodes():
 
 
 def load_park_nodes():
-    """
-    Load coordinates for park routing nodes.
-    """
-
     if not PARK_NODES_FILE.exists():
         return {}
 
@@ -230,9 +224,9 @@ def load_park_nodes():
 
     for _, row in nodes.iterrows():
 
-        node = str(
+        node = clean_name(
             row["node"]
-        ).strip()
+        )
 
         try:
             latitude = float(
@@ -242,7 +236,10 @@ def load_park_nodes():
             longitude = float(
                 row["longitude"]
             )
-        except (TypeError, ValueError):
+        except (
+            TypeError,
+            ValueError,
+        ):
             continue
 
         if not (
@@ -264,17 +261,14 @@ ATTRACTION_NODES = load_attraction_nodes()
 PARK_NODES = load_park_nodes()
 
 
-def get_route_coordinates(path_nodes):
-    """
-    Convert routing node names into map coordinates.
-
-    Returns coordinates in [longitude, latitude] format
-    for use by PyDeck PathLayer.
-    """
-
+def get_route_coordinates(
+    path_nodes
+):
     coordinates = []
 
     for node in path_nodes:
+
+        node = clean_name(node)
 
         location = PARK_NODES.get(
             node
@@ -297,22 +291,16 @@ def find_shortest_path(
     start_node,
     end_node,
 ):
-    """
-    Find the shortest walking path between two
-    nodes using Dijkstra's algorithm.
-
-    Returns:
-
-        distance_miles
-        path_nodes
-
-    or:
-
-        None
-    """
-
     if not PARK_GRAPH:
         return None
+
+    start_node = clean_name(
+        start_node
+    )
+
+    end_node = clean_name(
+        end_node
+    )
 
     if start_node not in PARK_GRAPH:
         return None
@@ -321,7 +309,10 @@ def find_shortest_path(
         return None
 
     if start_node == end_node:
-        return 0.0, [start_node]
+        return (
+            0.0,
+            [start_node],
+        )
 
     distances = {
         start_node: 0.0
@@ -347,16 +338,19 @@ def find_shortest_path(
         if current_node in visited:
             continue
 
-        visited.add(current_node)
+        visited.add(
+            current_node
+        )
 
         if current_node == end_node:
             break
 
-        for neighbor, edge_distance in (
-            PARK_GRAPH.get(
-                current_node,
-                [],
-            )
+        for (
+            neighbor,
+            edge_distance,
+        ) in PARK_GRAPH.get(
+            current_node,
+            [],
         ):
 
             new_distance = (
@@ -370,13 +364,13 @@ def find_shortest_path(
                 < distances[neighbor]
             ):
 
-                distances[neighbor] = (
-                    new_distance
-                )
+                distances[
+                    neighbor
+                ] = new_distance
 
-                previous[neighbor] = (
-                    current_node
-                )
+                previous[
+                    neighbor
+                ] = current_node
 
                 heapq.heappush(
                     queue,
@@ -395,14 +389,20 @@ def find_shortest_path(
 
     while current != start_node:
 
-        path.append(current)
+        path.append(
+            current
+        )
 
         if current not in previous:
             return None
 
-        current = previous[current]
+        current = previous[
+            current
+        ]
 
-    path.append(start_node)
+    path.append(
+        start_node
+    )
 
     path.reverse()
 
@@ -417,21 +417,24 @@ def calculate_walking_route(
     target_attraction,
     locations,
 ):
-    """
-    Calculate a walking route between two attractions.
-
-    First attempts to use the modeled park network.
-
-    Falls back to coordinate-based distance if either
-    attraction is not connected to the network.
-    """
-
-    start_node = ATTRACTION_NODES.get(
+    current_attraction = clean_name(
         current_attraction
     )
 
-    end_node = ATTRACTION_NODES.get(
+    target_attraction = clean_name(
         target_attraction
+    )
+
+    start_node = (
+        ATTRACTION_NODES.get(
+            current_attraction
+        )
+    )
+
+    end_node = (
+        ATTRACTION_NODES.get(
+            target_attraction
+        )
     )
 
     if (
@@ -446,7 +449,9 @@ def calculate_walking_route(
 
         if route is not None:
 
-            distance_miles, path_nodes = route
+            distance_miles, path_nodes = (
+                route
+            )
 
             walking_minutes = (
                 estimate_walking_time(
@@ -486,7 +491,6 @@ def calculate_walking_route(
     )
 
     try:
-
         current_lat = float(
             current_location["latitude"]
         )
@@ -503,7 +507,10 @@ def calculate_walking_route(
             target_location["longitude"]
         )
 
-    except (TypeError, ValueError):
+    except (
+        TypeError,
+        ValueError,
+    ):
         return None
 
     if not (
@@ -590,15 +597,6 @@ def rank_attractions(
     historical_waits=None,
     priorities=None,
 ):
-    """
-    Rank attractions using:
-
-    - park-network walking distance
-    - current wait
-    - historical wait performance
-    - user priority
-    """
-
     if priorities is None:
         priorities = {}
 
@@ -607,6 +605,10 @@ def rank_attractions(
 
     if locations.empty:
         return []
+
+    current_attraction = clean_name(
+        current_attraction
+    )
 
     current_location = locations[
         locations["attraction"]
@@ -618,11 +620,13 @@ def rank_attractions(
 
     results = []
 
-    for _, location in locations.iterrows():
+    for _, location in (
+        locations.iterrows()
+    ):
 
-        attraction = location[
-            "attraction"
-        ]
+        attraction = clean_name(
+            location["attraction"]
+        )
 
         if attraction == current_attraction:
             continue
@@ -645,8 +649,10 @@ def rank_attractions(
             wait_minutes = float(
                 wait_minutes
             )
-
-        except (TypeError, ValueError):
+        except (
+            TypeError,
+            ValueError,
+        ):
             continue
 
         if not isfinite(
@@ -689,6 +695,7 @@ def rank_attractions(
         wait_message = (
             "Not enough history"
         )
+
         history_adjustment = 0.0
 
         if (
@@ -712,7 +719,6 @@ def rank_attractions(
                 )
 
                 try:
-
                     typical_wait = float(
                         history_row[
                             "typical_wait"
@@ -729,7 +735,6 @@ def rank_attractions(
                     TypeError,
                     ValueError,
                 ):
-
                     typical_wait = None
                     observations = 0
 
@@ -802,22 +807,17 @@ def rank_attractions(
         results.append(
             {
                 "attraction": attraction,
-
                 "priority": priority,
-
                 "distance_miles": round(
                     distance,
                     2,
                 ),
-
                 "walking_minutes": round(
                     walking_minutes
                 ),
-
                 "wait_minutes": round(
                     wait_minutes
                 ),
-
                 "typical_wait": (
                     round(
                         typical_wait,
@@ -827,7 +827,6 @@ def rank_attractions(
                     is not None
                     else None
                 ),
-
                 "difference": (
                     round(
                         difference,
@@ -837,36 +836,25 @@ def rank_attractions(
                     is not None
                     else None
                 ),
-
                 "observations": observations,
-
                 "confidence": confidence,
-
                 "wait_message": wait_message,
-
                 "total_minutes": round(
                     base_total
                 ),
-
                 "history_adjustment": round(
                     history_adjustment,
                     1,
                 ),
-
                 "priority_adjustment": (
                     priority_adjustment
                 ),
-
                 "recommendation_score": round(
                     recommendation_score,
                     1,
                 ),
-
                 "path_nodes": path_nodes,
-
-                "routing_method": (
-                    routing_method
-                ),
+                "routing_method": routing_method,
             }
         )
 
