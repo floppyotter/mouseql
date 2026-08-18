@@ -10,7 +10,10 @@ conn = sqlite3.connect(DB_PATH)
 conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
+# --------------------------------------------------
 # Dataset stats
+# --------------------------------------------------
+
 cur.execute("""
     SELECT
         COUNT(*) AS observations,
@@ -21,11 +24,16 @@ cur.execute("""
 """)
 stats = cur.fetchone()
 
+
+# --------------------------------------------------
 # Highest average waits
+# --------------------------------------------------
+
 cur.execute("""
     SELECT
         attraction,
-        ROUND(AVG(wait_minutes), 1) AS avg_wait
+        ROUND(AVG(wait_minutes), 1) AS avg_wait,
+        COUNT(*) AS observations
     FROM wait_times
     WHERE wait_minutes IS NOT NULL
     GROUP BY attraction
@@ -34,21 +42,103 @@ cur.execute("""
 """)
 highest_waits = cur.fetchall()
 
-# Best overall hour in Disney/Eastern time
+
+# --------------------------------------------------
+# Pull wait-time observations for hourly analysis
+# Python handles Eastern Time correctly, including DST
+# --------------------------------------------------
+
 cur.execute("""
     SELECT
-        CAST(strftime('%H', datetime(recorded_at, '-4 hours')) AS INTEGER)
-            AS hour_of_day,
-        ROUND(AVG(wait_minutes), 1) AS avg_wait,
-        COUNT(*) AS observations
+        attraction,
+        recorded_at,
+        wait_minutes
     FROM wait_times
     WHERE wait_minutes IS NOT NULL
-    GROUP BY hour_of_day
-    ORDER BY avg_wait
-    LIMIT 1
 """)
-best_hour = cur.fetchone()
 
+wait_rows = cur.fetchall()
+
+eastern = ZoneInfo("America/New_York")
+
+hourly_data = {}
+
+for row in wait_rows:
+    utc_time = datetime.fromisoformat(
+        row["recorded_at"].replace("Z", "+00:00")
+    )
+    eastern_time = utc_time.astimezone(eastern)
+
+    hour = eastern_time.hour
+    attraction = row["attraction"]
+    wait = row["wait_minutes"]
+
+    # Overall hourly data
+    hourly_data.setdefault(hour, []).append(wait)
+
+
+# --------------------------------------------------
+# Best overall hour
+# --------------------------------------------------
+
+best_hour = None
+
+if hourly_data:
+    hour_results = []
+
+    for hour, waits in hourly_data.items():
+        hour_results.append({
+            "hour": hour,
+            "avg_wait": round(sum(waits) / len(waits), 1),
+            "observations": len(waits),
+        })
+
+    best_hour = min(hour_results, key=lambda x: x["avg_wait"])
+
+
+# --------------------------------------------------
+# Best hour for each attraction
+# --------------------------------------------------
+
+attraction_hourly = {}
+
+for row in wait_rows:
+    utc_time = datetime.fromisoformat(
+        row["recorded_at"].replace("Z", "+00:00")
+    )
+    eastern_time = utc_time.astimezone(eastern)
+
+    attraction = row["attraction"]
+    hour = eastern_time.hour
+    wait = row["wait_minutes"]
+
+    key = (attraction, hour)
+
+    attraction_hourly.setdefault(key, []).append(wait)
+
+
+best_times = {}
+
+for (attraction, hour), waits in attraction_hourly.items():
+
+    avg_wait = round(sum(waits) / len(waits), 1)
+
+    candidate = {
+        "hour": hour,
+        "avg_wait": avg_wait,
+        "observations": len(waits),
+    }
+
+    if (
+        attraction not in best_times
+        or avg_wait < best_times[attraction]["avg_wait"]
+    ):
+        best_times[attraction] = candidate
+
+
+# --------------------------------------------------
+# Formatting helpers
+# --------------------------------------------------
 
 def format_hour(hour):
     hour = int(hour)
@@ -67,15 +157,24 @@ def format_timestamp(timestamp):
     if not timestamp:
         return "N/A"
 
-    utc_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
-    eastern_time = utc_time.astimezone(ZoneInfo("America/New_York"))
+    utc_time = datetime.fromisoformat(
+        timestamp.replace("Z", "+00:00")
+    )
 
-    return eastern_time.strftime("%B %d, %Y at %I:%M %p ET").replace(" 0", " ")
+    eastern_time = utc_time.astimezone(eastern)
 
+    return eastern_time.strftime(
+        "%B %d, %Y at %I:%M %p ET"
+    ).replace(" 0", " ")
+
+
+# --------------------------------------------------
+# Build report
+# --------------------------------------------------
 
 report = f"""# Magic Kingdom Wait Time Report
 
-Generated from the MOUSEQL wait-time dataset.
+Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
@@ -85,27 +184,84 @@ Generated from the MOUSEQL wait-time dataset.
 - Latest observation: **{format_timestamp(stats['last_recorded'])}**
 
 ## Best Overall Time
+"""
 
+if best_hour:
+
+    report += f"""
 Based on the data collected so far, the lowest average wait occurred around:
 
-**{format_hour(best_hour['hour_of_day'])} — {best_hour['avg_wait']} minute average**
+**{format_hour(best_hour['hour'])} — {best_hour['avg_wait']} minute average**
 
 Observations during this hour: **{best_hour['observations']}**
+"""
+
+else:
+
+    report += """
+Not enough data has been collected yet.
+"""
+
+
+# --------------------------------------------------
+# Highest waits section
+# --------------------------------------------------
+
+report += """
 
 ## Highest Average Waits
 
-| Attraction | Average Wait |
-|---|---:|
+| Attraction | Average Wait | Observations |
+|---|---:|---:|
 """
 
 for row in highest_waits:
-    report += f"| {row['attraction']} | {row['avg_wait']} min |\n"
+    report += (
+        f"| {row['attraction']} "
+        f"| {row['avg_wait']} min "
+        f"| {row['observations']} |\n"
+    )
+
+
+# --------------------------------------------------
+# Best time by attraction
+# --------------------------------------------------
 
 report += """
+
+## Best Time for Each Attraction
+
+These are the lowest average wait times observed for each attraction so far.
+
+Because the dataset is still growing, results based on only a few observations should be treated as preliminary.
+
+| Attraction | Best Time | Average Wait | Observations |
+|---|---:|---:|---:|
+"""
+
+for attraction in sorted(best_times):
+
+    result = best_times[attraction]
+
+    report += (
+        f"| {attraction} "
+        f"| {format_hour(result['hour'])} "
+        f"| {result['avg_wait']} min "
+        f"| {result['observations']} |\n"
+    )
+
+
+# --------------------------------------------------
+# Footer
+# --------------------------------------------------
+
+report += """
+
 ---
 
 *This report is generated automatically from data collected by MOUSEQL.*
 """
+
 
 REPORT_PATH.write_text(report, encoding="utf-8")
 
