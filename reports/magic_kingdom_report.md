@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **665**
+- Observations: **700**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 18, 2026 at 7:41 AM ET**
+- Latest observation: **August 18, 2026 at 9:07 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **12**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 61.7 min | 9 |
-| Seven Dwarfs Mine Train | 45.0 min | 10 |
-| Tiana's Bayou Adventure | 44.2 min | 6 |
-| Peter Pan's Flight | 32.5 min | 10 |
-| Big Thunder Mountain Railroad | 32.2 min | 9 |
-| Buzz Lightyear’s Space Ranger Spin | 29.5 min | 10 |
-| Jungle Cruise | 27.2 min | 9 |
-| Space Mountain | 26.0 min | 10 |
+| TRON Lightcycle / Run | 60.0 min | 10 |
+| Seven Dwarfs Mine Train | 43.2 min | 11 |
+| Tiana's Bayou Adventure | 41.4 min | 7 |
+| Peter Pan's Flight | 32.7 min | 11 |
+| Big Thunder Mountain Railroad | 29.5 min | 10 |
+| Buzz Lightyear’s Space Ranger Spin | 28.2 min | 11 |
+| Jungle Cruise | 27.0 min | 10 |
+| Space Mountain | 24.5 min | 11 |
 | The Many Adventures of Winnie the Pooh | 22.2 min | 9 |
-| The Barnstormer | 17.5 min | 8 |
+| Enchanted Tales with Belle | 16.7 min | 3 |
 
 
 ## Best Time for Each Attraction
@@ -44,7 +44,7 @@ Because the dataset is still growing, results based on only a few observations s
 |---|---:|---:|---:|
 | "it's a small world" | 6 PM | 5.0 min | 1 |
 | Astro Orbiter | 7 AM | 5.0 min | 1 |
-| Big Thunder Mountain Railroad | 10 PM | 13.3 min | 3 |
+| Big Thunder Mountain Railroad | 9 AM | 5.0 min | 1 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 1 |
 | Country Bear Musical Jamboree | 5 PM | 10.0 min | 2 |
 | Dumbo the Flying Elephant | 5 PM | 5.0 min | 2 |
@@ -52,7 +52,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Haunted Mansion | 6 PM | 10.0 min | 1 |
 | Jungle Cruise | 10 PM | 10.0 min | 3 |
 | Mad Tea Party | 5 PM | 5.0 min | 2 |
-| Mickey's PhilharMagic | 5 PM | 15.0 min | 2 |
+| Mickey's PhilharMagic | 9 AM | 10.0 min | 1 |
 | Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 2 |
 | Peter Pan's Flight | 10 PM | 15.0 min | 3 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 3 |
