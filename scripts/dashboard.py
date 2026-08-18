@@ -17,6 +17,7 @@ from itinerary_planner import (
 
 
 DB_PATH = Path("data/mouseql.db")
+WAITS_CSV_PATH = Path("data/magic_kingdom_waits.csv")
 LOCATIONS_PATH = Path("data/attraction_locations.csv")
 
 
@@ -688,38 +689,192 @@ render_html(
 )
 
 
-@st.cache_data(ttl=300)
-def load_data():
-    conn = sqlite3.connect(
-        DB_PATH
+def normalize_wait_data(data):
+    if data is None:
+        return pd.DataFrame()
+
+    if data.empty:
+        return pd.DataFrame()
+
+    required_columns = [
+        "recorded_at",
+        "attraction",
+        "wait_minutes",
+        "status",
+    ]
+
+    for column in required_columns:
+        if column not in data.columns:
+            data[column] = None
+
+    data = data[
+        required_columns
+    ].copy()
+
+    data[
+        "recorded_at"
+    ] = pd.to_datetime(
+        data[
+            "recorded_at"
+        ],
+        utc=True,
+        errors="coerce",
     )
 
-    waits = pd.read_sql_query(
-        """
-        SELECT
-            recorded_at,
-            attraction,
-            wait_minutes,
-            status
-        FROM wait_times
-        ORDER BY recorded_at
-        """,
-        conn,
+    data[
+        "wait_minutes"
+    ] = pd.to_numeric(
+        data[
+            "wait_minutes"
+        ],
+        errors="coerce",
     )
 
-    conn.close()
+    data[
+        "attraction"
+    ] = (
+        data[
+            "attraction"
+        ]
+        .astype(str)
+        .str.strip()
+    )
 
-    waits[
+    data[
+        "status"
+    ] = (
+        data[
+            "status"
+        ]
+        .fillna(
+            "UNKNOWN"
+        )
+        .astype(str)
+        .str.strip()
+    )
+
+    data = (
+        data.dropna(
+            subset=[
+                "recorded_at",
+                "attraction",
+            ]
+        )
+        .copy()
+    )
+
+    data[
         "recorded_at"
     ] = (
-        pd.to_datetime(
-            waits[
-                "recorded_at"
-            ],
-            utc=True,
-        )
+        data[
+            "recorded_at"
+        ]
         .dt.tz_convert(
             "America/New_York"
+        )
+    )
+
+    return data
+
+
+@st.cache_data(ttl=300)
+def load_data():
+    frames = []
+
+    if DB_PATH.exists():
+        try:
+            conn = sqlite3.connect(
+                DB_PATH
+            )
+
+            db_waits = (
+                pd.read_sql_query(
+                    """
+                    SELECT
+                        recorded_at,
+                        attraction,
+                        wait_minutes,
+                        status
+                    FROM wait_times
+                    ORDER BY recorded_at
+                    """,
+                    conn,
+                )
+            )
+
+            conn.close()
+
+            db_waits = (
+                normalize_wait_data(
+                    db_waits
+                )
+            )
+
+            if not db_waits.empty:
+                frames.append(
+                    db_waits
+                )
+
+        except Exception:
+            pass
+
+    if WAITS_CSV_PATH.exists():
+        try:
+            csv_waits = (
+                pd.read_csv(
+                    WAITS_CSV_PATH
+                )
+            )
+
+            csv_waits = (
+                normalize_wait_data(
+                    csv_waits
+                )
+            )
+
+            if not csv_waits.empty:
+                frames.append(
+                    csv_waits
+                )
+
+        except Exception:
+            pass
+
+    if not frames:
+        return pd.DataFrame(
+            columns=[
+                "recorded_at",
+                "attraction",
+                "wait_minutes",
+                "status",
+            ]
+        )
+
+    waits = (
+        pd.concat(
+            frames,
+            ignore_index=True,
+        )
+    )
+
+    waits = (
+        waits.drop_duplicates(
+            subset=[
+                "recorded_at",
+                "attraction",
+                "wait_minutes",
+                "status",
+            ],
+            keep="last",
+        )
+    )
+
+    waits = (
+        waits.sort_values(
+            "recorded_at"
+        )
+        .reset_index(
+            drop=True
         )
     )
 
@@ -1212,25 +1367,51 @@ if df.empty:
     st.stop()
 
 
-latest_waits = (
-    df
-    .sort_values(
-        "recorded_at"
-    )
-    .groupby(
-        "attraction",
-        as_index=False,
-    )
-    .tail(1)
-    .copy()
-)
-
-
 latest_timestamp = (
     df[
         "recorded_at"
     ].max()
 )
+
+
+latest_snapshot = (
+    df[
+        df[
+            "recorded_at"
+        ]
+        == latest_timestamp
+    ]
+    .copy()
+)
+
+
+if latest_snapshot.empty:
+    latest_waits = (
+        df
+        .sort_values(
+            "recorded_at"
+        )
+        .groupby(
+            "attraction",
+            as_index=False,
+        )
+        .tail(1)
+        .copy()
+    )
+
+else:
+    latest_waits = (
+        latest_snapshot
+        .sort_values(
+            "recorded_at"
+        )
+        .groupby(
+            "attraction",
+            as_index=False,
+        )
+        .tail(1)
+        .copy()
+    )
 
 
 current_hour = (
