@@ -6,9 +6,6 @@ on:
 env:
   TZ: America/New_York
 
-permissions:
-  contents: write
-
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -37,6 +34,9 @@ jobs:
 
       - name: Run volatility analysis
         run: sqlite3 -header -column data/mouseql.db < queries/07_wait_time_volatility.sql
+
+      - name: Run day of week analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/08_waits_by_day.sql
 
       - name: Generate Magic Kingdom report
         run: python scripts/generate_report.py
