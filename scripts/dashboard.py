@@ -137,14 +137,7 @@ render_html(
 
     .mouseql-title {
         color: #f7f3eb;
-
-        font-size:
-            clamp(
-                3rem,
-                7vw,
-                5rem
-            );
-
+        font-size: clamp(3rem, 7vw, 5rem);
         line-height: 0.96;
         font-weight: 790;
         letter-spacing: -0.06em;
@@ -186,14 +179,7 @@ render_html(
 
     .mouseql-section-title {
         color: #f3efe7;
-
-        font-size:
-            clamp(
-                1.7rem,
-                4vw,
-                2.3rem
-            );
-
+        font-size: clamp(1.7rem, 4vw, 2.3rem);
         letter-spacing: -0.04em;
         font-weight: 710;
         line-height: 1.12;
@@ -241,14 +227,7 @@ render_html(
 
     .mouseql-best-name {
         color: #f6f2ea;
-
-        font-size:
-            clamp(
-                1.8rem,
-                4.6vw,
-                2.6rem
-            );
-
+        font-size: clamp(1.8rem, 4.6vw, 2.6rem);
         font-weight: 740;
         line-height: 1.1;
         letter-spacing: -0.04em;
@@ -1012,38 +991,28 @@ def get_map_view_state(
         + max_lat
     ) / 2
 
-    lon_span = (
-        max_lon
-        - min_lon
-    )
-
-    lat_span = (
-        max_lat
-        - min_lat
-    )
-
     span = max(
-        lon_span,
-        lat_span,
+        max_lon - min_lon,
+        max_lat - min_lat,
     )
 
     if span < 0.0015:
-        zoom = 17.1
+        zoom = 17.0
 
     elif span < 0.003:
-        zoom = 16.5
+        zoom = 16.4
 
     elif span < 0.005:
-        zoom = 16.0
+        zoom = 15.9
 
     elif span < 0.008:
-        zoom = 15.4
+        zoom = 15.3
 
     elif span < 0.012:
-        zoom = 14.9
+        zoom = 14.8
 
     else:
-        zoom = 14.4
+        zoom = 14.3
 
     return pdk.ViewState(
         latitude=center_lat,
@@ -1113,7 +1082,7 @@ def render_park_map(
             91,
             96,
             118,
-            60,
+            55,
         ]
         for _ in range(
             len(map_data)
@@ -1121,6 +1090,7 @@ def render_park_map(
     ]
 
     map_data["plan_stop"] = ""
+    map_data["map_label"] = ""
 
     active_attractions = set()
 
@@ -1144,6 +1114,11 @@ def render_park_map(
             current_mask,
             "marker_size",
         ] = 165
+
+        map_data.loc[
+            current_mask,
+            "map_label",
+        ] = "START"
 
         for index in map_data.index[
             current_mask
@@ -1177,6 +1152,14 @@ def render_park_map(
                 stop["step"]
             )
 
+            map_data.loc[
+                stop_mask,
+                "map_label",
+            ] = (
+                f'{stop["step"]}  '
+                f'{stop["attraction"]}'
+            )
+
             for index in map_data.index[
                 stop_mask
             ]:
@@ -1207,6 +1190,11 @@ def render_park_map(
             "marker_size",
         ] = 180
 
+        map_data.loc[
+            best_mask,
+            "map_label",
+        ] = best_attraction
+
         for index in map_data.index[
             best_mask
         ]:
@@ -1235,15 +1223,15 @@ def render_park_map(
             "PathLayer",
             data=route_data,
             get_path="path",
-            get_width=12,
+            get_width=9,
             get_color=[
-                20,
-                24,
-                40,
+                17,
+                21,
+                35,
                 210,
             ],
-            width_min_pixels=8,
-            width_max_pixels=14,
+            width_min_pixels=6,
+            width_max_pixels=10,
             joint_rounded=True,
             cap_rounded=True,
             pickable=False,
@@ -1257,15 +1245,15 @@ def render_park_map(
             "PathLayer",
             data=route_data,
             get_path="path",
-            get_width=7,
+            get_width=5,
             get_color=[
                 190,
                 177,
                 220,
                 245,
             ],
-            width_min_pixels=5,
-            width_max_pixels=9,
+            width_min_pixels=4,
+            width_max_pixels=7,
             joint_rounded=True,
             cap_rounded=True,
             pickable=False,
@@ -1306,9 +1294,9 @@ def render_park_map(
             get_radius="marker_size",
             get_fill_color="marker_color",
             radius_min_pixels=3,
-            radius_max_pixels=6,
+            radius_max_pixels=5,
             pickable=True,
-            opacity=0.55,
+            opacity=0.42,
             stroked=False,
         )
 
@@ -1377,6 +1365,44 @@ def render_park_map(
 
         layers.append(
             stop_text_layer
+        )
+
+    label_data = (
+        map_data[
+            map_data["map_label"]
+            != ""
+        ]
+        .copy()
+    )
+
+    if not label_data.empty:
+        label_layer = pdk.Layer(
+            "TextLayer",
+            data=label_data,
+            get_position=[
+                "longitude",
+                "latitude",
+            ],
+            get_text="map_label",
+            get_size=13,
+            get_color=[
+                245,
+                241,
+                233,
+                245,
+            ],
+            get_text_anchor='"middle"',
+            get_alignment_baseline='"bottom"',
+            get_pixel_offset=[
+                0,
+                -24,
+            ],
+            billboard=True,
+            pickable=False,
+        )
+
+        layers.append(
+            label_layer
         )
 
     view_state = (
@@ -1455,11 +1481,10 @@ def render_park_map(
 
     if itinerary:
         st.caption(
-            "Gold marks your current location. "
-            "Numbered lavender markers show your planned stops. "
-            "The line shows the order of your itinerary; "
-            "walking times are calculated separately using "
-            "MOUSEQL's modeled park-path network."
+            "START marks your current location. "
+            "Numbered lavender stops show the order of your plan. "
+            "The line shows itinerary sequence; walking times are "
+            "calculated separately using MOUSEQL's modeled park-path network."
         )
 
     elif recommendations:
