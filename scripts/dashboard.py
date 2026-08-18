@@ -2,6 +2,7 @@ import sqlite3
 from pathlib import Path
 
 import pandas as pd
+import pydeck as pdk
 import streamlit as st
 
 from route_planner import rank_attractions
@@ -121,6 +122,10 @@ def build_historical_waits(data, current_hour):
     )
 
 
+# --------------------------------------------------
+# Load data
+# --------------------------------------------------
+
 df = load_data()
 locations = load_locations()
 
@@ -176,6 +181,8 @@ location_choices = sorted(
     .dropna()
     .unique()
 )
+
+recommendations = []
 
 if location_choices:
 
@@ -476,13 +483,15 @@ if location_choices:
         )
 
 else:
+    current_attraction = None
+
     st.info(
         "No attraction locations are available."
     )
 
 
 # --------------------------------------------------
-# Park map
+# Interactive park map
 # --------------------------------------------------
 
 st.divider()
@@ -500,18 +509,170 @@ if not locations.empty:
         ],
         on="attraction",
         how="left",
+    ).copy()
+
+    map_data["wait_display"] = (
+        map_data["wait_minutes"]
+        .fillna(0)
+        .astype(int)
+        .astype(str)
+        + " min"
     )
 
-    st.map(
-        map_data,
-        latitude="latitude",
-        longitude="longitude",
-        size=20,
+    map_data.loc[
+        map_data["wait_minutes"].isna(),
+        "wait_display",
+    ] = "No current wait"
+
+    map_data["status"] = (
+        map_data["status"]
+        .fillna("Unknown")
+        .astype(str)
+    )
+
+    # Default map marker
+    map_data["marker_size"] = 90
+
+    # Muted lavender marker
+    map_data["marker_color"] = [
+        [139, 131, 168, 185]
+        for _ in range(len(map_data))
+    ]
+
+    # Current location
+    if current_attraction is not None:
+
+        current_mask = (
+            map_data["attraction"]
+            == current_attraction
+        )
+
+        map_data.loc[
+            current_mask,
+            "marker_size",
+        ] = 150
+
+        current_indices = map_data.index[
+            current_mask
+        ]
+
+        for index in current_indices:
+            map_data.at[
+                index,
+                "marker_color",
+            ] = [215, 195, 145, 230]
+
+    # Best recommendation
+    if recommendations:
+
+        best_attraction = (
+            recommendations[0]["attraction"]
+        )
+
+        best_mask = (
+            map_data["attraction"]
+            == best_attraction
+        )
+
+        map_data.loc[
+            best_mask,
+            "marker_size",
+        ] = 180
+
+        best_indices = map_data.index[
+            best_mask
+        ]
+
+        for index in best_indices:
+            map_data.at[
+                index,
+                "marker_color",
+            ] = [173, 164, 204, 245]
+
+    attraction_layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=map_data,
+        get_position=[
+            "longitude",
+            "latitude",
+        ],
+        get_radius="marker_size",
+        get_fill_color="marker_color",
+        radius_min_pixels=5,
+        radius_max_pixels=14,
+        pickable=True,
+        auto_highlight=True,
+        opacity=0.9,
+        stroked=True,
+        get_line_color=[
+            243,
+            239,
+            230,
+            150,
+        ],
+        line_width_min_pixels=1,
+    )
+
+    view_state = pdk.ViewState(
+        latitude=map_data[
+            "latitude"
+        ].mean(),
+        longitude=map_data[
+            "longitude"
+        ].mean(),
+        zoom=15.5,
+        pitch=0,
+    )
+
+    tooltip = {
+        "html": """
+        <div style="
+            padding: 4px;
+            font-family: sans-serif;
+        ">
+            <div style="
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 5px;
+            ">
+                {attraction}
+            </div>
+
+            <div>
+                Current wait: {wait_display}
+            </div>
+
+            <div>
+                Status: {status}
+            </div>
+        </div>
+        """,
+        "style": {
+            "backgroundColor": "#151B2E",
+            "color": "#F3EFE6",
+            "fontSize": "13px",
+            "border": "1px solid #383D55",
+        },
+    }
+
+    deck = pdk.Deck(
+        layers=[
+            attraction_layer,
+        ],
+        initial_view_state=view_state,
+        tooltip=tooltip,
+        map_style=None,
+    )
+
+    st.pydeck_chart(
+        deck,
         use_container_width=True,
     )
 
     st.caption(
-        f"{len(map_data)} attraction locations"
+        "Hover over an attraction to see its current wait "
+        "and operating status. Your current location and "
+        "best next ride use larger markers."
     )
 
 else:
@@ -603,7 +764,9 @@ if not ride_data.empty:
     if date_range == "Today":
 
         ride_data = ride_data[
-            ride_data["recorded_at"].dt.date
+            ride_data[
+                "recorded_at"
+            ].dt.date
             == today
         ]
 
@@ -636,21 +799,31 @@ if not ride_data.empty:
 
     latest = ride_data.iloc[-1]
 
-    latest_wait = latest["wait_minutes"]
+    latest_wait = latest[
+        "wait_minutes"
+    ]
 
     average_wait = (
-        ride_data["wait_minutes"].mean()
+        ride_data[
+            "wait_minutes"
+        ].mean()
     )
 
     lowest_wait = (
-        ride_data["wait_minutes"].min()
+        ride_data[
+            "wait_minutes"
+        ].min()
     )
 
     highest_wait = (
-        ride_data["wait_minutes"].max()
+        ride_data[
+            "wait_minutes"
+        ].max()
     )
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = (
+        st.columns(4)
+    )
 
     col1.metric(
         "Latest Wait",
@@ -678,9 +851,13 @@ if not ride_data.empty:
     )
 
 
+    # ----------------------------------------------
     # Wait history
+    # ----------------------------------------------
 
-    st.subheader("Wait Time History")
+    st.subheader(
+        "Wait Time History"
+    )
 
     history = (
         ride_data[
@@ -689,7 +866,9 @@ if not ride_data.empty:
                 "wait_minutes",
             ]
         ]
-        .set_index("recorded_at")
+        .set_index(
+            "recorded_at"
+        )
     )
 
     st.line_chart(
@@ -697,10 +876,14 @@ if not ride_data.empty:
     )
 
 
+    # ----------------------------------------------
     # Best observed hour
+    # ----------------------------------------------
 
     ride_data["hour"] = (
-        ride_data["recorded_at"].dt.hour
+        ride_data[
+            "recorded_at"
+        ].dt.hour
     )
 
     ride_hourly = (
@@ -720,8 +903,12 @@ if not ride_data.empty:
         )
     )
 
-    ride_hourly["average_wait"] = (
-        ride_hourly["average_wait"].round(1)
+    ride_hourly[
+        "average_wait"
+    ] = (
+        ride_hourly[
+            "average_wait"
+        ].round(1)
     )
 
     best_hour = (
@@ -761,7 +948,9 @@ else:
 # --------------------------------------------------
 
 st.divider()
-st.subheader("Average Wait by Attraction")
+st.subheader(
+    "Average Wait by Attraction"
+)
 
 attraction_summary = (
     df.dropna(
@@ -783,8 +972,12 @@ attraction_summary = (
     )
 )
 
-attraction_summary["average_wait"] = (
-    attraction_summary["average_wait"].round(1)
+attraction_summary[
+    "average_wait"
+] = (
+    attraction_summary[
+        "average_wait"
+    ].round(1)
 )
 
 attraction_summary = (
@@ -806,7 +999,9 @@ st.dataframe(
 # Highest average waits
 # --------------------------------------------------
 
-st.subheader("Highest Average Waits")
+st.subheader(
+    "Highest Average Waits"
+)
 
 top_attractions = (
     attraction_summary
@@ -825,7 +1020,9 @@ st.bar_chart(
 # Average wait by hour
 # --------------------------------------------------
 
-st.subheader("Average Wait by Hour")
+st.subheader(
+    "Average Wait by Hour"
+)
 
 hourly = (
     df.dropna(
@@ -835,7 +1032,9 @@ hourly = (
 )
 
 hourly["hour"] = (
-    hourly["recorded_at"].dt.hour
+    hourly[
+        "recorded_at"
+    ].dt.hour
 )
 
 hourly_summary = (
@@ -855,8 +1054,12 @@ hourly_summary = (
     )
 )
 
-hourly_summary["average_wait"] = (
-    hourly_summary["average_wait"].round(1)
+hourly_summary[
+    "average_wait"
+] = (
+    hourly_summary[
+        "average_wait"
+    ].round(1)
 )
 
 st.line_chart(
@@ -870,7 +1073,9 @@ st.line_chart(
 # Latest observations
 # --------------------------------------------------
 
-st.subheader("Latest Observations")
+st.subheader(
+    "Latest Observations"
+)
 
 latest = (
     df.sort_values(
@@ -882,7 +1087,9 @@ latest = (
 )
 
 latest["recorded_at"] = (
-    latest["recorded_at"]
+    latest[
+        "recorded_at"
+    ]
     .dt.strftime(
         "%B %d, %Y %I:%M %p"
     )
