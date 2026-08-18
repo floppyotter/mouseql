@@ -22,11 +22,8 @@ st.set_page_config(
 )
 
 
-def render_html(html):
-    st.markdown(
-        dedent(html),
-        unsafe_allow_html=True,
-    )
+def render_html(content):
+    st.html(dedent(content))
 
 
 render_html(
@@ -432,20 +429,15 @@ def build_historical_waits(
     current_hour,
 ):
     history = data.dropna(
-        subset=[
-            "wait_minutes"
-        ]
+        subset=["wait_minutes"]
     ).copy()
 
     history["hour"] = (
-        history[
-            "recorded_at"
-        ].dt.hour
+        history["recorded_at"].dt.hour
     )
 
     history = history[
-        history["hour"]
-        == current_hour
+        history["hour"] == current_hour
     ]
 
     if history.empty:
@@ -488,9 +480,7 @@ if df.empty:
 
 latest_waits = (
     df
-    .sort_values(
-        "recorded_at"
-    )
+    .sort_values("recorded_at")
     .groupby(
         "attraction",
         as_index=False,
@@ -500,9 +490,7 @@ latest_waits = (
 )
 
 latest_timestamp = (
-    df[
-        "recorded_at"
-    ].max()
+    df["recorded_at"].max()
 )
 
 current_hour = (
@@ -515,7 +503,6 @@ historical_waits = (
         current_hour,
     )
 )
-
 
 latest_data_text = (
     latest_timestamp.strftime(
@@ -530,17 +517,14 @@ render_html(
         <div class="mouseql-eyebrow">
             Magic Kingdom park intelligence
         </div>
-
         <div class="mouseql-title">
             MOUSEQL
         </div>
-
         <div class="mouseql-subtitle">
             Make your next move using current waits,
             walking distance, ride priorities, and
             historical park data.
         </div>
-
         <div class="mouseql-status">
             Latest park data · {latest_data_text}
         </div>
@@ -555,11 +539,9 @@ render_html(
         <div class="mouseql-kicker">
             Park planner
         </div>
-
         <div class="mouseql-section-title">
             Where should you go next?
         </div>
-
         <div class="mouseql-section-copy">
             Tell MOUSEQL where you are and what you still
             want to ride. It weighs the walk, current waits,
@@ -582,7 +564,6 @@ recommendations = []
 
 
 if location_choices:
-
     current_attraction = st.selectbox(
         "Current location",
         location_choices,
@@ -591,10 +572,8 @@ if location_choices:
 
     ride_choices = [
         attraction
-        for attraction
-        in location_choices
-        if attraction
-        != current_attraction
+        for attraction in location_choices
+        if attraction != current_attraction
     ]
 
     wanted_attractions = st.multiselect(
@@ -604,12 +583,10 @@ if location_choices:
     )
 
     if wanted_attractions:
-
         with st.expander(
             "Ride priorities",
             expanded=False,
         ):
-
             st.caption(
                 "Priority affects the recommendation while "
                 "walking time, current waits, and historical "
@@ -625,10 +602,8 @@ if location_choices:
 
             remaining_after_must = [
                 attraction
-                for attraction
-                in wanted_attractions
-                if attraction
-                not in must_do
+                for attraction in wanted_attractions
+                if attraction not in must_do
             ]
 
             want_to_do = st.multiselect(
@@ -640,12 +615,9 @@ if location_choices:
 
             if_theres_time = [
                 attraction
-                for attraction
-                in wanted_attractions
-                if attraction
-                not in must_do
-                and attraction
-                not in want_to_do
+                for attraction in wanted_attractions
+                if attraction not in must_do
+                and attraction not in want_to_do
             ]
 
             st.caption(
@@ -656,46 +628,46 @@ if location_choices:
         priorities = {}
 
         for attraction in must_do:
-            priorities[
-                attraction
-            ] = "Must Do"
+            priorities[attraction] = "Must Do"
 
         for attraction in want_to_do:
-            priorities[
-                attraction
-            ] = "Want to Do"
+            priorities[attraction] = "Want to Do"
 
         for attraction in if_theres_time:
             priorities[
                 attraction
             ] = "If There's Time"
 
-        selected_locations = locations[
+        selected_locations = (
             locations[
-                "attraction"
-            ].isin(
-                wanted_attractions
-                + [
-                    current_attraction
-                ]
-            )
-        ].copy()
+                locations[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                    + [current_attraction]
+                )
+            ].copy()
+        )
 
-        selected_waits = latest_waits[
+        selected_waits = (
             latest_waits[
-                "attraction"
-            ].isin(
-                wanted_attractions
-            )
-        ].copy()
+                latest_waits[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                )
+            ].copy()
+        )
 
-        selected_history = historical_waits[
+        selected_history = (
             historical_waits[
-                "attraction"
-            ].isin(
-                wanted_attractions
-            )
-        ].copy()
+                historical_waits[
+                    "attraction"
+                ].isin(
+                    wanted_attractions
+                )
+            ].copy()
+        )
 
         recommendations = rank_attractions(
             current_attraction,
@@ -706,7 +678,6 @@ if location_choices:
         )
 
         if recommendations:
-
             best = recommendations[0]
 
             render_html(
@@ -715,11 +686,9 @@ if location_choices:
                     <div class="mouseql-best-label">
                         Best next ride
                     </div>
-
                     <div class="mouseql-best-name">
                         {best["attraction"]}
                     </div>
-
                     <div class="mouseql-best-total">
                         About {best["total_minutes"]} minutes
                         including the walk and current wait
@@ -734,9 +703,7 @@ if location_choices:
 
             col1.metric(
                 "Priority",
-                best[
-                    "priority"
-                ],
+                best["priority"],
             )
 
             col2.metric(
@@ -754,18 +721,8 @@ if location_choices:
                 f"{best['total_minutes']} min",
             )
 
-            if (
-                best[
-                    "typical_wait"
-                ]
-                is not None
-            ):
-
-                difference = (
-                    best[
-                        "difference"
-                    ]
-                )
+            if best["typical_wait"] is not None:
+                difference = best["difference"]
 
                 if difference < 0:
                     comparison = (
@@ -803,14 +760,11 @@ if location_choices:
                     "for a same-hour comparison yet."
                 )
 
-            if best.get(
-                "path_nodes"
-            ):
+            if best.get("path_nodes"):
                 st.caption(
                     "Walking route calculated using "
                     "the Magic Kingdom park path network."
                 )
-
             else:
                 st.caption(
                     "Walking route is currently estimated "
@@ -821,8 +775,10 @@ if location_choices:
                 """
                 <div
                     class="mouseql-kicker"
-                    style="margin-top: 2rem;
-                           margin-bottom: 0.8rem;"
+                    style="
+                        margin-top: 2rem;
+                        margin-bottom: 0.8rem;
+                    "
                 >
                     Also worth considering
                 </div>
@@ -830,16 +786,13 @@ if location_choices:
             )
 
             top_recommendations = (
-                recommendations[
-                    1:6
-                ]
+                recommendations[1:6]
             )
 
             for number, ride in enumerate(
                 top_recommendations,
                 start=2,
             ):
-
                 details = (
                     f"{ride['walking_minutes']} min walk"
                     f" · {ride['wait_minutes']} min wait"
@@ -847,16 +800,12 @@ if location_choices:
                 )
 
                 if (
-                    ride[
-                        "priority"
-                    ]
+                    ride["priority"]
                     != "If There's Time"
                 ):
                     details += (
                         " · "
-                        + ride[
-                            "priority"
-                        ]
+                        + ride["priority"]
                     )
 
                 render_html(
@@ -865,7 +814,6 @@ if location_choices:
                         <div class="mouseql-other-name">
                             {number}. {ride["attraction"]}
                         </div>
-
                         <div class="mouseql-other-details">
                             {details}
                         </div>
@@ -876,7 +824,6 @@ if location_choices:
             with st.expander(
                 "View full recommendation table"
             ):
-
                 recommendations_df = (
                     pd.DataFrame(
                         recommendations
@@ -886,30 +833,18 @@ if location_choices:
                 recommendations_df = (
                     recommendations_df.rename(
                         columns={
-                            "attraction":
-                                "Attraction",
-                            "priority":
-                                "Priority",
-                            "walking_minutes":
-                                "Walk",
-                            "wait_minutes":
-                                "Wait Now",
-                            "typical_wait":
-                                "Typical",
-                            "difference":
-                                "Difference",
-                            "observations":
-                                "History",
-                            "confidence":
-                                "Confidence",
-                            "wait_message":
-                                "Wait Status",
-                            "total_minutes":
-                                "Walk + Wait",
-                            "routing_method":
-                                "Routing",
-                            "recommendation_score":
-                                "Score",
+                            "attraction": "Attraction",
+                            "priority": "Priority",
+                            "walking_minutes": "Walk",
+                            "wait_minutes": "Wait Now",
+                            "typical_wait": "Typical",
+                            "difference": "Difference",
+                            "observations": "History",
+                            "confidence": "Confidence",
+                            "wait_message": "Wait Status",
+                            "total_minutes": "Walk + Wait",
+                            "routing_method": "Routing",
+                            "recommendation_score": "Score",
                         }
                     )
                 )
@@ -929,10 +864,8 @@ if location_choices:
 
                 available_columns = [
                     column
-                    for column
-                    in display_columns
-                    if column
-                    in recommendations_df.columns
+                    for column in display_columns
+                    if column in recommendations_df.columns
                 ]
 
                 st.dataframe(
@@ -972,11 +905,9 @@ render_html(
         <div class="mouseql-kicker">
             Park view
         </div>
-
         <div class="mouseql-section-title">
             Your route through Magic Kingdom
         </div>
-
         <div class="mouseql-section-copy">
             Explore attraction locations and see the
             recommended path when park-network routing
@@ -988,7 +919,6 @@ render_html(
 
 
 if not locations.empty:
-
     map_data = (
         locations.merge(
             latest_waits[
@@ -1004,12 +934,8 @@ if not locations.empty:
         .copy()
     )
 
-    map_data[
-        "wait_display"
-    ] = (
-        map_data[
-            "wait_minutes"
-        ]
+    map_data["wait_display"] = (
+        map_data["wait_minutes"]
         .fillna(0)
         .astype(int)
         .astype(str)
@@ -1023,42 +949,24 @@ if not locations.empty:
         "wait_display",
     ] = "No current wait"
 
-    map_data[
-        "status"
-    ] = (
-        map_data[
-            "status"
-        ]
-        .fillna(
-            "Unknown"
-        )
+    map_data["status"] = (
+        map_data["status"]
+        .fillna("Unknown")
         .astype(str)
     )
 
-    map_data[
-        "marker_size"
-    ] = 90
+    map_data["marker_size"] = 90
 
-    map_data[
-        "marker_color"
-    ] = [
-        [
-            139,
-            131,
-            168,
-            185,
-        ]
+    map_data["marker_color"] = [
+        [139, 131, 168, 185]
         for _ in range(
             len(map_data)
         )
     ]
 
     if current_attraction is not None:
-
         current_mask = (
-            map_data[
-                "attraction"
-            ]
+            map_data["attraction"]
             == current_attraction
         )
 
@@ -1070,7 +978,6 @@ if not locations.empty:
         for index in map_data.index[
             current_mask
         ]:
-
             map_data.at[
                 index,
                 "marker_color",
@@ -1082,19 +989,14 @@ if not locations.empty:
             ]
 
     if recommendations:
-
         best_attraction = (
-            recommendations[
-                0
-            ][
+            recommendations[0][
                 "attraction"
             ]
         )
 
         best_mask = (
-            map_data[
-                "attraction"
-            ]
+            map_data["attraction"]
             == best_attraction
         )
 
@@ -1106,7 +1008,6 @@ if not locations.empty:
         for index in map_data.index[
             best_mask
         ]:
-
             map_data.at[
                 index,
                 "marker_color",
@@ -1146,11 +1047,8 @@ if not locations.empty:
     ]
 
     if recommendations:
-
         best_route = (
-            recommendations[
-                0
-            ]
+            recommendations[0]
         )
 
         path_nodes = (
@@ -1161,20 +1059,13 @@ if not locations.empty:
         )
 
         if path_nodes:
-
             route_coordinates = (
                 get_route_coordinates(
                     path_nodes
                 )
             )
 
-            if (
-                len(
-                    route_coordinates
-                )
-                >= 2
-            ):
-
+            if len(route_coordinates) >= 2:
                 route_data = (
                     pd.DataFrame(
                         [
@@ -1206,12 +1097,16 @@ if not locations.empty:
                 )
 
     view_state = pdk.ViewState(
-        latitude=map_data[
-            "latitude"
-        ].mean(),
-        longitude=map_data[
-            "longitude"
-        ].mean(),
+        latitude=(
+            map_data[
+                "latitude"
+            ].mean()
+        ),
+        longitude=(
+            map_data[
+                "longitude"
+            ].mean()
+        ),
         zoom=15.5,
         pitch=0,
     )
@@ -1229,17 +1124,14 @@ if not locations.empty:
             ">
                 {attraction}
             </div>
-
             <div>
                 Current wait: {wait_display}
             </div>
-
             <div>
                 Status: {status}
             </div>
         </div>
         """,
-
         "style": {
             "backgroundColor":
                 "#12192B",
@@ -1285,11 +1177,9 @@ render_html(
         <div class="mouseql-kicker">
             Park data
         </div>
-
         <div class="mouseql-section-title">
             Wait intelligence
         </div>
-
         <div class="mouseql-section-copy">
             Explore the history behind the recommendations
             and see how attraction waits change over time.
@@ -1310,9 +1200,7 @@ col1.metric(
 
 col2.metric(
     "Attractions",
-    df[
-        "attraction"
-    ].nunique(),
+    df["attraction"].nunique(),
 )
 
 col3.metric(
@@ -1326,9 +1214,7 @@ st.subheader(
 )
 
 attractions = sorted(
-    df[
-        "attraction"
-    ]
+    df["attraction"]
     .dropna()
     .unique()
 )
@@ -1364,9 +1250,7 @@ date_range = (
 
 ride_data = (
     df[
-        df[
-            "attraction"
-        ]
+        df["attraction"]
         == selected_attraction
     ]
     .dropna(
@@ -1382,13 +1266,11 @@ ride_data = (
 
 
 if not ride_data.empty:
-
     today = (
         latest_timestamp.date()
     )
 
     if date_range == "Today":
-
         ride_data = (
             ride_data[
                 ride_data[
@@ -1399,7 +1281,6 @@ if not ride_data.empty:
         )
 
     elif date_range == "Last 7 days":
-
         cutoff = (
             latest_timestamp
             - pd.Timedelta(
@@ -1417,7 +1298,6 @@ if not ride_data.empty:
         )
 
     elif date_range == "Last 30 days":
-
         cutoff = (
             latest_timestamp
             - pd.Timedelta(
@@ -1436,17 +1316,12 @@ if not ride_data.empty:
 
 
 if not ride_data.empty:
-
     latest = (
-        ride_data.iloc[
-            -1
-        ]
+        ride_data.iloc[-1]
     )
 
     latest_wait = (
-        latest[
-            "wait_minutes"
-        ]
+        latest["wait_minutes"]
     )
 
     average_wait = (
@@ -1516,9 +1391,7 @@ if not ride_data.empty:
         history
     )
 
-    ride_data[
-        "hour"
-    ] = (
+    ride_data["hour"] = (
         ride_data[
             "recorded_at"
         ].dt.hour
@@ -1562,9 +1435,7 @@ if not ride_data.empty:
                 False,
             ],
         )
-        .iloc[
-            0
-        ]
+        .iloc[0]
     )
 
     st.write(
@@ -1584,6 +1455,7 @@ else:
 
 
 st.divider()
+
 
 st.subheader(
     "Average Wait by Attraction"
@@ -1666,9 +1538,7 @@ hourly = (
     .copy()
 )
 
-hourly[
-    "hour"
-] = (
+hourly["hour"] = (
     hourly[
         "recorded_at"
     ].dt.hour
@@ -1721,9 +1591,7 @@ latest = (
     .copy()
 )
 
-latest[
-    "recorded_at"
-] = (
+latest["recorded_at"] = (
     latest[
         "recorded_at"
     ]
