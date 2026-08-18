@@ -1,3 +1,4 @@
+from functools import lru_cache
 from math import radians, sin, cos, sqrt, atan2, isfinite
 from pathlib import Path
 import heapq
@@ -54,18 +55,15 @@ def clean_name(value):
         and value[0] == value[-1]
         and value[0] in {'"', "'"}
     ):
-        value = value[
-            1:-1
-        ].strip()
+        value = value[1:-1].strip()
 
     return value
 
 
 def normalize_key(value):
-    return (
-        clean_name(value)
-        .casefold()
-    )
+    return clean_name(
+        value
+    ).casefold()
 
 
 def calculate_distance(
@@ -126,7 +124,7 @@ def calculate_distance(
 
 
 def estimate_walking_time(
-    distance_miles
+    distance_miles,
 ):
     walking_distance = (
         distance_miles
@@ -144,16 +142,19 @@ def estimate_walking_time(
     )
 
 
-def load_park_paths():
+@lru_cache(maxsize=1)
+def get_park_graph():
+    graph = {}
+
     if not PATHS_FILE.exists():
-        return {}
+        return graph
 
     try:
         paths = pd.read_csv(
             PATHS_FILE
         )
     except Exception:
-        return {}
+        return graph
 
     required_columns = {
         "from_node",
@@ -164,9 +165,7 @@ def load_park_paths():
     if not required_columns.issubset(
         paths.columns
     ):
-        return {}
-
-    graph = {}
+        return graph
 
     for _, row in paths.iterrows():
         from_node = clean_name(
@@ -226,16 +225,19 @@ def load_park_paths():
     return graph
 
 
-def load_attraction_nodes():
+@lru_cache(maxsize=1)
+def get_attraction_nodes():
+    attraction_nodes = {}
+
     if not NODES_FILE.exists():
-        return {}
+        return attraction_nodes
 
     try:
         nodes = pd.read_csv(
             NODES_FILE
         )
     except Exception:
-        return {}
+        return attraction_nodes
 
     required_columns = {
         "attraction",
@@ -245,9 +247,7 @@ def load_attraction_nodes():
     if not required_columns.issubset(
         nodes.columns
     ):
-        return {}
-
-    attraction_nodes = {}
+        return attraction_nodes
 
     for _, row in nodes.iterrows():
         attraction = clean_name(
@@ -277,16 +277,19 @@ def load_attraction_nodes():
     return attraction_nodes
 
 
-def load_park_nodes():
+@lru_cache(maxsize=1)
+def get_park_nodes():
+    park_nodes = {}
+
     if not PARK_NODES_FILE.exists():
-        return {}
+        return park_nodes
 
     try:
         nodes = pd.read_csv(
             PARK_NODES_FILE
         )
     except Exception:
-        return {}
+        return park_nodes
 
     required_columns = {
         "node",
@@ -297,9 +300,7 @@ def load_park_nodes():
     if not required_columns.issubset(
         nodes.columns
     ):
-        return {}
-
-    park_nodes = {}
+        return park_nodes
 
     for _, row in nodes.iterrows():
         node = clean_name(
@@ -350,22 +351,13 @@ def load_park_nodes():
     return park_nodes
 
 
-PARK_GRAPH = (
-    load_park_paths()
-)
-
-ATTRACTION_NODES = (
-    load_attraction_nodes()
-)
-
-PARK_NODES = (
-    load_park_nodes()
-)
-
-
 def get_route_coordinates(
-    path_nodes
+    path_nodes,
 ):
+    park_nodes = (
+        get_park_nodes()
+    )
+
     coordinates = []
 
     for node in path_nodes:
@@ -374,7 +366,7 @@ def get_route_coordinates(
         )
 
         location = (
-            PARK_NODES.get(
+            park_nodes.get(
                 node
             )
         )
@@ -396,11 +388,31 @@ def get_route_coordinates(
     return coordinates
 
 
+def find_attraction_node(
+    attraction,
+):
+    attraction_nodes = (
+        get_attraction_nodes()
+    )
+
+    return (
+        attraction_nodes.get(
+            normalize_key(
+                attraction
+            )
+        )
+    )
+
+
 def find_shortest_path(
     start_node,
     end_node,
 ):
-    if not PARK_GRAPH:
+    graph = (
+        get_park_graph()
+    )
+
+    if not graph:
         return None
 
     start_node = clean_name(
@@ -413,13 +425,9 @@ def find_shortest_path(
 
     if (
         start_node
-        not in PARK_GRAPH
-    ):
-        return None
-
-    if (
-        end_node
-        not in PARK_GRAPH
+        not in graph
+        or end_node
+        not in graph
     ):
         return None
 
@@ -477,7 +485,7 @@ def find_shortest_path(
         for (
             neighbor,
             edge_distance,
-        ) in PARK_GRAPH.get(
+        ) in graph.get(
             current_node,
             [],
         ):
@@ -496,11 +504,15 @@ def find_shortest_path(
             ):
                 distances[
                     neighbor
-                ] = new_distance
+                ] = (
+                    new_distance
+                )
 
                 previous[
                     neighbor
-                ] = current_node
+                ] = (
+                    current_node
+                )
 
                 heapq.heappush(
                     queue,
@@ -554,89 +566,13 @@ def find_shortest_path(
     )
 
 
-def find_attraction_node(
-    attraction
-):
-    return (
-        ATTRACTION_NODES.get(
-            normalize_key(
-                attraction
-            )
-        )
-    )
-
-
-def calculate_walking_route(
+def calculate_coordinate_route(
     current_attraction,
     target_attraction,
     locations,
 ):
-    current_attraction = (
-        clean_name(
-            current_attraction
-        )
-    )
-
-    target_attraction = (
-        clean_name(
-            target_attraction
-        )
-    )
-
-    start_node = (
-        find_attraction_node(
-            current_attraction
-        )
-    )
-
-    end_node = (
-        find_attraction_node(
-            target_attraction
-        )
-    )
-
-    if (
-        start_node
-        and end_node
-    ):
-        route = (
-            find_shortest_path(
-                start_node,
-                end_node,
-            )
-        )
-
-        if route is not None:
-            (
-                distance_miles,
-                path_nodes,
-            ) = route
-
-            walking_minutes = (
-                estimate_walking_time(
-                    distance_miles
-                )
-            )
-
-            return {
-                "distance_miles":
-                    distance_miles,
-
-                "walking_minutes":
-                    walking_minutes,
-
-                "path_nodes":
-                    path_nodes,
-
-                "routing_method":
-                    "Park path",
-
-                "start_node":
-                    start_node,
-
-                "end_node":
-                    end_node,
-            }
+    if locations.empty:
+        return None
 
     location_names = (
         locations[
@@ -767,8 +703,89 @@ def calculate_walking_route(
     }
 
 
+def calculate_walking_route(
+    current_attraction,
+    target_attraction,
+    locations,
+):
+    current_attraction = (
+        clean_name(
+            current_attraction
+        )
+    )
+
+    target_attraction = (
+        clean_name(
+            target_attraction
+        )
+    )
+
+    start_node = (
+        find_attraction_node(
+            current_attraction
+        )
+    )
+
+    end_node = (
+        find_attraction_node(
+            target_attraction
+        )
+    )
+
+    if (
+        start_node
+        and end_node
+    ):
+        route = (
+            find_shortest_path(
+                start_node,
+                end_node,
+            )
+        )
+
+        if route is not None:
+            (
+                distance_miles,
+                path_nodes,
+            ) = route
+
+            walking_minutes = (
+                estimate_walking_time(
+                    distance_miles
+                )
+            )
+
+            return {
+                "distance_miles":
+                    distance_miles,
+
+                "walking_minutes":
+                    walking_minutes,
+
+                "path_nodes":
+                    path_nodes,
+
+                "routing_method":
+                    "Park path",
+
+                "start_node":
+                    start_node,
+
+                "end_node":
+                    end_node,
+            }
+
+    return (
+        calculate_coordinate_route(
+            current_attraction,
+            target_attraction,
+            locations,
+        )
+    )
+
+
 def get_history_confidence(
-    observations
+    observations,
 ):
     if (
         observations
@@ -786,7 +803,7 @@ def get_history_confidence(
 
 
 def get_history_weight(
-    observations
+    observations,
 ):
     if (
         observations
@@ -810,7 +827,7 @@ def get_history_weight(
 
 
 def get_wait_message(
-    difference
+    difference,
 ):
     if difference <= -10:
         return (
@@ -859,6 +876,12 @@ def rank_attractions(
         )
     )
 
+    current_key = (
+        normalize_key(
+            current_attraction
+        )
+    )
+
     location_names = (
         locations[
             "attraction"
@@ -872,36 +895,30 @@ def rank_attractions(
     current_location = (
         locations[
             location_names
-            == normalize_key(
-                current_attraction
-            )
+            == current_key
         ]
     )
 
     if current_location.empty:
         return []
 
-    results = []
-
-    for _, location in locations.iterrows():
-        attraction = clean_name(
-            location[
-                "attraction"
-            ]
+    wait_names = (
+        latest_waits[
+            "attraction"
+        ]
+        .astype(str)
+        .map(
+            normalize_key
         )
+    )
 
-        if (
-            normalize_key(
-                attraction
-            )
-            == normalize_key(
-                current_attraction
-            )
-        ):
-            continue
-
-        wait_names = (
-            latest_waits[
+    if (
+        historical_waits
+        is not None
+        and not historical_waits.empty
+    ):
+        history_names = (
+            historical_waits[
                 "attraction"
             ]
             .astype(str)
@@ -910,12 +927,49 @@ def rank_attractions(
             )
         )
 
+    else:
+        history_names = None
+
+    normalized_priorities = {
+        normalize_key(
+            attraction
+        ):
+        priority
+
+        for (
+            attraction,
+            priority,
+        )
+        in priorities.items()
+    }
+
+    results = []
+
+    for _, location in (
+        locations.iterrows()
+    ):
+        attraction = clean_name(
+            location[
+                "attraction"
+            ]
+        )
+
+        attraction_key = (
+            normalize_key(
+                attraction
+            )
+        )
+
+        if (
+            attraction_key
+            == current_key
+        ):
+            continue
+
         wait_row = (
             latest_waits[
                 wait_names
-                == normalize_key(
-                    attraction
-                )
+                == attraction_key
             ]
         )
 
@@ -972,48 +1026,30 @@ def rank_attractions(
             ]
         )
 
-        path_nodes = (
-            route[
-                "path_nodes"
-            ]
-        )
-
-        routing_method = (
-            route[
-                "routing_method"
-            ]
-        )
-
         typical_wait = None
         difference = None
         observations = 0
         confidence = "Low"
+
         wait_message = (
             "Not enough history"
         )
-        history_adjustment = 0.0
+
+        history_adjustment = (
+            0.0
+        )
 
         if (
             historical_waits
             is not None
             and not historical_waits.empty
+            and history_names
+            is not None
         ):
-            history_names = (
-                historical_waits[
-                    "attraction"
-                ]
-                .astype(str)
-                .map(
-                    normalize_key
-                )
-            )
-
             history_row = (
                 historical_waits[
                     history_names
-                    == normalize_key(
-                        attraction
-                    )
+                    == attraction_key
                 ]
             )
 
@@ -1090,8 +1126,8 @@ def rank_attractions(
                     )
 
         priority = (
-            priorities.get(
-                attraction,
+            normalized_priorities.get(
+                attraction_key,
                 "If There's Time",
             )
         )
@@ -1190,10 +1226,14 @@ def rank_attractions(
                     ),
 
                 "path_nodes":
-                    path_nodes,
+                    route[
+                        "path_nodes"
+                    ],
 
                 "routing_method":
-                    routing_method,
+                    route[
+                        "routing_method"
+                    ],
 
                 "start_node":
                     route.get(
