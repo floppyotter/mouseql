@@ -1,7 +1,16 @@
 -- Average wait times by day of week and hour
+-- Convert UTC timestamps to Eastern time
+
+WITH local_waits AS (
+    SELECT
+        wait_minutes,
+        datetime(recorded_at, 'localtime') AS local_recorded_at
+    FROM wait_times
+    WHERE wait_minutes IS NOT NULL
+)
 
 SELECT
-    CASE strftime('%w', recorded_at)
+    CASE strftime('%w', local_recorded_at)
         WHEN '0' THEN 'Sunday'
         WHEN '1' THEN 'Monday'
         WHEN '2' THEN 'Tuesday'
@@ -11,24 +20,19 @@ SELECT
         WHEN '6' THEN 'Saturday'
     END AS day_of_week,
 
-    CAST(strftime('%H', recorded_at) AS INTEGER) AS hour_of_day,
+    CAST(strftime('%H', local_recorded_at) AS INTEGER) AS hour_of_day,
 
     ROUND(AVG(wait_minutes), 1) AS avg_wait,
-
     MIN(wait_minutes) AS min_wait,
-
     MAX(wait_minutes) AS max_wait,
-
     COUNT(*) AS observations
 
-FROM wait_times
-
-WHERE wait_minutes IS NOT NULL
+FROM local_waits
 
 GROUP BY
-    strftime('%w', recorded_at),
-    strftime('%H', recorded_at)
+    strftime('%w', local_recorded_at),
+    strftime('%H', local_recorded_at)
 
 ORDER BY
-    CAST(strftime('%w', recorded_at) AS INTEGER),
+    CAST(strftime('%w', local_recorded_at) AS INTEGER),
     hour_of_day;
