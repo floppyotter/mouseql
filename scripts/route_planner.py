@@ -20,19 +20,45 @@ PRIORITY_ADJUSTMENTS = {
 
 
 DATA_DIR = (
-    Path(__file__).resolve().parent.parent / "data"
+    Path(__file__)
+    .resolve()
+    .parent
+    .parent
+    / "data"
 )
 
-PATHS_FILE = DATA_DIR / "park_paths.csv"
-NODES_FILE = DATA_DIR / "attraction_nodes.csv"
-PARK_NODES_FILE = DATA_DIR / "park_nodes.csv"
+PATHS_FILE = (
+    DATA_DIR
+    / "park_paths.csv"
+)
+
+NODES_FILE = (
+    DATA_DIR
+    / "attraction_nodes.csv"
+)
+
+PARK_NODES_FILE = (
+    DATA_DIR
+    / "park_nodes.csv"
+)
 
 
 def clean_name(value):
     if value is None:
         return ""
 
-    return str(value).strip().strip('"').strip("'")
+    value = str(value).strip()
+
+    if (
+        len(value) >= 2
+        and value[0] == value[-1]
+        and value[0] in {'"', "'"}
+    ):
+        value = value[
+            1:-1
+        ].strip()
+
+    return value
 
 
 def calculate_distance(
@@ -43,30 +69,60 @@ def calculate_distance(
 ):
     earth_radius_miles = 3958.8
 
-    lat1 = radians(float(lat1))
-    lon1 = radians(float(lon1))
-    lat2 = radians(float(lat2))
-    lon2 = radians(float(lon2))
+    lat1 = radians(
+        float(lat1)
+    )
 
-    lat_difference = lat2 - lat1
-    lon_difference = lon2 - lon1
+    lon1 = radians(
+        float(lon1)
+    )
+
+    lat2 = radians(
+        float(lat2)
+    )
+
+    lon2 = radians(
+        float(lon2)
+    )
+
+    lat_difference = (
+        lat2 - lat1
+    )
+
+    lon_difference = (
+        lon2 - lon1
+    )
 
     a = (
-        sin(lat_difference / 2) ** 2
+        sin(
+            lat_difference
+            / 2
+        ) ** 2
         + cos(lat1)
         * cos(lat2)
-        * sin(lon_difference / 2) ** 2
+        * sin(
+            lon_difference
+            / 2
+        ) ** 2
     )
 
-    c = 2 * atan2(
-        sqrt(a),
-        sqrt(1 - a),
+    c = (
+        2
+        * atan2(
+            sqrt(a),
+            sqrt(1 - a),
+        )
     )
 
-    return earth_radius_miles * c
+    return (
+        earth_radius_miles
+        * c
+    )
 
 
-def estimate_walking_time(distance_miles):
+def estimate_walking_time(
+    distance_miles
+):
     walking_distance = (
         distance_miles
         * WALKING_DISTANCE_MULTIPLIER
@@ -77,7 +133,10 @@ def estimate_walking_time(distance_miles):
         / WALKING_SPEED_MPH
     )
 
-    return walking_hours * 60
+    return (
+        walking_hours
+        * 60
+    )
 
 
 def load_park_paths():
@@ -104,19 +163,26 @@ def load_park_paths():
 
     graph = {}
 
-    for _, row in paths.iterrows():
-
+    for _, row in (
+        paths.iterrows()
+    ):
         from_node = clean_name(
-            row["from_node"]
+            row[
+                "from_node"
+            ]
         )
 
         to_node = clean_name(
-            row["to_node"]
+            row[
+                "to_node"
+            ]
         )
 
         try:
             distance = float(
-                row["distance_miles"]
+                row[
+                    "distance_miles"
+                ]
             )
         except (
             TypeError,
@@ -127,7 +193,9 @@ def load_park_paths():
         if (
             not from_node
             or not to_node
-            or not isfinite(distance)
+            or not isfinite(
+                distance
+            )
             or distance <= 0
         ):
             continue
@@ -178,17 +246,25 @@ def load_attraction_nodes():
 
     attraction_nodes = {}
 
-    for _, row in nodes.iterrows():
-
+    for _, row in (
+        nodes.iterrows()
+    ):
         attraction = clean_name(
-            row["attraction"]
+            row[
+                "attraction"
+            ]
         )
 
         node = clean_name(
-            row["node"]
+            row[
+                "node"
+            ]
         )
 
-        if not attraction or not node:
+        if (
+            not attraction
+            or not node
+        ):
             continue
 
         attraction_nodes[
@@ -222,20 +298,28 @@ def load_park_nodes():
 
     park_nodes = {}
 
-    for _, row in nodes.iterrows():
-
+    for _, row in (
+        nodes.iterrows()
+    ):
         node = clean_name(
-            row["node"]
+            row[
+                "node"
+            ]
         )
 
         try:
             latitude = float(
-                row["latitude"]
+                row[
+                    "latitude"
+                ]
             )
 
             longitude = float(
-                row["longitude"]
+                row[
+                    "longitude"
+                ]
             )
+
         except (
             TypeError,
             ValueError,
@@ -243,22 +327,39 @@ def load_park_nodes():
             continue
 
         if not (
-            isfinite(latitude)
-            and isfinite(longitude)
+            isfinite(
+                latitude
+            )
+            and isfinite(
+                longitude
+            )
         ):
             continue
 
-        park_nodes[node] = {
-            "latitude": latitude,
-            "longitude": longitude,
+        park_nodes[
+            node
+        ] = {
+            "latitude":
+                latitude,
+
+            "longitude":
+                longitude,
         }
 
     return park_nodes
 
 
-PARK_GRAPH = load_park_paths()
-ATTRACTION_NODES = load_attraction_nodes()
-PARK_NODES = load_park_nodes()
+PARK_GRAPH = (
+    load_park_paths()
+)
+
+ATTRACTION_NODES = (
+    load_attraction_nodes()
+)
+
+PARK_NODES = (
+    load_park_nodes()
+)
 
 
 def get_route_coordinates(
@@ -267,11 +368,14 @@ def get_route_coordinates(
     coordinates = []
 
     for node in path_nodes:
-
-        node = clean_name(node)
-
-        location = PARK_NODES.get(
+        node = clean_name(
             node
+        )
+
+        location = (
+            PARK_NODES.get(
+                node
+            )
         )
 
         if location is None:
@@ -279,8 +383,12 @@ def get_route_coordinates(
 
         coordinates.append(
             [
-                location["longitude"],
-                location["latitude"],
+                location[
+                    "longitude"
+                ],
+                location[
+                    "latitude"
+                ],
             ]
         )
 
@@ -302,20 +410,32 @@ def find_shortest_path(
         end_node
     )
 
-    if start_node not in PARK_GRAPH:
+    if (
+        start_node
+        not in PARK_GRAPH
+    ):
         return None
 
-    if end_node not in PARK_GRAPH:
+    if (
+        end_node
+        not in PARK_GRAPH
+    ):
         return None
 
-    if start_node == end_node:
+    if (
+        start_node
+        == end_node
+    ):
         return (
             0.0,
-            [start_node],
+            [
+                start_node
+            ],
         )
 
     distances = {
-        start_node: 0.0
+        start_node:
+            0.0
     }
 
     previous = {}
@@ -330,19 +450,27 @@ def find_shortest_path(
     visited = set()
 
     while queue:
-
-        current_distance, current_node = (
-            heapq.heappop(queue)
+        (
+            current_distance,
+            current_node,
+        ) = heapq.heappop(
+            queue
         )
 
-        if current_node in visited:
+        if (
+            current_node
+            in visited
+        ):
             continue
 
         visited.add(
             current_node
         )
 
-        if current_node == end_node:
+        if (
+            current_node
+            == end_node
+        ):
             break
 
         for (
@@ -352,18 +480,19 @@ def find_shortest_path(
             current_node,
             [],
         ):
-
             new_distance = (
                 current_distance
                 + edge_distance
             )
 
             if (
-                neighbor not in distances
+                neighbor
+                not in distances
                 or new_distance
-                < distances[neighbor]
+                < distances[
+                    neighbor
+                ]
             ):
-
                 distances[
                     neighbor
                 ] = new_distance
@@ -380,25 +509,35 @@ def find_shortest_path(
                     ),
                 )
 
-    if end_node not in distances:
+    if (
+        end_node
+        not in distances
+    ):
         return None
 
     path = []
 
     current = end_node
 
-    while current != start_node:
-
+    while (
+        current
+        != start_node
+    ):
         path.append(
             current
         )
 
-        if current not in previous:
+        if (
+            current
+            not in previous
+        ):
             return None
 
-        current = previous[
-            current
-        ]
+        current = (
+            previous[
+                current
+            ]
+        )
 
     path.append(
         start_node
@@ -407,7 +546,9 @@ def find_shortest_path(
     path.reverse()
 
     return (
-        distances[end_node],
+        distances[
+            end_node
+        ],
         path,
     )
 
@@ -417,12 +558,16 @@ def calculate_walking_route(
     target_attraction,
     locations,
 ):
-    current_attraction = clean_name(
-        current_attraction
+    current_attraction = (
+        clean_name(
+            current_attraction
+        )
     )
 
-    target_attraction = clean_name(
-        target_attraction
+    target_attraction = (
+        clean_name(
+            target_attraction
+        )
     )
 
     start_node = (
@@ -441,17 +586,18 @@ def calculate_walking_route(
         start_node
         and end_node
     ):
-
-        route = find_shortest_path(
-            start_node,
-            end_node,
+        route = (
+            find_shortest_path(
+                start_node,
+                end_node,
+            )
         )
 
         if route is not None:
-
-            distance_miles, path_nodes = (
-                route
-            )
+            (
+                distance_miles,
+                path_nodes,
+            ) = route
 
             walking_minutes = (
                 estimate_walking_time(
@@ -460,21 +606,40 @@ def calculate_walking_route(
             )
 
             return {
-                "distance_miles": distance_miles,
-                "walking_minutes": walking_minutes,
-                "path_nodes": path_nodes,
-                "routing_method": "Park path",
+                "distance_miles":
+                    distance_miles,
+
+                "walking_minutes":
+                    walking_minutes,
+
+                "path_nodes":
+                    path_nodes,
+
+                "routing_method":
+                    "Park path",
             }
 
-    current_location = locations[
-        locations["attraction"]
-        == current_attraction
-    ]
+    location_names = (
+        locations[
+            "attraction"
+        ]
+        .astype(str)
+        .map(clean_name)
+    )
 
-    target_location = locations[
-        locations["attraction"]
-        == target_attraction
-    ]
+    current_location = (
+        locations[
+            location_names
+            == current_attraction
+        ]
+    )
+
+    target_location = (
+        locations[
+            location_names
+            == target_attraction
+        ]
+    )
 
     if (
         current_location.empty
@@ -483,28 +648,40 @@ def calculate_walking_route(
         return None
 
     current_location = (
-        current_location.iloc[0]
+        current_location.iloc[
+            0
+        ]
     )
 
     target_location = (
-        target_location.iloc[0]
+        target_location.iloc[
+            0
+        ]
     )
 
     try:
         current_lat = float(
-            current_location["latitude"]
+            current_location[
+                "latitude"
+            ]
         )
 
         current_lon = float(
-            current_location["longitude"]
+            current_location[
+                "longitude"
+            ]
         )
 
         target_lat = float(
-            target_location["latitude"]
+            target_location[
+                "latitude"
+            ]
         )
 
         target_lon = float(
-            target_location["longitude"]
+            target_location[
+                "longitude"
+            ]
         )
 
     except (
@@ -514,18 +691,28 @@ def calculate_walking_route(
         return None
 
     if not (
-        isfinite(current_lat)
-        and isfinite(current_lon)
-        and isfinite(target_lat)
-        and isfinite(target_lon)
+        isfinite(
+            current_lat
+        )
+        and isfinite(
+            current_lon
+        )
+        and isfinite(
+            target_lat
+        )
+        and isfinite(
+            target_lon
+        )
     ):
         return None
 
-    distance = calculate_distance(
-        current_lat,
-        current_lon,
-        target_lat,
-        target_lon,
+    distance = (
+        calculate_distance(
+            current_lat,
+            current_lon,
+            target_lat,
+            target_lon,
+        )
     )
 
     walking_minutes = (
@@ -535,20 +722,33 @@ def calculate_walking_route(
     )
 
     return {
-        "distance_miles": distance,
-        "walking_minutes": walking_minutes,
-        "path_nodes": [],
-        "routing_method": "Coordinate estimate",
+        "distance_miles":
+            distance,
+
+        "walking_minutes":
+            walking_minutes,
+
+        "path_nodes":
+            [],
+
+        "routing_method":
+            "Coordinate estimate",
     }
 
 
 def get_history_confidence(
     observations
 ):
-    if observations < MIN_HISTORY_OBSERVATIONS:
+    if (
+        observations
+        < MIN_HISTORY_OBSERVATIONS
+    ):
         return "Low"
 
-    if observations < FULL_HISTORY_OBSERVATIONS:
+    if (
+        observations
+        < FULL_HISTORY_OBSERVATIONS
+    ):
         return "Medium"
 
     return "High"
@@ -557,10 +757,16 @@ def get_history_confidence(
 def get_history_weight(
     observations
 ):
-    if observations < MIN_HISTORY_OBSERVATIONS:
+    if (
+        observations
+        < MIN_HISTORY_OBSERVATIONS
+    ):
         return 0.0
 
-    if observations >= FULL_HISTORY_OBSERVATIONS:
+    if (
+        observations
+        >= FULL_HISTORY_OBSERVATIONS
+    ):
         return 1.0
 
     return (
@@ -576,18 +782,28 @@ def get_wait_message(
     difference
 ):
     if difference <= -10:
-        return "Much lower than typical"
+        return (
+            "Much lower than typical"
+        )
 
     if difference <= -5:
-        return "Lower than typical"
+        return (
+            "Lower than typical"
+        )
 
     if difference >= 10:
-        return "Much higher than typical"
+        return (
+            "Much higher than typical"
+        )
 
     if difference >= 5:
-        return "Higher than typical"
+        return (
+            "Higher than typical"
+        )
 
-    return "Near typical"
+    return (
+        "Near typical"
+    )
 
 
 def rank_attractions(
@@ -606,14 +822,26 @@ def rank_attractions(
     if locations.empty:
         return []
 
-    current_attraction = clean_name(
-        current_attraction
+    current_attraction = (
+        clean_name(
+            current_attraction
+        )
     )
 
-    current_location = locations[
-        locations["attraction"]
-        == current_attraction
-    ]
+    location_names = (
+        locations[
+            "attraction"
+        ]
+        .astype(str)
+        .map(clean_name)
+    )
+
+    current_location = (
+        locations[
+            location_names
+            == current_attraction
+        ]
+    )
 
     if current_location.empty:
         return []
@@ -623,24 +851,40 @@ def rank_attractions(
     for _, location in (
         locations.iterrows()
     ):
-
         attraction = clean_name(
-            location["attraction"]
+            location[
+                "attraction"
+            ]
         )
 
-        if attraction == current_attraction:
+        if (
+            attraction
+            == current_attraction
+        ):
             continue
 
-        wait_row = latest_waits[
-            latest_waits["attraction"]
-            == attraction
-        ]
+        wait_names = (
+            latest_waits[
+                "attraction"
+            ]
+            .astype(str)
+            .map(clean_name)
+        )
+
+        wait_row = (
+            latest_waits[
+                wait_names
+                == attraction
+            ]
+        )
 
         if wait_row.empty:
             continue
 
         wait_minutes = (
-            wait_row.iloc[0][
+            wait_row.iloc[
+                0
+            ][
                 "wait_minutes"
             ]
         )
@@ -649,6 +893,7 @@ def rank_attractions(
             wait_minutes = float(
                 wait_minutes
             )
+
         except (
             TypeError,
             ValueError,
@@ -663,88 +908,117 @@ def rank_attractions(
         if wait_minutes < 0:
             continue
 
-        route = calculate_walking_route(
-            current_attraction,
-            attraction,
-            locations,
+        route = (
+            calculate_walking_route(
+                current_attraction,
+                attraction,
+                locations,
+            )
         )
 
         if route is None:
             continue
 
-        distance = route[
-            "distance_miles"
-        ]
+        distance = (
+            route[
+                "distance_miles"
+            ]
+        )
 
-        walking_minutes = route[
-            "walking_minutes"
-        ]
+        walking_minutes = (
+            route[
+                "walking_minutes"
+            ]
+        )
 
-        path_nodes = route[
-            "path_nodes"
-        ]
+        path_nodes = (
+            route[
+                "path_nodes"
+            ]
+        )
 
-        routing_method = route[
-            "routing_method"
-        ]
+        routing_method = (
+            route[
+                "routing_method"
+            ]
+        )
 
         typical_wait = None
         difference = None
         observations = 0
         confidence = "Low"
+
         wait_message = (
             "Not enough history"
         )
 
-        history_adjustment = 0.0
+        history_adjustment = (
+            0.0
+        )
 
         if (
-            historical_waits is not None
+            historical_waits
+            is not None
             and not historical_waits.empty
         ):
+            history_names = (
+                historical_waits[
+                    "attraction"
+                ]
+                .astype(str)
+                .map(clean_name)
+            )
 
             history_row = (
                 historical_waits[
-                    historical_waits[
-                        "attraction"
-                    ]
+                    history_names
                     == attraction
                 ]
             )
 
             if not history_row.empty:
-
                 history_row = (
-                    history_row.iloc[0]
+                    history_row.iloc[
+                        0
+                    ]
                 )
 
                 try:
-                    typical_wait = float(
-                        history_row[
-                            "typical_wait"
-                        ]
+                    typical_wait = (
+                        float(
+                            history_row[
+                                "typical_wait"
+                            ]
+                        )
                     )
 
-                    observations = int(
-                        history_row[
-                            "observations"
-                        ]
+                    observations = (
+                        int(
+                            history_row[
+                                "observations"
+                            ]
+                        )
                     )
 
                 except (
                     TypeError,
                     ValueError,
                 ):
-                    typical_wait = None
-                    observations = 0
+                    typical_wait = (
+                        None
+                    )
+
+                    observations = (
+                        0
+                    )
 
                 if (
-                    typical_wait is not None
+                    typical_wait
+                    is not None
                     and isfinite(
                         typical_wait
                     )
                 ):
-
                     difference = (
                         wait_minutes
                         - typical_wait
@@ -773,17 +1047,21 @@ def rank_attractions(
                         * history_weight
                     )
 
-                    history_adjustment = max(
-                        -MAX_HISTORY_ADJUSTMENT,
-                        min(
-                            MAX_HISTORY_ADJUSTMENT,
-                            raw_adjustment,
-                        ),
+                    history_adjustment = (
+                        max(
+                            -MAX_HISTORY_ADJUSTMENT,
+                            min(
+                                MAX_HISTORY_ADJUSTMENT,
+                                raw_adjustment,
+                            ),
+                        )
                     )
 
-        priority = priorities.get(
-            attraction,
-            "If There's Time",
+        priority = (
+            priorities.get(
+                attraction,
+                "If There's Time",
+            )
         )
 
         priority_adjustment = (
@@ -806,55 +1084,84 @@ def rank_attractions(
 
         results.append(
             {
-                "attraction": attraction,
-                "priority": priority,
-                "distance_miles": round(
-                    distance,
-                    2,
-                ),
-                "walking_minutes": round(
-                    walking_minutes
-                ),
-                "wait_minutes": round(
-                    wait_minutes
-                ),
-                "typical_wait": (
+                "attraction":
+                    attraction,
+
+                "priority":
+                    priority,
+
+                "distance_miles":
                     round(
-                        typical_wait,
-                        1,
-                    )
-                    if typical_wait
-                    is not None
-                    else None
-                ),
-                "difference": (
+                        distance,
+                        2,
+                    ),
+
+                "walking_minutes":
                     round(
-                        difference,
+                        walking_minutes
+                    ),
+
+                "wait_minutes":
+                    round(
+                        wait_minutes
+                    ),
+
+                "typical_wait":
+                    (
+                        round(
+                            typical_wait,
+                            1,
+                        )
+                        if typical_wait
+                        is not None
+                        else None
+                    ),
+
+                "difference":
+                    (
+                        round(
+                            difference,
+                            1,
+                        )
+                        if difference
+                        is not None
+                        else None
+                    ),
+
+                "observations":
+                    observations,
+
+                "confidence":
+                    confidence,
+
+                "wait_message":
+                    wait_message,
+
+                "total_minutes":
+                    round(
+                        base_total
+                    ),
+
+                "history_adjustment":
+                    round(
+                        history_adjustment,
                         1,
-                    )
-                    if difference
-                    is not None
-                    else None
-                ),
-                "observations": observations,
-                "confidence": confidence,
-                "wait_message": wait_message,
-                "total_minutes": round(
-                    base_total
-                ),
-                "history_adjustment": round(
-                    history_adjustment,
-                    1,
-                ),
-                "priority_adjustment": (
-                    priority_adjustment
-                ),
-                "recommendation_score": round(
-                    recommendation_score,
-                    1,
-                ),
-                "path_nodes": path_nodes,
-                "routing_method": routing_method,
+                    ),
+
+                "priority_adjustment":
+                    priority_adjustment,
+
+                "recommendation_score":
+                    round(
+                        recommendation_score,
+                        1,
+                    ),
+
+                "path_nodes":
+                    path_nodes,
+
+                "routing_method":
+                    routing_method,
             }
         )
 
@@ -870,3 +1177,296 @@ def rank_attractions(
     )
 
     return results
+
+
+def build_itinerary(
+    current_attraction,
+    wanted_attractions,
+    locations,
+    latest_waits,
+    historical_waits=None,
+    priorities=None,
+    time_budget_minutes=120,
+):
+    if priorities is None:
+        priorities = {}
+
+    try:
+        time_budget_minutes = int(
+            time_budget_minutes
+        )
+
+    except (
+        TypeError,
+        ValueError,
+    ):
+        return []
+
+    if time_budget_minutes <= 0:
+        return []
+
+    if not current_attraction:
+        return []
+
+    if not wanted_attractions:
+        return []
+
+    remaining = [
+        clean_name(
+            attraction
+        )
+        for attraction
+        in wanted_attractions
+        if clean_name(
+            attraction
+        )
+        != clean_name(
+            current_attraction
+        )
+    ]
+
+    current_location = (
+        clean_name(
+            current_attraction
+        )
+    )
+
+    elapsed_minutes = 0
+
+    itinerary = []
+
+    step_number = 1
+
+    while remaining:
+        selected_names = (
+            set(
+                remaining
+                + [
+                    current_location
+                ]
+            )
+        )
+
+        location_mask = (
+            locations[
+                "attraction"
+            ]
+            .astype(str)
+            .map(clean_name)
+            .isin(
+                selected_names
+            )
+        )
+
+        selected_locations = (
+            locations[
+                location_mask
+            ]
+            .copy()
+        )
+
+        wait_mask = (
+            latest_waits[
+                "attraction"
+            ]
+            .astype(str)
+            .map(clean_name)
+            .isin(
+                remaining
+            )
+        )
+
+        selected_waits = (
+            latest_waits[
+                wait_mask
+            ]
+            .copy()
+        )
+
+        if (
+            historical_waits
+            is not None
+            and not historical_waits.empty
+        ):
+            history_mask = (
+                historical_waits[
+                    "attraction"
+                ]
+                .astype(str)
+                .map(clean_name)
+                .isin(
+                    remaining
+                )
+            )
+
+            selected_history = (
+                historical_waits[
+                    history_mask
+                ]
+                .copy()
+            )
+
+        else:
+            selected_history = (
+                pd.DataFrame()
+            )
+
+        rankings = (
+            rank_attractions(
+                current_location,
+                selected_locations,
+                selected_waits,
+                selected_history,
+                priorities,
+            )
+        )
+
+        if not rankings:
+            break
+
+        remaining_time = (
+            time_budget_minutes
+            - elapsed_minutes
+        )
+
+        chosen = None
+
+        for candidate in rankings:
+            candidate_time = int(
+                candidate[
+                    "total_minutes"
+                ]
+            )
+
+            if (
+                candidate_time
+                <= remaining_time
+            ):
+                chosen = candidate
+                break
+
+        if chosen is None:
+            break
+
+        segment_minutes = int(
+            chosen[
+                "total_minutes"
+            ]
+        )
+
+        arrival_elapsed = (
+            elapsed_minutes
+            + int(
+                chosen[
+                    "walking_minutes"
+                ]
+            )
+        )
+
+        elapsed_minutes += (
+            segment_minutes
+        )
+
+        itinerary.append(
+            {
+                "step":
+                    step_number,
+
+                "from_attraction":
+                    current_location,
+
+                "attraction":
+                    chosen[
+                        "attraction"
+                    ],
+
+                "priority":
+                    chosen[
+                        "priority"
+                    ],
+
+                "walking_minutes":
+                    chosen[
+                        "walking_minutes"
+                    ],
+
+                "wait_minutes":
+                    chosen[
+                        "wait_minutes"
+                    ],
+
+                "segment_minutes":
+                    segment_minutes,
+
+                "arrival_elapsed_minutes":
+                    arrival_elapsed,
+
+                "cumulative_minutes":
+                    elapsed_minutes,
+
+                "time_remaining_minutes":
+                    max(
+                        0,
+                        time_budget_minutes
+                        - elapsed_minutes,
+                    ),
+
+                "typical_wait":
+                    chosen[
+                        "typical_wait"
+                    ],
+
+                "difference":
+                    chosen[
+                        "difference"
+                    ],
+
+                "confidence":
+                    chosen[
+                        "confidence"
+                    ],
+
+                "wait_message":
+                    chosen[
+                        "wait_message"
+                    ],
+
+                "distance_miles":
+                    chosen[
+                        "distance_miles"
+                    ],
+
+                "path_nodes":
+                    chosen[
+                        "path_nodes"
+                    ],
+
+                "routing_method":
+                    chosen[
+                        "routing_method"
+                    ],
+
+                "recommendation_score":
+                    chosen[
+                        "recommendation_score"
+                    ],
+            }
+        )
+
+        current_location = (
+            chosen[
+                "attraction"
+            ]
+        )
+
+        remaining = [
+            attraction
+            for attraction
+            in remaining
+            if attraction
+            != current_location
+        ]
+
+        step_number += 1
+
+    return itinerary
