@@ -38,6 +38,9 @@ jobs:
       - name: Run day of week analysis
         run: sqlite3 -header -column data/mouseql.db < queries/08_waits_by_day.sql
 
+      - name: Run day and hour analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/09_waits_by_day_and_hour.sql
+
       - name: Generate Magic Kingdom report
         run: python scripts/generate_report.py
 
