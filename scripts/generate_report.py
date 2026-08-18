@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 DB_PATH = Path("data/mouseql.db")
 REPORT_PATH = Path("reports/magic_kingdom_report.md")
@@ -33,7 +34,7 @@ cur.execute("""
 """)
 highest_waits = cur.fetchall()
 
-# Best overall hour
+# Best overall hour in Disney/Eastern time
 cur.execute("""
     SELECT
         CAST(strftime('%H', datetime(recorded_at, '-4 hours')) AS INTEGER)
@@ -62,6 +63,16 @@ def format_hour(hour):
     return f"{hour - 12} PM"
 
 
+def format_timestamp(timestamp):
+    if not timestamp:
+        return "N/A"
+
+    utc_time = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+    eastern_time = utc_time.astimezone(ZoneInfo("America/New_York"))
+
+    return eastern_time.strftime("%B %d, %Y at %I:%M %p ET").replace(" 0", " ")
+
+
 report = f"""# Magic Kingdom Wait Time Report
 
 Generated from the MOUSEQL wait-time dataset.
@@ -70,8 +81,8 @@ Generated from the MOUSEQL wait-time dataset.
 
 - Observations: **{stats['observations']}**
 - Attractions: **{stats['attractions']}**
-- First observation: `{stats['first_recorded']}`
-- Latest observation: `{stats['last_recorded']}`
+- First observation: **{format_timestamp(stats['first_recorded'])}**
+- Latest observation: **{format_timestamp(stats['last_recorded'])}**
 
 ## Best Overall Time
 
