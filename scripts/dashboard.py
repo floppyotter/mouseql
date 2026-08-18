@@ -89,20 +89,10 @@ render_html(
     .mouseql-hero {
         position: relative;
         overflow: hidden;
-
-        padding:
-            2.6rem
-            2.7rem
-            2.45rem;
-
+        padding: 2.6rem 2.7rem 2.45rem;
         margin-bottom: 2.2rem;
-
         border-radius: 28px;
-
-        border:
-            1px solid
-            rgba(191, 179, 220, 0.22);
-
+        border: 1px solid rgba(191, 179, 220, 0.22);
         background:
             radial-gradient(
                 circle at 88% 10%,
@@ -119,7 +109,6 @@ render_html(
                 rgba(25, 32, 56, 0.98),
                 rgba(13, 18, 34, 0.98)
             );
-
         box-shadow:
             0 26px 65px
             rgba(0, 0, 0, 0.30);
@@ -128,18 +117,12 @@ render_html(
     .mouseql-hero::after {
         content: "";
         position: absolute;
-
         width: 220px;
         height: 220px;
-
         right: -80px;
         top: -95px;
-
         border-radius: 999px;
-
-        border:
-            1px solid
-            rgba(215, 195, 145, 0.12);
+        border: 1px solid rgba(215, 195, 145, 0.12);
     }
 
     .mouseql-eyebrow {
@@ -153,14 +136,12 @@ render_html(
 
     .mouseql-title {
         color: #f7f3eb;
-
         font-size:
             clamp(
                 3rem,
                 7vw,
                 5rem
             );
-
         line-height: 0.96;
         font-weight: 790;
         letter-spacing: -0.06em;
@@ -179,20 +160,10 @@ render_html(
     .mouseql-status {
         display: inline-flex;
         align-items: center;
-
-        padding:
-            0.52rem
-            0.82rem;
-
+        padding: 0.52rem 0.82rem;
         border-radius: 999px;
-
-        background:
-            rgba(215, 195, 145, 0.08);
-
-        border:
-            1px solid
-            rgba(215, 195, 145, 0.20);
-
+        background: rgba(215, 195, 145, 0.08);
+        border: 1px solid rgba(215, 195, 145, 0.20);
         color: #dacb9e;
         font-size: 0.78rem;
     }
@@ -212,14 +183,12 @@ render_html(
 
     .mouseql-section-title {
         color: #f3efe7;
-
         font-size:
             clamp(
                 1.7rem,
                 4vw,
                 2.3rem
             );
-
         letter-spacing: -0.04em;
         font-weight: 710;
         line-height: 1.12;
@@ -234,21 +203,10 @@ render_html(
     }
 
     .mouseql-best-card {
-        padding:
-            1.6rem
-            1.7rem;
-
+        padding: 1.6rem 1.7rem;
         border-radius: 22px;
-
-        margin:
-            1.3rem
-            0
-            1.2rem;
-
-        border:
-            1px solid
-            rgba(195, 182, 225, 0.27);
-
+        margin: 1.3rem 0 1.2rem;
+        border: 1px solid rgba(195, 182, 225, 0.27);
         background:
             radial-gradient(
                 circle at 90% 15%,
@@ -260,7 +218,6 @@ render_html(
                 rgba(38, 43, 69, 0.94),
                 rgba(21, 27, 47, 0.95)
             );
-
         box-shadow:
             0 16px 40px
             rgba(0, 0, 0, 0.18);
@@ -277,14 +234,12 @@ render_html(
 
     .mouseql-best-name {
         color: #f6f2ea;
-
         font-size:
             clamp(
                 1.8rem,
                 4.6vw,
                 2.6rem
             );
-
         font-weight: 740;
         line-height: 1.1;
         letter-spacing: -0.04em;
@@ -303,21 +258,10 @@ render_html(
 
     .mouseql-step {
         position: relative;
-
-        padding:
-            1rem
-            1rem
-            1rem
-            3.7rem;
-
+        padding: 1rem 1rem 1rem 3.7rem;
         margin-bottom: 0.75rem;
-
         border-radius: 16px;
-
-        border:
-            1px solid
-            rgba(184, 174, 215, 0.13);
-
+        border: 1px solid rgba(184, 174, 215, 0.13);
         background:
             linear-gradient(
                 135deg,
@@ -328,22 +272,16 @@ render_html(
 
     .mouseql-step-number {
         position: absolute;
-
         left: 1rem;
         top: 1rem;
-
         width: 2rem;
         height: 2rem;
-
         display: flex;
         align-items: center;
         justify-content: center;
-
         border-radius: 999px;
-
         color: #171b2a;
         background: #c5b8da;
-
         font-size: 0.78rem;
         font-weight: 800;
     }
@@ -369,40 +307,21 @@ render_html(
     }
 
     .mouseql-plan-summary {
-        padding:
-            1rem
-            1.1rem;
-
+        padding: 1rem 1.1rem;
         margin-top: 0.9rem;
-
         border-radius: 15px;
-
-        background:
-            rgba(215, 195, 145, 0.06);
-
-        border:
-            1px solid
-            rgba(215, 195, 145, 0.15);
-
+        background: rgba(215, 195, 145, 0.06);
+        border: 1px solid rgba(215, 195, 145, 0.15);
         color: #cfc4a5;
         font-size: 0.84rem;
     }
 
     .mouseql-other-option {
-        padding:
-            0.9rem
-            1rem;
-
+        padding: 0.9rem 1rem;
         margin-bottom: 0.65rem;
-
         border-radius: 14px;
-
-        border:
-            1px solid
-            rgba(184, 174, 215, 0.11);
-
-        background:
-            rgba(19, 25, 43, 0.60);
+        border: 1px solid rgba(184, 174, 215, 0.11);
+        background: rgba(19, 25, 43, 0.60);
     }
 
     .mouseql-other-name {
@@ -418,23 +337,11 @@ render_html(
     }
 
     .mouseql-unavailable {
-        padding:
-            1.1rem
-            1.15rem;
-
+        padding: 1.1rem 1.15rem;
         border-radius: 16px;
-
-        margin:
-            1.2rem
-            0
-            0.5rem;
-
-        background:
-            rgba(24, 43, 69, 0.68);
-
-        border:
-            1px solid
-            rgba(117, 164, 214, 0.20);
+        margin: 1.2rem 0 0.5rem;
+        background: rgba(24, 43, 69, 0.68);
+        border: 1px solid rgba(117, 164, 214, 0.20);
     }
 
     .mouseql-unavailable-title {
@@ -457,17 +364,9 @@ render_html(
                 rgba(23, 30, 51, 0.92),
                 rgba(18, 24, 42, 0.92)
             );
-
-        border:
-            1px solid
-            rgba(184, 174, 215, 0.15);
-
+        border: 1px solid rgba(184, 174, 215, 0.15);
         border-radius: 17px;
-
-        padding:
-            1rem
-            1.1rem;
-
+        padding: 1rem 1.1rem;
         box-shadow:
             0 12px 30px
             rgba(0, 0, 0, 0.13);
@@ -484,12 +383,8 @@ render_html(
     }
 
     div[data-baseweb="select"] > div {
-        background:
-            rgba(21, 28, 48, 0.91);
-
-        border-color:
-            rgba(184, 174, 215, 0.17);
-
+        background: rgba(21, 28, 48, 0.91);
+        border-color: rgba(184, 174, 215, 0.17);
         border-radius: 12px;
     }
 
@@ -498,13 +393,8 @@ render_html(
     }
 
     [data-testid="stExpander"] {
-        background:
-            rgba(20, 27, 46, 0.65);
-
-        border:
-            1px solid
-            rgba(184, 174, 215, 0.14);
-
+        background: rgba(20, 27, 46, 0.65);
+        border: 1px solid rgba(184, 174, 215, 0.14);
         border-radius: 15px;
         overflow: hidden;
     }
@@ -512,11 +402,7 @@ render_html(
     [data-testid="stPydeckChart"] {
         border-radius: 20px;
         overflow: hidden;
-
-        border:
-            1px solid
-            rgba(184, 174, 215, 0.15);
-
+        border: 1px solid rgba(184, 174, 215, 0.15);
         box-shadow:
             0 16px 42px
             rgba(0, 0, 0, 0.16);
@@ -530,11 +416,7 @@ render_html(
         }
 
         .mouseql-hero {
-            padding:
-                1.4rem
-                1.25rem
-                1.35rem;
-
+            padding: 1.4rem 1.25rem 1.35rem;
             border-radius: 20px;
             margin-bottom: 1.55rem;
         }
@@ -553,9 +435,7 @@ render_html(
         }
 
         [data-testid="stMetric"] {
-            padding:
-                0.8rem
-                0.85rem;
+            padding: 0.8rem 0.85rem;
         }
     }
     </style>
@@ -681,7 +561,6 @@ def load_data():
 
             if not db_waits.empty:
                 db_waits["source"] = "SQLite"
-
                 frames.append(
                     db_waits
                 )
@@ -701,7 +580,6 @@ def load_data():
 
             if not csv_waits.empty:
                 csv_waits["source"] = "CSV"
-
                 frames.append(
                     csv_waits
                 )
@@ -953,6 +831,258 @@ def build_historical_waits(
     )
 
 
+def get_attraction_coordinate(
+    locations,
+    attraction,
+):
+    match = (
+        locations[
+            locations["attraction"]
+            == attraction
+        ]
+    )
+
+    if match.empty:
+        return None
+
+    row = match.iloc[0]
+
+    return [
+        float(
+            row["longitude"]
+        ),
+        float(
+            row["latitude"]
+        ),
+    ]
+
+
+def build_map_route(
+    locations,
+    itinerary,
+):
+    route_segments = []
+
+    for stop in itinerary:
+        from_attraction = (
+            stop.get(
+                "from_attraction"
+            )
+        )
+
+        to_attraction = (
+            stop.get(
+                "attraction"
+            )
+        )
+
+        start_coordinate = (
+            get_attraction_coordinate(
+                locations,
+                from_attraction,
+            )
+        )
+
+        end_coordinate = (
+            get_attraction_coordinate(
+                locations,
+                to_attraction,
+            )
+        )
+
+        path_nodes = (
+            stop.get(
+                "path_nodes",
+                [],
+            )
+        )
+
+        routing_method = (
+            stop.get(
+                "routing_method"
+            )
+        )
+
+        coordinates = []
+
+        if start_coordinate is not None:
+            coordinates.append(
+                start_coordinate
+            )
+
+        if (
+            routing_method
+            == "Park path"
+            and path_nodes
+        ):
+            node_coordinates = (
+                get_route_coordinates(
+                    path_nodes
+                )
+            )
+
+            for coordinate in (
+                node_coordinates
+            ):
+                if (
+                    not coordinates
+                    or coordinate
+                    != coordinates[-1]
+                ):
+                    coordinates.append(
+                        coordinate
+                    )
+
+        if end_coordinate is not None:
+            if (
+                not coordinates
+                or end_coordinate
+                != coordinates[-1]
+            ):
+                coordinates.append(
+                    end_coordinate
+                )
+
+        if (
+            len(coordinates)
+            >= 2
+        ):
+            route_segments.append(
+                {
+                    "path":
+                        coordinates,
+
+                    "step":
+                        str(
+                            stop["step"]
+                        ),
+
+                    "routing_method":
+                        routing_method,
+                }
+            )
+
+    return route_segments
+
+
+def get_map_view_state(
+    locations,
+    current_attraction,
+    itinerary,
+    route_segments,
+):
+    focus_coordinates = []
+
+    current_coordinate = (
+        get_attraction_coordinate(
+            locations,
+            current_attraction,
+        )
+    )
+
+    if current_coordinate is not None:
+        focus_coordinates.append(
+            current_coordinate
+        )
+
+    for stop in itinerary:
+        coordinate = (
+            get_attraction_coordinate(
+                locations,
+                stop["attraction"],
+            )
+        )
+
+        if coordinate is not None:
+            focus_coordinates.append(
+                coordinate
+            )
+
+    for segment in route_segments:
+        focus_coordinates.extend(
+            segment["path"]
+        )
+
+    if not focus_coordinates:
+        return pdk.ViewState(
+            latitude=(
+                locations["latitude"]
+                .mean()
+            ),
+            longitude=(
+                locations["longitude"]
+                .mean()
+            ),
+            zoom=15.3,
+            pitch=0,
+        )
+
+    longitudes = [
+        point[0]
+        for point
+        in focus_coordinates
+    ]
+
+    latitudes = [
+        point[1]
+        for point
+        in focus_coordinates
+    ]
+
+    min_lon = min(
+        longitudes
+    )
+
+    max_lon = max(
+        longitudes
+    )
+
+    min_lat = min(
+        latitudes
+    )
+
+    max_lat = max(
+        latitudes
+    )
+
+    center_lon = (
+        min_lon
+        + max_lon
+    ) / 2
+
+    center_lat = (
+        min_lat
+        + max_lat
+    ) / 2
+
+    span = max(
+        max_lon - min_lon,
+        max_lat - min_lat,
+    )
+
+    if span < 0.002:
+        zoom = 16.8
+
+    elif span < 0.004:
+        zoom = 16.1
+
+    elif span < 0.007:
+        zoom = 15.5
+
+    elif span < 0.011:
+        zoom = 15.0
+
+    else:
+        zoom = 14.5
+
+    return pdk.ViewState(
+        latitude=center_lat,
+        longitude=center_lon,
+        zoom=zoom,
+        pitch=0,
+    )
+
+
 def render_park_map(
     locations,
     latest_waits,
@@ -1006,14 +1136,14 @@ def render_park_map(
         .astype(str)
     )
 
-    map_data["marker_size"] = 80
+    map_data["marker_size"] = 62
 
     map_data["marker_color"] = [
         [
-            106,
-            111,
-            134,
-            150,
+            96,
+            101,
+            122,
+            100,
         ]
         for _ in range(
             len(map_data)
@@ -1031,7 +1161,7 @@ def render_park_map(
         map_data.loc[
             current_mask,
             "marker_size",
-        ] = 150
+        ] = 155
 
         for index in map_data.index[
             current_mask
@@ -1043,34 +1173,26 @@ def render_park_map(
                 216,
                 197,
                 143,
-                245,
+                250,
             ]
 
     if itinerary:
         for stop in itinerary:
-            stop_attraction = (
-                stop["attraction"]
-            )
-
-            stop_number = int(
-                stop["step"]
-            )
-
             stop_mask = (
                 map_data["attraction"]
-                == stop_attraction
+                == stop["attraction"]
             )
 
             map_data.loc[
                 stop_mask,
                 "marker_size",
-            ] = 170
+            ] = 175
 
             map_data.loc[
                 stop_mask,
                 "plan_stop",
             ] = str(
-                stop_number
+                stop["step"]
             )
 
             for index in map_data.index[
@@ -1083,7 +1205,7 @@ def render_park_map(
                     190,
                     177,
                     220,
-                    245,
+                    250,
                 ]
 
     elif recommendations:
@@ -1101,7 +1223,7 @@ def render_park_map(
         map_data.loc[
             best_mask,
             "marker_size",
-        ] = 180
+        ] = 175
 
         for index in map_data.index[
             best_mask
@@ -1113,8 +1235,42 @@ def render_park_map(
                 190,
                 177,
                 220,
-                245,
+                250,
             ]
+
+    route_segments = (
+        build_map_route(
+            locations,
+            itinerary,
+        )
+        if itinerary
+        else []
+    )
+
+    layers = []
+
+    if route_segments:
+        route_layer = pdk.Layer(
+            "PathLayer",
+            data=route_segments,
+            get_path="path",
+            get_width=8,
+            get_color=[
+                188,
+                174,
+                218,
+                238,
+            ],
+            width_min_pixels=5,
+            width_max_pixels=10,
+            joint_rounded=True,
+            cap_rounded=True,
+            pickable=False,
+        )
+
+        layers.append(
+            route_layer
+        )
 
     attraction_layer = pdk.Layer(
         "ScatterplotLayer",
@@ -1125,7 +1281,7 @@ def render_park_map(
         ],
         get_radius="marker_size",
         get_fill_color="marker_color",
-        radius_min_pixels=5,
+        radius_min_pixels=4,
         radius_max_pixels=15,
         pickable=True,
         auto_highlight=True,
@@ -1135,120 +1291,10 @@ def render_park_map(
             243,
             239,
             230,
-            145,
+            115,
         ],
         line_width_min_pixels=1,
     )
-
-    layers = []
-
-    route_segments = []
-
-    if itinerary:
-        for stop in itinerary:
-            path_nodes = (
-                stop.get(
-                    "path_nodes",
-                    [],
-                )
-            )
-
-            routing_method = (
-                stop.get(
-                    "routing_method"
-                )
-            )
-
-            if (
-                routing_method == "Park path"
-                and path_nodes
-            ):
-                coordinates = (
-                    get_route_coordinates(
-                        path_nodes
-                    )
-                )
-
-                if (
-                    len(coordinates)
-                    >= 2
-                ):
-                    route_segments.append(
-                        {
-                            "path":
-                                coordinates,
-
-                            "step":
-                                str(
-                                    stop["step"]
-                                ),
-                        }
-                    )
-
-    elif recommendations:
-        best_route = (
-            recommendations[0]
-        )
-
-        path_nodes = (
-            best_route.get(
-                "path_nodes",
-                [],
-            )
-        )
-
-        routing_method = (
-            best_route.get(
-                "routing_method"
-            )
-        )
-
-        if (
-            routing_method == "Park path"
-            and path_nodes
-        ):
-            coordinates = (
-                get_route_coordinates(
-                    path_nodes
-                )
-            )
-
-            if (
-                len(coordinates)
-                >= 2
-            ):
-                route_segments.append(
-                    {
-                        "path":
-                            coordinates,
-
-                        "step":
-                            "1",
-                    }
-                )
-
-    if route_segments:
-        route_layer = pdk.Layer(
-            "PathLayer",
-            data=route_segments,
-            get_path="path",
-            get_width=7,
-            get_color=[
-                188,
-                174,
-                218,
-                235,
-            ],
-            width_min_pixels=4,
-            width_max_pixels=9,
-            joint_rounded=True,
-            cap_rounded=True,
-            pickable=False,
-        )
-
-        layers.append(
-            route_layer
-        )
 
     layers.append(
         attraction_layer
@@ -1288,17 +1334,26 @@ def render_park_map(
             stop_text_layer
         )
 
-    view_state = pdk.ViewState(
-        latitude=(
-            map_data["latitude"]
-            .mean()
-        ),
-        longitude=(
-            map_data["longitude"]
-            .mean()
-        ),
-        zoom=15.5,
-        pitch=0,
+    view_state = (
+        get_map_view_state(
+            locations,
+            current_attraction,
+            itinerary,
+            route_segments,
+        )
+        if itinerary
+        else pdk.ViewState(
+            latitude=(
+                map_data["latitude"]
+                .mean()
+            ),
+            longitude=(
+                map_data["longitude"]
+                .mean()
+            ),
+            zoom=15.3,
+            pitch=0,
+        )
     )
 
     tooltip = {
@@ -1355,47 +1410,12 @@ def render_park_map(
     )
 
     if itinerary:
-        park_path_legs = sum(
-            1
-            for stop in itinerary
-            if (
-                stop.get(
-                    "routing_method"
-                )
-                == "Park path"
-                and stop.get(
-                    "path_nodes"
-                )
-            )
+        st.caption(
+            "Gold marks your current location. "
+            "Numbered lavender markers show your planned stops. "
+            "The lavender route follows the modeled park path network "
+            "and is anchored to each attraction."
         )
-
-        total_legs = len(
-            itinerary
-        )
-
-        if (
-            park_path_legs
-            == total_legs
-        ):
-            st.caption(
-                "Gold marks your current location. "
-                "Numbered lavender markers show your planned stops. "
-                "Route lines follow the modeled Magic Kingdom park path network."
-            )
-
-        elif park_path_legs > 0:
-            st.caption(
-                "Gold marks your current location. "
-                "Numbered lavender markers show your planned stops. "
-                "Only itinerary legs with a modeled park-path route are drawn."
-            )
-
-        else:
-            st.caption(
-                "Gold marks your current location. "
-                "Numbered lavender markers show your planned stops. "
-                "No modeled park-path route is available for these itinerary legs."
-            )
 
     elif recommendations:
         st.caption(
@@ -1870,7 +1890,7 @@ render_html(
         <div class="mouseql-section-copy">
             See where you are, your planned stops,
             and the modeled park-path route between
-            each attraction when available.
+            each attraction.
         </div>
     </div>
     """
