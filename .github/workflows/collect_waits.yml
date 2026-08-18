@@ -6,6 +6,9 @@ on:
 env:
   TZ: America/New_York
 
+permissions:
+  contents: write
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -40,6 +43,9 @@ jobs:
 
       - name: Run day and hour analysis
         run: sqlite3 -header -column data/mouseql.db < queries/09_waits_by_day_and_hour.sql
+
+      - name: Run best attraction time by day
+        run: sqlite3 -header -column data/mouseql.db < queries/10_best_time_by_attraction_and_day.sql
 
       - name: Generate Magic Kingdom report
         run: python scripts/generate_report.py
