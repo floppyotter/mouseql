@@ -1,37 +1,33 @@
-name: Collect Magic Kingdom wait times
+name: Run MOUSEQL analysis
 
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "15 * * * *"
-
-permissions:
-  contents: write
-
 jobs:
-  collect:
+  analyze:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Run data check
+        run: sqlite3 -header -column data/mouseql.db < queries/01_data_check.sql
 
-      - name: Collect wait times
-        run: python scripts/collect_waits.py
+      - name: Run wait time summary
+        run: sqlite3 -header -column data/mouseql.db < queries/02_wait_time_summary.sql
 
-      - name: Build SQLite database
-        run: python scripts/build_database.py
+      - name: Run hourly analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/03_waits_by_hour.sql
 
-      - name: Save new data
-        run: |
-          git config user.name "mouseql-bot"
-          git config user.email "mouseql-bot@users.noreply.github.com"
-          git add data/magic_kingdom_waits.csv data/mouseql.db
-          git diff --cached --quiet || git commit -m "Update Magic Kingdom wait data"
-          git push
+      - name: Run best time analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/04_best_time_by_attraction.sql
+
+      - name: Run attraction comparison
+        run: sqlite3 -header -column data/mouseql.db < queries/05_attraction_comparison.sql
+
+      - name: Run wait time drops
+        run: sqlite3 -header -column data/mouseql.db < queries/06_wait_time_drops.sql
+
+      - name: Run volatility analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/07_wait_time_volatility.sql
