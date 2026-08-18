@@ -5,7 +5,10 @@ import pandas as pd
 import pydeck as pdk
 import streamlit as st
 
-from route_planner import rank_attractions
+from route_planner import (
+    rank_attractions,
+    get_route_coordinates,
+)
 
 
 DB_PATH = Path("data/mouseql.db")
@@ -613,6 +616,56 @@ if not locations.empty:
         line_width_min_pixels=1,
     )
 
+    layers = [
+        attraction_layer
+    ]
+
+    if recommendations:
+
+        best_route = recommendations[0]
+
+        path_nodes = best_route.get(
+            "path_nodes",
+            [],
+        )
+
+        if path_nodes:
+
+            route_coordinates = (
+                get_route_coordinates(
+                    path_nodes
+                )
+            )
+
+            if len(route_coordinates) >= 2:
+
+                route_data = pd.DataFrame(
+                    [
+                        {
+                            "path": route_coordinates
+                        }
+                    ]
+                )
+
+                route_layer = pdk.Layer(
+                    "PathLayer",
+                    data=route_data,
+                    get_path="path",
+                    get_width=6,
+                    get_color=[
+                        173,
+                        164,
+                        204,
+                        220,
+                    ],
+                    width_min_pixels=4,
+                    pickable=False,
+                )
+
+                layers.append(
+                    route_layer
+                )
+
     view_state = pdk.ViewState(
         latitude=map_data[
             "latitude"
@@ -656,9 +709,7 @@ if not locations.empty:
     }
 
     deck = pdk.Deck(
-        layers=[
-            attraction_layer,
-        ],
+        layers=layers,
         initial_view_state=view_state,
         tooltip=tooltip,
         map_style=None,
