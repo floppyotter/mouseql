@@ -59,6 +59,9 @@ jobs:
       - name: Run best attraction time by day
         run: sqlite3 -header -column data/mouseql.db < queries/10_best_time_by_attraction_and_day.sql
 
+      - name: Run current vs typical analysis
+        run: sqlite3 -header -column data/mouseql.db < queries/11_current_vs_typical.sql
+
       - name: Generate Magic Kingdom report
         run: python scripts/generate_report.py
 
