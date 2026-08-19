@@ -9,6 +9,9 @@ import pandas as pd
 WALKING_SPEED_MPH = 3.0
 WALKING_DISTANCE_MULTIPLIER = 1.05
 
+WALKING_TIME_WEIGHT = 2.0
+WAIT_TIME_WEIGHT = 1.0
+
 MIN_HISTORY_OBSERVATIONS = 5
 FULL_HISTORY_OBSERVATIONS = 20
 MAX_HISTORY_ADJUSTMENT = 10
@@ -195,7 +198,9 @@ def get_park_graph():
         if (
             not from_node
             or not to_node
-            or not isfinite(distance)
+            or not isfinite(
+                distance
+            )
             or distance <= 0
         ):
             continue
@@ -327,8 +332,12 @@ def get_park_nodes():
             continue
 
         if not (
-            isfinite(latitude)
-            and isfinite(longitude)
+            isfinite(
+                latitude
+            )
+            and isfinite(
+                longitude
+            )
         ):
             continue
 
@@ -829,10 +838,18 @@ def calculate_coordinate_route(
         return None
 
     if not (
-        isfinite(current_lat)
-        and isfinite(current_lon)
-        and isfinite(target_lat)
-        and isfinite(target_lon)
+        isfinite(
+            current_lat
+        )
+        and isfinite(
+            current_lon
+        )
+        and isfinite(
+            target_lat
+        )
+        and isfinite(
+            target_lon
+        )
     ):
         return None
 
@@ -1304,9 +1321,19 @@ def rank_attractions(
             )
         )
 
-        base_total = (
+        walking_score = (
             walking_minutes
-            + wait_minutes
+            * WALKING_TIME_WEIGHT
+        )
+
+        wait_score = (
+            wait_minutes
+            * WAIT_TIME_WEIGHT
+        )
+
+        base_total = (
+            walking_score
+            + wait_score
         )
 
         recommendation_score = (
@@ -1372,7 +1399,20 @@ def rank_attractions(
 
                 "total_minutes":
                     round(
-                        base_total
+                        walking_minutes
+                        + wait_minutes
+                    ),
+
+                "walking_score":
+                    round(
+                        walking_score,
+                        1,
+                    ),
+
+                "wait_score":
+                    round(
+                        wait_score,
+                        1,
                     ),
 
                 "history_adjustment":
@@ -1419,6 +1459,9 @@ def rank_attractions(
             ],
             item[
                 "walking_minutes"
+            ],
+            item[
+                "wait_minutes"
             ],
         )
     )
