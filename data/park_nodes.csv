@@ -2,34 +2,70 @@ node,latitude,longitude
 Main Street Entrance,28.4177,-81.5812
 Main Street Hub,28.4184,-81.5810
 Central Hub,28.4190,-81.5812
+
 Adventureland Entrance,28.4194,-81.5830
+Adventureland Entrance Mid,28.4196,-81.5840
 Adventureland Center,28.4198,-81.5850
+Adventureland Center South,28.4188,-81.5855
 Pirates Area,28.4178,-81.5860
 Jungle Cruise Area,28.4200,-81.5845
+Adventureland Frontier Junction,28.4188,-81.5870
+
 Frontierland Entrance,28.4180,-81.5880
+Frontierland Center South,28.4175,-81.5885
 Frontierland Center,28.4170,-81.5890
+Frontierland Center North,28.4175,-81.5890
 Big Thunder Area,28.4160,-81.5900
+
 Liberty Square West,28.4190,-81.5890
+Liberty Square West Mid,28.4194,-81.5885
 Liberty Square Center,28.4198,-81.5880
+Liberty Square Center North,28.4200,-81.5875
 Liberty Square Entrance,28.4200,-81.5868
+Haunted Mansion Approach,28.4205,-81.5872
 Haunted Mansion Area,28.4210,-81.5875
+
+Fantasyland West South,28.4210,-81.5850
 Fantasyland West,28.4215,-81.5845
-Fantasyland Castle,28.4198,-81.5818
-Fantasyland Center,28.4220,-81.5825
-Fantasyland East,28.4225,-81.5805
+Fantasyland West North,28.4217,-81.5840
 Small World Area,28.4218,-81.5835
 Peter Pan Area,28.4222,-81.5840
+
+Fantasyland Castle,28.4198,-81.5818
+Fantasyland Castle North,28.4209,-81.5822
+Fantasyland Center South,28.4215,-81.5823
+Fantasyland Center,28.4220,-81.5825
+Fantasyland Center North,28.4222,-81.5820
+Fantasyland East,28.4225,-81.5805
+
+Seven Dwarfs Approach,28.4228,-81.5795
 Seven Dwarfs Area,28.4230,-81.5785
+
 Storybook Circus Entrance,28.4235,-81.5765
+Storybook Circus Mid,28.4238,-81.5760
 Storybook Circus Center,28.4240,-81.5755
 Dumbo Area,28.4245,-81.5760
 Barnstormer Area,28.4245,-81.5750
+
+Little Mermaid Approach,28.4238,-81.5790
 Little Mermaid Area,28.4235,-81.5780
+
 Tomorrowland Entrance,28.4210,-81.5780
+Tomorrowland Entrance North,28.4212,-81.5770
+Tomorrowland Center South,28.4213,-81.5760
 Tomorrowland Center,28.4215,-81.5755
+Tomorrowland Center North,28.4220,-81.5750
+
+Space Mountain Approach,28.4208,-81.5745
 Space Mountain Area,28.4205,-81.5740
 Buzz Lightyear Area,28.4218,-81.5745
 PeopleMover Area,28.4220,-81.5750
+
+Tomorrowland North West,28.4225,-81.5748
 Tomorrowland North,28.4230,-81.5745
+TRON Approach,28.4238,-81.5738
 TRON Area,28.4245,-81.5730
 Tomorrowland Speedway Area,28.4240,-81.5715
+
+Fantasyland East North,28.4228,-81.5795
+Fantasyland Tomorrowland Junction,28.4230,-81.5775
