@@ -1,39 +1,79 @@
 from_node,to_node,distance_miles
 Main Street Entrance,Main Street Hub,0.20
 Main Street Hub,Central Hub,0.10
+
 Central Hub,Adventureland Entrance,0.08
 Central Hub,Liberty Square Entrance,0.10
 Central Hub,Fantasyland Castle,0.08
 Central Hub,Tomorrowland Entrance,0.10
-Adventureland Entrance,Adventureland Center,0.10
+
+Adventureland Entrance,Adventureland Entrance Mid,0.06
+Adventureland Entrance Mid,Adventureland Center,0.06
+Adventureland Center,Adventureland Center South,0.08
 Adventureland Center,Pirates Area,0.10
 Adventureland Center,Jungle Cruise Area,0.07
-Adventureland Center,Frontierland Entrance,0.12
-Pirates Area,Frontierland Entrance,0.08
-Frontierland Entrance,Frontierland Center,0.10
+Adventureland Center South,Adventureland Frontier Junction,0.08
+Pirates Area,Adventureland Frontier Junction,0.08
+Adventureland Frontier Junction,Frontierland Entrance,0.08
+
+Frontierland Entrance,Frontierland Center South,0.06
+Frontierland Center South,Frontierland Center,0.06
+Frontierland Center,Frontierland Center North,0.05
 Frontierland Center,Big Thunder Area,0.12
-Frontierland Center,Liberty Square West,0.10
-Liberty Square West,Liberty Square Center,0.08
+Frontierland Center North,Liberty Square West,0.10
+
+Liberty Square West,Liberty Square West Mid,0.06
+Liberty Square West Mid,Liberty Square Center,0.06
+Liberty Square Center,Liberty Square Center North,0.05
 Liberty Square Center,Liberty Square Entrance,0.08
-Liberty Square Center,Haunted Mansion Area,0.08
-Haunted Mansion Area,Fantasyland West,0.10
-Fantasyland Castle,Fantasyland Center,0.08
-Fantasyland Center,Fantasyland West,0.10
-Fantasyland Center,Fantasyland East,0.10
-Fantasyland West,Small World Area,0.06
+Liberty Square Center North,Liberty Square Entrance,0.06
+Liberty Square Center,Haunted Mansion Approach,0.06
+Haunted Mansion Approach,Haunted Mansion Area,0.06
+
+Haunted Mansion Area,Fantasyland West South,0.08
+Fantasyland West South,Fantasyland West,0.06
+Fantasyland West,Fantasyland West North,0.05
+Fantasyland West North,Small World Area,0.06
 Fantasyland West,Peter Pan Area,0.05
-Fantasyland East,Seven Dwarfs Area,0.08
+Fantasyland West North,Peter Pan Area,0.05
+
+Fantasyland Castle,Fantasyland Castle North,0.08
+Fantasyland Castle North,Fantasyland Center South,0.07
+Fantasyland Center South,Fantasyland Center,0.06
+Fantasyland Center,Fantasyland Center North,0.05
+Fantasyland Center North,Fantasyland East,0.08
+Fantasyland Center,Fantasyland West,0.10
+
+Fantasyland East,Seven Dwarfs Approach,0.07
+Seven Dwarfs Approach,Seven Dwarfs Area,0.06
+Fantasyland East,Little Mermaid Approach,0.07
+Little Mermaid Approach,Little Mermaid Area,0.06
+
 Fantasyland East,Storybook Circus Entrance,0.10
-Fantasyland East,Little Mermaid Area,0.08
-Storybook Circus Entrance,Storybook Circus Center,0.08
+Storybook Circus Entrance,Storybook Circus Mid,0.06
+Storybook Circus Mid,Storybook Circus Center,0.05
 Storybook Circus Center,Dumbo Area,0.05
 Storybook Circus Center,Barnstormer Area,0.05
-Storybook Circus Center,Tomorrowland North,0.12
-Tomorrowland Entrance,Tomorrowland Center,0.10
-Tomorrowland Center,Space Mountain Area,0.10
+
+Storybook Circus Center,Fantasyland Tomorrowland Junction,0.10
+Fantasyland East,Fantasyland Tomorrowland Junction,0.12
+Fantasyland Tomorrowland Junction,Tomorrowland Entrance North,0.08
+Tomorrowland Entrance,Tomorrowland Entrance North,0.06
+
+Tomorrowland Entrance,Tomorrowland Center South,0.08
+Tomorrowland Entrance North,Tomorrowland Center South,0.06
+Tomorrowland Center South,Tomorrowland Center,0.05
+Tomorrowland Center,Tomorrowland Center North,0.07
+
+Tomorrowland Center,Space Mountain Approach,0.08
+Space Mountain Approach,Space Mountain Area,0.06
 Tomorrowland Center,Buzz Lightyear Area,0.05
 Tomorrowland Center,PeopleMover Area,0.04
-Tomorrowland Center,Tomorrowland North,0.10
-Tomorrowland North,TRON Area,0.07
+
+Tomorrowland Center North,Tomorrowland North West,0.06
+Tomorrowland North West,Tomorrowland North,0.06
+Tomorrowland North,TRON Approach,0.07
+TRON Approach,TRON Area,0.06
 Tomorrowland North,Tomorrowland Speedway Area,0.08
-Fantasyland East,Tomorrowland North,0.12
+
+Fantasyland Center North,Fantasyland Tomorrowland Junction,0.10
