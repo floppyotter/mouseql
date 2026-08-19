@@ -4,33 +4,33 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **1155**
+- Observations: **1190**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 18, 2026 at 11:11 PM ET**
+- Latest observation: **August 19, 2026 at 12:00 AM ET**
 
 ## Best Overall Time
 
 Based on the data collected so far, the lowest average wait occurred around:
 
-**11 PM — 8.5 minute average**
+**12 AM — 8.1 minute average**
 
-Observations during this hour: **22**
+Observations during this hour: **21**
 
 
 ## Highest Average Waits
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 50.4 min | 23 |
-| Seven Dwarfs Mine Train | 39.0 min | 24 |
-| Tiana's Bayou Adventure | 33.0 min | 20 |
-| Peter Pan's Flight | 32.9 min | 24 |
-| Buzz Lightyear’s Space Ranger Spin | 28.5 min | 23 |
-| Jungle Cruise | 25.4 min | 23 |
-| Space Mountain | 24.6 min | 24 |
-| Big Thunder Mountain Railroad | 24.1 min | 23 |
-| The Many Adventures of Winnie the Pooh | 22.6 min | 21 |
+| TRON Lightcycle / Run | 50.4 min | 24 |
+| Seven Dwarfs Mine Train | 37.8 min | 25 |
+| Tiana's Bayou Adventure | 31.9 min | 21 |
+| Peter Pan's Flight | 31.8 min | 25 |
+| Buzz Lightyear’s Space Ranger Spin | 27.5 min | 24 |
+| Jungle Cruise | 24.6 min | 24 |
+| Space Mountain | 24.0 min | 25 |
+| Big Thunder Mountain Railroad | 23.5 min | 24 |
+| The Many Adventures of Winnie the Pooh | 21.8 min | 22 |
 | Haunted Mansion | 17.5 min | 23 |
 
 
@@ -54,10 +54,10 @@ Because the dataset is still growing, results based on only a few observations s
 | Mad Tea Party | 5 PM | 5.0 min | 3 |
 | Mickey's PhilharMagic | 9 AM | 10.0 min | 2 |
 | Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 3 |
-| Peter Pan's Flight | 10 PM | 15.0 min | 3 |
+| Peter Pan's Flight | 12 AM | 5.0 min | 1 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 3 |
 | Prince Charming Regal Carrousel | 5 PM | 5.0 min | 3 |
-| Seven Dwarfs Mine Train | 9 PM | 15.0 min | 1 |
+| Seven Dwarfs Mine Train | 12 AM | 10.0 min | 1 |
 | Space Mountain | 10 PM | 6.7 min | 3 |
 | Swiss Family Treehouse | 5 PM | 5.0 min | 3 |
 | TRON Lightcycle / Run | 9 PM | 25.0 min | 1 |
