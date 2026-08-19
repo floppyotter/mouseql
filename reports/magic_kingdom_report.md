@@ -4,34 +4,34 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **1120**
+- Observations: **1155**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 18, 2026 at 9:53 PM ET**
+- Latest observation: **August 18, 2026 at 11:11 PM ET**
 
 ## Best Overall Time
 
 Based on the data collected so far, the lowest average wait occurred around:
 
-**9 PM — 8.8 minute average**
+**11 PM — 8.5 minute average**
 
-Observations during this hour: **21**
+Observations during this hour: **22**
 
 
 ## Highest Average Waits
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.4 min | 22 |
-| Seven Dwarfs Mine Train | 39.8 min | 23 |
-| Tiana's Bayou Adventure | 34.2 min | 19 |
-| Peter Pan's Flight | 33.7 min | 23 |
-| Buzz Lightyear’s Space Ranger Spin | 29.5 min | 22 |
-| Jungle Cruise | 26.4 min | 22 |
-| Space Mountain | 25.2 min | 23 |
-| Big Thunder Mountain Railroad | 24.8 min | 22 |
-| The Many Adventures of Winnie the Pooh | 23.3 min | 20 |
-| Haunted Mansion | 17.7 min | 22 |
+| TRON Lightcycle / Run | 50.4 min | 23 |
+| Seven Dwarfs Mine Train | 39.0 min | 24 |
+| Tiana's Bayou Adventure | 33.0 min | 20 |
+| Peter Pan's Flight | 32.9 min | 24 |
+| Buzz Lightyear’s Space Ranger Spin | 28.5 min | 23 |
+| Jungle Cruise | 25.4 min | 23 |
+| Space Mountain | 24.6 min | 24 |
+| Big Thunder Mountain Railroad | 24.1 min | 23 |
+| The Many Adventures of Winnie the Pooh | 22.6 min | 21 |
+| Haunted Mansion | 17.5 min | 23 |
 
 
 ## Best Time for Each Attraction
@@ -50,7 +50,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Dumbo the Flying Elephant | 5 PM | 5.0 min | 3 |
 | Enchanted Tales with Belle | 10 AM | 10.0 min | 1 |
 | Haunted Mansion | 9 PM | 10.0 min | 1 |
-| Jungle Cruise | 10 PM | 10.0 min | 3 |
+| Jungle Cruise | 11 PM | 5.0 min | 1 |
 | Mad Tea Party | 5 PM | 5.0 min | 3 |
 | Mickey's PhilharMagic | 9 AM | 10.0 min | 2 |
 | Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 3 |
@@ -64,7 +64,7 @@ Because the dataset is still growing, results based on only a few observations s
 | The Barnstormer | 10 PM | 5.0 min | 1 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 3 |
 | The Many Adventures of Winnie the Pooh | 9 PM | 5.0 min | 1 |
-| Tiana's Bayou Adventure | 7 PM | 20.0 min | 2 |
+| Tiana's Bayou Adventure | 11 PM | 10.0 min | 1 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 1 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 3 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 3 |
