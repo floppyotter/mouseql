@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **1820**
+- Observations: **1855**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 20, 2026 at 10:01 AM ET**
+- Latest observation: **August 20, 2026 at 10:55 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **21**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 50.3 min | 29 |
-| Seven Dwarfs Mine Train | 37.0 min | 30 |
-| Tiana's Bayou Adventure | 32.0 min | 22 |
-| Peter Pan's Flight | 29.8 min | 30 |
-| Buzz Lightyear’s Space Ranger Spin | 27.2 min | 29 |
-| Jungle Cruise | 24.8 min | 26 |
-| Space Mountain | 23.3 min | 30 |
+| TRON Lightcycle / Run | 49.8 min | 30 |
+| Seven Dwarfs Mine Train | 37.1 min | 31 |
+| Tiana's Bayou Adventure | 32.6 min | 23 |
+| Peter Pan's Flight | 30.2 min | 31 |
+| Buzz Lightyear’s Space Ranger Spin | 27.7 min | 30 |
+| Jungle Cruise | 25.7 min | 27 |
+| Space Mountain | 24.2 min | 31 |
 | Big Thunder Mountain Railroad | 23.0 min | 27 |
-| The Many Adventures of Winnie the Pooh | 20.7 min | 27 |
-| Haunted Mansion | 16.7 min | 28 |
+| The Many Adventures of Winnie the Pooh | 21.4 min | 28 |
+| The Hall of Presidents | 20.0 min | 1 |
 
 
 ## Best Time for Each Attraction
@@ -48,10 +48,10 @@ Because the dataset is still growing, results based on only a few observations s
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 1 |
 | Country Bear Musical Jamboree | 5 PM | 10.0 min | 3 |
 | Dumbo the Flying Elephant | 5 PM | 5.0 min | 3 |
-| Enchanted Tales with Belle | 10 AM | 10.0 min | 1 |
+| Enchanted Tales with Belle | 10 AM | 10.0 min | 2 |
 | Haunted Mansion | 9 PM | 10.0 min | 1 |
 | Jungle Cruise | 11 PM | 5.0 min | 1 |
-| Mad Tea Party | 10 AM | 2.5 min | 2 |
+| Mad Tea Party | 10 AM | 3.3 min | 3 |
 | Mickey's PhilharMagic | 9 AM | 10.0 min | 3 |
 | Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 3 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
@@ -62,6 +62,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Swiss Family Treehouse | 5 PM | 5.0 min | 3 |
 | TRON Lightcycle / Run | 9 PM | 25.0 min | 1 |
 | The Barnstormer | 10 PM | 5.0 min | 1 |
+| The Hall of Presidents | 10 AM | 20.0 min | 1 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 3 |
 | The Many Adventures of Winnie the Pooh | 9 PM | 5.0 min | 1 |
 | Tiana's Bayou Adventure | 11 PM | 10.0 min | 1 |
@@ -70,7 +71,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 3 |
 | Walt Disney World Railroad - Fantasyland | 9 AM | 5.0 min | 1 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 9 AM | 5.0 min | 1 |
-| Walt Disney's Enchanted Tiki Room | 10 AM | 7.5 min | 2 |
+| Walt Disney's Enchanted Tiki Room | 10 AM | 6.7 min | 3 |
 
 
 ---
