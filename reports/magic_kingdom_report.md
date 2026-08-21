@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **2590**
+- Observations: **2625**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 21, 2026 at 9:59 AM ET**
+- Latest observation: **August 21, 2026 at 10:53 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **22**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 54.5 min | 42 |
-| Seven Dwarfs Mine Train | 42.3 min | 41 |
-| Tiana's Bayou Adventure | 35.6 min | 33 |
-| Peter Pan's Flight | 34.4 min | 44 |
-| Big Thunder Mountain Railroad | 31.4 min | 37 |
+| TRON Lightcycle / Run | 54.9 min | 43 |
+| Seven Dwarfs Mine Train | 42.5 min | 42 |
+| Tiana's Bayou Adventure | 35.4 min | 34 |
+| Peter Pan's Flight | 34.4 min | 45 |
+| Big Thunder Mountain Railroad | 31.6 min | 38 |
 | Buzz Lightyear’s Space Ranger Spin | 30.2 min | 42 |
-| Space Mountain | 29.3 min | 40 |
-| Jungle Cruise | 29.3 min | 38 |
+| Jungle Cruise | 29.5 min | 39 |
+| Space Mountain | 29.1 min | 41 |
 | The Many Adventures of Winnie the Pooh | 24.9 min | 39 |
-| Haunted Mansion | 20.6 min | 41 |
+| Haunted Mansion | 20.8 min | 42 |
 
 
 ## Best Time for Each Attraction
@@ -48,10 +48,10 @@ Because the dataset is still growing, results based on only a few observations s
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 2 |
 | Country Bear Musical Jamboree | 5 PM | 10.0 min | 4 |
 | Dumbo the Flying Elephant | 5 PM | 5.0 min | 4 |
-| Enchanted Tales with Belle | 10 AM | 10.0 min | 2 |
+| Enchanted Tales with Belle | 1 PM | 10.0 min | 2 |
 | Haunted Mansion | 9 PM | 12.5 min | 2 |
 | Jungle Cruise | 11 PM | 5.0 min | 1 |
-| Mad Tea Party | 10 AM | 3.3 min | 3 |
+| Mad Tea Party | 10 AM | 3.8 min | 4 |
 | Mickey's PhilharMagic | 11 AM | 10.0 min | 2 |
 | Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 4 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
@@ -69,8 +69,8 @@ Because the dataset is still growing, results based on only a few observations s
 | Tomorrowland Speedway | 7 AM | 5.0 min | 2 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 3 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 3 |
-| Walt Disney World Railroad - Fantasyland | 10 AM | 5.0 min | 1 |
-| Walt Disney World Railroad - Main Street, U.S.A. | 10 AM | 5.0 min | 1 |
+| Walt Disney World Railroad - Fantasyland | 11 AM | 5.0 min | 1 |
+| Walt Disney World Railroad - Main Street, U.S.A. | 11 AM | 5.0 min | 1 |
 | Walt Disney's Enchanted Tiki Room | 9 PM | 5.0 min | 1 |
 
 
