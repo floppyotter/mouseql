@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **4165**
+- Observations: **4200**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 23, 2026 at 9:46 AM ET**
+- Latest observation: **August 23, 2026 at 10:39 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.8 min | 70 |
-| Seven Dwarfs Mine Train | 41.3 min | 68 |
-| Tiana's Bayou Adventure | 34.5 min | 59 |
-| Peter Pan's Flight | 33.8 min | 73 |
-| Buzz Lightyear’s Space Ranger Spin | 30.4 min | 69 |
-| Big Thunder Mountain Railroad | 29.2 min | 63 |
-| Space Mountain | 28.0 min | 67 |
-| Jungle Cruise | 27.2 min | 64 |
-| The Many Adventures of Winnie the Pooh | 24.8 min | 65 |
-| Haunted Mansion | 20.2 min | 69 |
+| TRON Lightcycle / Run | 52.5 min | 71 |
+| Seven Dwarfs Mine Train | 41.3 min | 69 |
+| Tiana's Bayou Adventure | 34.3 min | 60 |
+| Peter Pan's Flight | 33.8 min | 74 |
+| Buzz Lightyear’s Space Ranger Spin | 30.4 min | 70 |
+| Big Thunder Mountain Railroad | 29.1 min | 64 |
+| Space Mountain | 28.1 min | 68 |
+| Jungle Cruise | 27.3 min | 65 |
+| The Many Adventures of Winnie the Pooh | 24.8 min | 66 |
+| Haunted Mansion | 20.2 min | 70 |
 
 
 ## Best Time for Each Attraction
@@ -69,8 +69,8 @@ Because the dataset is still growing, results based on only a few observations s
 | Tomorrowland Speedway | 7 AM | 5.0 min | 3 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 4 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 4 |
-| Walt Disney World Railroad - Fantasyland | 10 AM | 13.3 min | 3 |
-| Walt Disney World Railroad - Main Street, U.S.A. | 10 AM | 13.3 min | 3 |
+| Walt Disney World Railroad - Fantasyland | 11 AM | 13.3 min | 3 |
+| Walt Disney World Railroad - Main Street, U.S.A. | 11 AM | 13.3 min | 3 |
 | Walt Disney's Enchanted Tiki Room | 9 PM | 5.0 min | 1 |
 
 
