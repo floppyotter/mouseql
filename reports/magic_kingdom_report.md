@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **5145**
+- Observations: **5180**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 24, 2026 at 4:48 PM ET**
+- Latest observation: **August 24, 2026 at 5:44 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.6 min | 90 |
-| Seven Dwarfs Mine Train | 41.5 min | 85 |
-| Peter Pan's Flight | 34.3 min | 94 |
-| Tiana's Bayou Adventure | 33.0 min | 77 |
-| Buzz Lightyear’s Space Ranger Spin | 30.3 min | 90 |
-| Space Mountain | 28.9 min | 88 |
-| Big Thunder Mountain Railroad | 28.7 min | 81 |
-| Jungle Cruise | 27.7 min | 81 |
-| The Many Adventures of Winnie the Pooh | 25.8 min | 83 |
-| Haunted Mansion | 19.9 min | 90 |
+| TRON Lightcycle / Run | 51.8 min | 91 |
+| Seven Dwarfs Mine Train | 41.6 min | 86 |
+| Peter Pan's Flight | 34.4 min | 95 |
+| Tiana's Bayou Adventure | 33.3 min | 78 |
+| Buzz Lightyear’s Space Ranger Spin | 30.5 min | 91 |
+| Space Mountain | 28.9 min | 89 |
+| Big Thunder Mountain Railroad | 28.8 min | 82 |
+| Jungle Cruise | 27.9 min | 82 |
+| The Many Adventures of Winnie the Pooh | 25.9 min | 84 |
+| Haunted Mansion | 20.0 min | 91 |
 
 
 ## Best Time for Each Attraction
@@ -46,20 +46,20 @@ Because the dataset is still growing, results based on only a few observations s
 | Astro Orbiter | 7 AM | 5.0 min | 4 |
 | Big Thunder Mountain Railroad | 11 PM | 12.5 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 4 |
-| Country Bear Musical Jamboree | 5 PM | 10.0 min | 7 |
+| Country Bear Musical Jamboree | 5 PM | 10.0 min | 8 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 4 |
 | Enchanted Tales with Belle | 4 PM | 11.7 min | 6 |
 | Haunted Mansion | 9 AM | 12.4 min | 10 |
 | Jungle Cruise | 11 PM | 5.0 min | 4 |
 | Mad Tea Party | 7 AM | 5.0 min | 3 |
 | Mickey's PhilharMagic | 11 PM | 10.0 min | 2 |
-| Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 7 |
+| Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 8 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 4 |
-| Prince Charming Regal Carrousel | 5 PM | 5.0 min | 7 |
+| Prince Charming Regal Carrousel | 5 PM | 4.4 min | 8 |
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 10 PM | 6.7 min | 3 |
-| Swiss Family Treehouse | 5 PM | 5.0 min | 7 |
+| Swiss Family Treehouse | 5 PM | 5.0 min | 8 |
 | TRON Lightcycle / Run | 11 PM | 34.2 min | 6 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 3 |
@@ -69,8 +69,8 @@ Because the dataset is still growing, results based on only a few observations s
 | Tomorrowland Speedway | 7 AM | 5.0 min | 3 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 4 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 4 |
-| Walt Disney World Railroad - Fantasyland | 5 PM | 15.0 min | 3 |
-| Walt Disney World Railroad - Main Street, U.S.A. | 5 PM | 15.0 min | 3 |
+| Walt Disney World Railroad - Fantasyland | 5 PM | 15.0 min | 4 |
+| Walt Disney World Railroad - Main Street, U.S.A. | 5 PM | 15.0 min | 4 |
 | Walt Disney's Enchanted Tiki Room | 9 PM | 5.0 min | 1 |
 
 
