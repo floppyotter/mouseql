@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **5950**
+- Observations: **5985**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 25, 2026 at 4:46 PM ET**
+- Latest observation: **August 25, 2026 at 5:44 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.2 min | 104 |
-| Seven Dwarfs Mine Train | 40.9 min | 98 |
-| Peter Pan's Flight | 33.8 min | 108 |
-| Tiana's Bayou Adventure | 32.5 min | 89 |
-| Buzz Lightyear’s Space Ranger Spin | 30.1 min | 103 |
-| Space Mountain | 28.1 min | 102 |
+| TRON Lightcycle / Run | 51.1 min | 105 |
+| Seven Dwarfs Mine Train | 40.9 min | 99 |
+| Peter Pan's Flight | 33.8 min | 109 |
+| Tiana's Bayou Adventure | 32.4 min | 90 |
+| Buzz Lightyear’s Space Ranger Spin | 30.0 min | 104 |
+| Space Mountain | 28.2 min | 103 |
 | Big Thunder Mountain Railroad | 27.7 min | 94 |
-| Jungle Cruise | 27.2 min | 95 |
-| The Many Adventures of Winnie the Pooh | 25.6 min | 97 |
-| Haunted Mansion | 19.6 min | 104 |
+| Jungle Cruise | 27.1 min | 96 |
+| The Many Adventures of Winnie the Pooh | 25.6 min | 98 |
+| Haunted Mansion | 19.5 min | 105 |
 
 
 ## Best Time for Each Attraction
@@ -53,13 +53,13 @@ Because the dataset is still growing, results based on only a few observations s
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 3 |
 | Mickey's PhilharMagic | 9 PM | 7.5 min | 2 |
-| Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 8 |
+| Monsters, Inc. Laugh Floor | 5 PM | 10.0 min | 9 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 4 |
-| Prince Charming Regal Carrousel | 5 PM | 4.4 min | 8 |
+| Prince Charming Regal Carrousel | 5 PM | 4.4 min | 9 |
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 10 PM | 6.7 min | 3 |
-| Swiss Family Treehouse | 5 PM | 5.0 min | 8 |
+| Swiss Family Treehouse | 5 PM | 5.0 min | 9 |
 | TRON Lightcycle / Run | 11 PM | 38.6 min | 7 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 3 |
