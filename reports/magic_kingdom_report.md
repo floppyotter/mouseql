@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **6090**
+- Observations: **6125**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 25, 2026 at 9:58 PM ET**
+- Latest observation: **August 25, 2026 at 11:18 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 50.6 min | 108 |
-| Seven Dwarfs Mine Train | 40.5 min | 102 |
-| Peter Pan's Flight | 33.4 min | 112 |
-| Tiana's Bayou Adventure | 31.7 min | 93 |
-| Buzz Lightyear’s Space Ranger Spin | 29.7 min | 107 |
-| Space Mountain | 27.9 min | 106 |
+| TRON Lightcycle / Run | 50.4 min | 109 |
+| Seven Dwarfs Mine Train | 40.3 min | 103 |
+| Peter Pan's Flight | 33.2 min | 113 |
+| Tiana's Bayou Adventure | 31.5 min | 94 |
+| Buzz Lightyear’s Space Ranger Spin | 29.5 min | 108 |
+| Space Mountain | 27.8 min | 107 |
 | Big Thunder Mountain Railroad | 27.7 min | 94 |
-| Jungle Cruise | 26.7 min | 99 |
-| The Many Adventures of Winnie the Pooh | 25.4 min | 101 |
-| Haunted Mansion | 19.4 min | 108 |
+| Jungle Cruise | 26.5 min | 100 |
+| The Many Adventures of Winnie the Pooh | 25.2 min | 102 |
+| Haunted Mansion | 19.3 min | 109 |
 
 
 ## Best Time for Each Attraction
@@ -60,12 +60,12 @@ Because the dataset is still growing, results based on only a few observations s
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 10 PM | 6.7 min | 3 |
 | Swiss Family Treehouse | 5 PM | 5.0 min | 9 |
-| TRON Lightcycle / Run | 11 PM | 38.6 min | 7 |
+| TRON Lightcycle / Run | 11 PM | 37.5 min | 8 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 3 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 4 |
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
-| Tiana's Bayou Adventure | 11 PM | 6.0 min | 5 |
+| Tiana's Bayou Adventure | 11 PM | 6.7 min | 6 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 3 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 4 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 4 |
