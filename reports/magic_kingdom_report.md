@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **6790**
+- Observations: **6825**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **August 29, 2026 at 5:05 AM ET**
+- Latest observation: **August 29, 2026 at 10:29 AM ET**
 
 ## Best Overall Time
 
@@ -23,15 +23,15 @@ Observations during this hour: **43**
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
 | TRON Lightcycle / Run | 50.1 min | 117 |
-| Seven Dwarfs Mine Train | 40.0 min | 109 |
-| Peter Pan's Flight | 33.4 min | 121 |
-| Tiana's Bayou Adventure | 31.5 min | 100 |
-| Buzz Lightyear’s Space Ranger Spin | 29.2 min | 115 |
-| Big Thunder Mountain Railroad | 27.7 min | 99 |
-| Space Mountain | 27.4 min | 114 |
-| Jungle Cruise | 26.2 min | 106 |
-| The Many Adventures of Winnie the Pooh | 25.3 min | 109 |
-| Haunted Mansion | 19.2 min | 116 |
+| Seven Dwarfs Mine Train | 40.0 min | 110 |
+| Peter Pan's Flight | 33.4 min | 122 |
+| Tiana's Bayou Adventure | 31.2 min | 101 |
+| Buzz Lightyear’s Space Ranger Spin | 29.4 min | 116 |
+| Big Thunder Mountain Railroad | 27.6 min | 100 |
+| Space Mountain | 27.4 min | 115 |
+| Jungle Cruise | 26.3 min | 107 |
+| The Many Adventures of Winnie the Pooh | 25.3 min | 110 |
+| Haunted Mansion | 19.2 min | 117 |
 
 
 ## Best Time for Each Attraction
@@ -46,7 +46,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Astro Orbiter | 7 AM | 5.0 min | 4 |
 | Big Thunder Mountain Railroad | 11 PM | 12.5 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 4 |
-| Country Bear Musical Jamboree | 10 AM | 9.4 min | 8 |
+| Country Bear Musical Jamboree | 10 AM | 9.4 min | 9 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 4 |
 | Enchanted Tales with Belle | 10 AM | 11.7 min | 6 |
 | Haunted Mansion | 9 AM | 12.5 min | 12 |
