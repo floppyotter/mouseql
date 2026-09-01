@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **7315**
+- Observations: **7350**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 1, 2026 at 6:06 AM ET**
+- Latest observation: **September 1, 2026 at 10:53 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 50.0 min | 126 |
-| Seven Dwarfs Mine Train | 39.5 min | 119 |
-| Peter Pan's Flight | 33.4 min | 132 |
+| TRON Lightcycle / Run | 49.9 min | 127 |
+| Seven Dwarfs Mine Train | 39.5 min | 120 |
+| Peter Pan's Flight | 33.4 min | 133 |
 | Tiana's Bayou Adventure | 30.0 min | 109 |
-| Buzz Lightyear’s Space Ranger Spin | 29.1 min | 125 |
-| Space Mountain | 27.1 min | 125 |
-| Big Thunder Mountain Railroad | 27.0 min | 108 |
-| Jungle Cruise | 25.7 min | 115 |
-| The Many Adventures of Winnie the Pooh | 25.3 min | 116 |
-| Haunted Mansion | 18.9 min | 125 |
+| Buzz Lightyear’s Space Ranger Spin | 29.0 min | 126 |
+| Space Mountain | 26.9 min | 126 |
+| Big Thunder Mountain Railroad | 26.8 min | 109 |
+| Jungle Cruise | 25.8 min | 116 |
+| The Many Adventures of Winnie the Pooh | 25.3 min | 117 |
+| Haunted Mansion | 18.9 min | 126 |
 
 
 ## Best Time for Each Attraction
@@ -46,9 +46,9 @@ Because the dataset is still growing, results based on only a few observations s
 | Astro Orbiter | 7 AM | 5.0 min | 4 |
 | Big Thunder Mountain Railroad | 11 PM | 12.5 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 4 |
-| Country Bear Musical Jamboree | 10 AM | 9.4 min | 9 |
+| Country Bear Musical Jamboree | 11 AM | 9.4 min | 9 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 4 |
-| Enchanted Tales with Belle | 10 AM | 11.7 min | 6 |
+| Enchanted Tales with Belle | 10 AM | 11.4 min | 7 |
 | Haunted Mansion | 9 AM | 12.5 min | 12 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 3 |
