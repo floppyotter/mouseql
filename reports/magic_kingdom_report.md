@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **7525**
+- Observations: **7560**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 2, 2026 at 5:38 AM ET**
+- Latest observation: **September 2, 2026 at 10:29 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 49.6 min | 130 |
-| Seven Dwarfs Mine Train | 39.3 min | 122 |
-| Peter Pan's Flight | 33.2 min | 136 |
-| Tiana's Bayou Adventure | 29.7 min | 111 |
-| Buzz Lightyear’s Space Ranger Spin | 28.8 min | 129 |
-| Space Mountain | 26.7 min | 129 |
-| Big Thunder Mountain Railroad | 26.7 min | 111 |
-| Jungle Cruise | 25.5 min | 118 |
-| The Many Adventures of Winnie the Pooh | 25.1 min | 120 |
-| Haunted Mansion | 18.8 min | 129 |
+| TRON Lightcycle / Run | 49.5 min | 131 |
+| Seven Dwarfs Mine Train | 39.2 min | 123 |
+| Peter Pan's Flight | 33.2 min | 137 |
+| Tiana's Bayou Adventure | 29.6 min | 112 |
+| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 130 |
+| Space Mountain | 26.6 min | 130 |
+| Big Thunder Mountain Railroad | 26.6 min | 112 |
+| Jungle Cruise | 25.6 min | 119 |
+| The Many Adventures of Winnie the Pooh | 25.1 min | 121 |
+| Haunted Mansion | 18.7 min | 130 |
 
 
 ## Best Time for Each Attraction
@@ -51,7 +51,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Enchanted Tales with Belle | 10 AM | 11.4 min | 7 |
 | Haunted Mansion | 9 AM | 12.5 min | 12 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
-| Mad Tea Party | 7 AM | 5.0 min | 3 |
+| Mad Tea Party | 10 AM | 4.5 min | 11 |
 | Mickey's PhilharMagic | 9 PM | 7.5 min | 2 |
 | Monsters, Inc. Laugh Floor | 12 PM | 9.4 min | 9 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
