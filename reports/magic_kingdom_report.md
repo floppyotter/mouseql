@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **7840**
+- Observations: **7875**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 3, 2026 at 6:35 PM ET**
+- Latest observation: **September 3, 2026 at 8:58 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 49.2 min | 137 |
-| Seven Dwarfs Mine Train | 39.3 min | 127 |
-| Peter Pan's Flight | 33.3 min | 143 |
-| Tiana's Bayou Adventure | 29.2 min | 117 |
-| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 136 |
-| Big Thunder Mountain Railroad | 26.7 min | 116 |
-| Space Mountain | 26.1 min | 136 |
-| Jungle Cruise | 25.9 min | 123 |
-| The Many Adventures of Winnie the Pooh | 25.2 min | 127 |
-| Haunted Mansion | 18.6 min | 136 |
+| TRON Lightcycle / Run | 49.2 min | 138 |
+| Seven Dwarfs Mine Train | 39.2 min | 128 |
+| Peter Pan's Flight | 33.3 min | 144 |
+| Tiana's Bayou Adventure | 29.1 min | 118 |
+| Buzz Lightyear’s Space Ranger Spin | 28.8 min | 137 |
+| Big Thunder Mountain Railroad | 26.8 min | 117 |
+| Space Mountain | 26.1 min | 137 |
+| Jungle Cruise | 25.8 min | 124 |
+| The Many Adventures of Winnie the Pooh | 25.2 min | 128 |
+| Haunted Mansion | 18.6 min | 137 |
 
 
 ## Best Time for Each Attraction
@@ -59,7 +59,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Prince Charming Regal Carrousel | 5 PM | 4.2 min | 13 |
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 12 AM | 7.5 min | 2 |
-| Swiss Family Treehouse | 8 PM | 3.8 min | 4 |
+| Swiss Family Treehouse | 8 PM | 4.0 min | 5 |
 | TRON Lightcycle / Run | 11 PM | 37.5 min | 8 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 3 |
