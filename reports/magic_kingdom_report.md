@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **9905**
+- Observations: **9940**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 13, 2026 at 2:10 AM ET**
+- Latest observation: **September 13, 2026 at 7:54 AM ET**
 
 ## Best Overall Time
 
@@ -24,13 +24,13 @@ Observations during this hour: **43**
 |---|---:|---:|
 | TRON Lightcycle / Run | 51.5 min | 172 |
 | Seven Dwarfs Mine Train | 40.7 min | 164 |
-| Peter Pan's Flight | 34.4 min | 180 |
+| Peter Pan's Flight | 34.2 min | 181 |
 | Tiana's Bayou Adventure | 29.8 min | 150 |
-| Buzz Lightyear’s Space Ranger Spin | 29.2 min | 174 |
+| Buzz Lightyear’s Space Ranger Spin | 29.0 min | 175 |
 | Big Thunder Mountain Railroad | 28.0 min | 153 |
-| Space Mountain | 27.0 min | 175 |
+| Space Mountain | 26.9 min | 176 |
 | Jungle Cruise | 26.2 min | 160 |
-| The Many Adventures of Winnie the Pooh | 25.7 min | 163 |
+| The Many Adventures of Winnie the Pooh | 25.7 min | 164 |
 | Haunted Mansion | 19.5 min | 175 |
 
 
@@ -43,15 +43,15 @@ Because the dataset is still growing, results based on only a few observations s
 | Attraction | Best Time | Average Wait | Observations |
 |---|---:|---:|---:|
 | "it's a small world" | 9 PM | 4.4 min | 9 |
-| Astro Orbiter | 7 AM | 5.0 min | 4 |
+| Astro Orbiter | 7 AM | 5.0 min | 5 |
 | Big Thunder Mountain Railroad | 11 PM | 12.5 min | 6 |
-| Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 4 |
+| Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 5 |
 | Country Bear Musical Jamboree | 11 AM | 9.4 min | 9 |
-| Dumbo the Flying Elephant | 7 AM | 5.0 min | 4 |
+| Dumbo the Flying Elephant | 7 AM | 5.0 min | 5 |
 | Enchanted Tales with Belle | 7 PM | 5.0 min | 1 |
 | Haunted Mansion | 9 AM | 12.5 min | 13 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
-| Mad Tea Party | 7 AM | 5.0 min | 3 |
+| Mad Tea Party | 7 AM | 5.0 min | 4 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
 | Monsters, Inc. Laugh Floor | 2 PM | 9.6 min | 12 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
@@ -66,7 +66,7 @@ Because the dataset is still growing, results based on only a few observations s
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 5 |
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
 | Tiana's Bayou Adventure | 11 PM | 6.7 min | 6 |
-| Tomorrowland Speedway | 7 AM | 5.0 min | 3 |
+| Tomorrowland Speedway | 7 AM | 5.0 min | 4 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 5 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 5 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
