@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **9835**
+- Observations: **9870**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 12, 2026 at 6:18 PM ET**
+- Latest observation: **September 12, 2026 at 9:01 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.2 min | 171 |
-| Seven Dwarfs Mine Train | 40.7 min | 163 |
-| Peter Pan's Flight | 34.4 min | 179 |
-| Tiana's Bayou Adventure | 29.9 min | 149 |
-| Buzz Lightyear’s Space Ranger Spin | 29.1 min | 173 |
-| Big Thunder Mountain Railroad | 28.0 min | 152 |
-| Space Mountain | 26.9 min | 174 |
-| Jungle Cruise | 26.3 min | 159 |
-| The Many Adventures of Winnie the Pooh | 25.6 min | 162 |
-| Haunted Mansion | 19.5 min | 174 |
+| TRON Lightcycle / Run | 51.5 min | 172 |
+| Seven Dwarfs Mine Train | 40.7 min | 164 |
+| Peter Pan's Flight | 34.4 min | 180 |
+| Tiana's Bayou Adventure | 29.8 min | 150 |
+| Buzz Lightyear’s Space Ranger Spin | 29.2 min | 174 |
+| Big Thunder Mountain Railroad | 28.0 min | 153 |
+| Space Mountain | 27.0 min | 175 |
+| Jungle Cruise | 26.2 min | 160 |
+| The Many Adventures of Winnie the Pooh | 25.7 min | 163 |
+| Haunted Mansion | 19.5 min | 175 |
 
 
 ## Best Time for Each Attraction
@@ -42,7 +42,7 @@ Because the dataset is still growing, results based on only a few observations s
 
 | Attraction | Best Time | Average Wait | Observations |
 |---|---:|---:|---:|
-| "it's a small world" | 9 PM | 4.4 min | 8 |
+| "it's a small world" | 9 PM | 4.4 min | 9 |
 | Astro Orbiter | 7 AM | 5.0 min | 4 |
 | Big Thunder Mountain Railroad | 11 PM | 12.5 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 4 |
@@ -71,7 +71,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 5 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 8 PM | 15.0 min | 3 |
-| Walt Disney's Enchanted Tiki Room | 9 PM | 8.3 min | 3 |
+| Walt Disney's Enchanted Tiki Room | 9 PM | 8.8 min | 4 |
 
 
 ---
