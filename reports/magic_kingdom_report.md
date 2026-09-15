@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **10325**
+- Observations: **10360**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 15, 2026 at 9:33 AM ET**
+- Latest observation: **September 15, 2026 at 2:12 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.6 min | 180 |
+| TRON Lightcycle / Run | 51.6 min | 181 |
 | Seven Dwarfs Mine Train | 40.6 min | 169 |
-| Peter Pan's Flight | 34.3 min | 189 |
+| Peter Pan's Flight | 34.3 min | 190 |
 | Tiana's Bayou Adventure | 29.4 min | 156 |
-| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 183 |
+| Buzz Lightyear’s Space Ranger Spin | 28.8 min | 184 |
 | Big Thunder Mountain Railroad | 28.1 min | 159 |
-| Space Mountain | 26.4 min | 184 |
+| Space Mountain | 26.3 min | 185 |
 | Jungle Cruise | 26.0 min | 166 |
-| The Many Adventures of Winnie the Pooh | 25.7 min | 172 |
-| Haunted Mansion | 19.6 min | 183 |
+| The Many Adventures of Winnie the Pooh | 25.8 min | 173 |
+| Haunted Mansion | 19.7 min | 184 |
 
 
 ## Best Time for Each Attraction
@@ -53,7 +53,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 4 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
-| Monsters, Inc. Laugh Floor | 2 PM | 9.6 min | 12 |
+| Monsters, Inc. Laugh Floor | 2 PM | 9.6 min | 13 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 5 |
 | Prince Charming Regal Carrousel | 7 AM | 5.0 min | 4 |
