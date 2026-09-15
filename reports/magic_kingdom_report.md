@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **10290**
+- Observations: **10325**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 15, 2026 at 3:44 AM ET**
+- Latest observation: **September 15, 2026 at 9:33 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 51.7 min | 179 |
-| Seven Dwarfs Mine Train | 40.7 min | 168 |
-| Peter Pan's Flight | 34.3 min | 188 |
+| TRON Lightcycle / Run | 51.6 min | 180 |
+| Seven Dwarfs Mine Train | 40.6 min | 169 |
+| Peter Pan's Flight | 34.3 min | 189 |
 | Tiana's Bayou Adventure | 29.4 min | 156 |
-| Buzz Lightyear’s Space Ranger Spin | 28.8 min | 182 |
-| Big Thunder Mountain Railroad | 28.2 min | 158 |
-| Space Mountain | 26.5 min | 183 |
-| Jungle Cruise | 26.1 min | 165 |
-| The Many Adventures of Winnie the Pooh | 25.7 min | 171 |
-| Haunted Mansion | 19.7 min | 182 |
+| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 183 |
+| Big Thunder Mountain Railroad | 28.1 min | 159 |
+| Space Mountain | 26.4 min | 184 |
+| Jungle Cruise | 26.0 min | 166 |
+| The Many Adventures of Winnie the Pooh | 25.7 min | 172 |
+| Haunted Mansion | 19.6 min | 183 |
 
 
 ## Best Time for Each Attraction
@@ -49,7 +49,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Country Bear Musical Jamboree | 11 AM | 9.4 min | 9 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 5 |
 | Enchanted Tales with Belle | 7 PM | 10.0 min | 2 |
-| Haunted Mansion | 9 AM | 12.5 min | 13 |
+| Haunted Mansion | 9 AM | 12.6 min | 14 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 4 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
