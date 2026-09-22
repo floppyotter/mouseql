@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **11690**
+- Observations: **11725**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 22, 2026 at 5:57 AM ET**
+- Latest observation: **September 22, 2026 at 10:54 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.2 min | 207 |
-| Seven Dwarfs Mine Train | 40.9 min | 192 |
+| TRON Lightcycle / Run | 52.1 min | 208 |
+| Seven Dwarfs Mine Train | 41.0 min | 193 |
 | Peter Pan's Flight | 34.9 min | 214 |
-| Tiana's Bayou Adventure | 29.3 min | 182 |
-| Buzz Lightyear’s Space Ranger Spin | 28.9 min | 207 |
-| Big Thunder Mountain Railroad | 27.9 min | 183 |
+| Tiana's Bayou Adventure | 29.2 min | 183 |
+| Buzz Lightyear’s Space Ranger Spin | 28.9 min | 208 |
+| Big Thunder Mountain Railroad | 27.8 min | 184 |
 | Space Mountain | 26.4 min | 209 |
-| The Many Adventures of Winnie the Pooh | 26.3 min | 197 |
-| Jungle Cruise | 25.9 min | 191 |
-| Haunted Mansion | 19.7 min | 210 |
+| The Many Adventures of Winnie the Pooh | 26.3 min | 198 |
+| Jungle Cruise | 25.9 min | 192 |
+| Haunted Mansion | 19.7 min | 211 |
 
 
 ## Best Time for Each Attraction
@@ -48,12 +48,12 @@ Because the dataset is still growing, results based on only a few observations s
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 5 |
 | Country Bear Musical Jamboree | 11 AM | 9.4 min | 9 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 5 |
-| Enchanted Tales with Belle | 10 AM | 11.1 min | 9 |
+| Enchanted Tales with Belle | 10 AM | 11.5 min | 10 |
 | Haunted Mansion | 9 AM | 12.6 min | 15 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 4 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
-| Monsters, Inc. Laugh Floor | 10 AM | 9.7 min | 17 |
+| Monsters, Inc. Laugh Floor | 10 AM | 9.7 min | 18 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 5 |
 | Prince Charming Regal Carrousel | 7 AM | 5.0 min | 4 |
