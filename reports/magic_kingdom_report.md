@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **12285**
+- Observations: **12320**
 - Attractions: **35**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **September 25, 2026 at 9:47 AM ET**
+- Latest observation: **September 25, 2026 at 2:37 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.2 min | 217 |
-| Seven Dwarfs Mine Train | 40.9 min | 202 |
-| Peter Pan's Flight | 35.2 min | 222 |
-| Buzz Lightyear’s Space Ranger Spin | 29.0 min | 216 |
-| Tiana's Bayou Adventure | 28.8 min | 191 |
-| Big Thunder Mountain Railroad | 27.8 min | 193 |
-| The Many Adventures of Winnie the Pooh | 26.3 min | 207 |
-| Space Mountain | 26.3 min | 218 |
-| Jungle Cruise | 25.9 min | 201 |
-| Haunted Mansion | 19.9 min | 219 |
+| TRON Lightcycle / Run | 52.3 min | 218 |
+| Seven Dwarfs Mine Train | 40.9 min | 203 |
+| Peter Pan's Flight | 35.2 min | 223 |
+| Buzz Lightyear’s Space Ranger Spin | 29.1 min | 217 |
+| Tiana's Bayou Adventure | 28.8 min | 192 |
+| Big Thunder Mountain Railroad | 27.9 min | 194 |
+| The Many Adventures of Winnie the Pooh | 26.3 min | 208 |
+| Space Mountain | 26.2 min | 219 |
+| Jungle Cruise | 26.0 min | 202 |
+| Haunted Mansion | 19.9 min | 220 |
 
 
 ## Best Time for Each Attraction
@@ -71,7 +71,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 5 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 8 PM | 15.0 min | 3 |
-| Walt Disney's Enchanted Tiki Room | 2 PM | 9.3 min | 15 |
+| Walt Disney's Enchanted Tiki Room | 2 PM | 9.4 min | 16 |
 
 
 ---
