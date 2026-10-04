@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **13754**
+- Observations: **13790**
 - Attractions: **36**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **October 4, 2026 at 1:54 AM ET**
+- Latest observation: **October 4, 2026 at 8:22 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.1 min | 247 |
-| Seven Dwarfs Mine Train | 40.6 min | 231 |
+| TRON Lightcycle / Run | 52.1 min | 248 |
+| Seven Dwarfs Mine Train | 40.6 min | 232 |
 | Peter Pan's Flight | 35.2 min | 251 |
 | Buzz Lightyear’s Space Ranger Spin | 28.8 min | 246 |
-| Tiana's Bayou Adventure | 27.8 min | 218 |
-| Big Thunder Mountain Railroad | 27.5 min | 222 |
-| The Many Adventures of Winnie the Pooh | 26.1 min | 234 |
-| Space Mountain | 25.9 min | 248 |
-| Jungle Cruise | 25.6 min | 230 |
-| Haunted Mansion | 20.2 min | 249 |
+| Tiana's Bayou Adventure | 27.7 min | 219 |
+| Big Thunder Mountain Railroad | 27.4 min | 223 |
+| The Many Adventures of Winnie the Pooh | 26.1 min | 235 |
+| Space Mountain | 25.9 min | 249 |
+| Jungle Cruise | 25.5 min | 231 |
+| Haunted Mansion | 20.2 min | 250 |
 
 
 ## Best Time for Each Attraction
@@ -44,7 +44,7 @@ Because the dataset is still growing, results based on only a few observations s
 |---|---:|---:|---:|
 | "it's a small world" | 11 PM | 4.4 min | 8 |
 | Astro Orbiter | 7 AM | 5.0 min | 5 |
-| Big Thunder Mountain Railroad | 8 AM | 5.0 min | 2 |
+| Big Thunder Mountain Railroad | 8 AM | 5.0 min | 3 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 5 |
 | Country Bear Musical Jamboree | 11 AM | 9.5 min | 11 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 5 |
@@ -60,12 +60,12 @@ Because the dataset is still growing, results based on only a few observations s
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 12 AM | 7.5 min | 2 |
 | Swiss Family Treehouse | 8 PM | 4.6 min | 13 |
-| TRON Lightcycle / Run | 8 AM | 17.5 min | 2 |
+| TRON Lightcycle / Run | 8 AM | 25.0 min | 3 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 5 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 5 |
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
-| Tiana's Bayou Adventure | 8 AM | 5.0 min | 2 |
+| Tiana's Bayou Adventure | 8 AM | 5.0 min | 3 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 4 |
 | Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 5 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 5 |
