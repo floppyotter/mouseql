@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **14042**
+- Observations: **14078**
 - Attractions: **36**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **October 5, 2026 at 10:58 PM ET**
+- Latest observation: **October 6, 2026 at 6:18 AM ET**
 
 ## Best Overall Time
 
