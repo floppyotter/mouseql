@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **14006**
+- Observations: **14042**
 - Attractions: **36**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **October 5, 2026 at 6:37 PM ET**
+- Latest observation: **October 5, 2026 at 10:58 PM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.1 min | 252 |
-| Seven Dwarfs Mine Train | 40.7 min | 237 |
-| Peter Pan's Flight | 35.3 min | 256 |
-| Buzz Lightyear’s Space Ranger Spin | 28.8 min | 250 |
-| Big Thunder Mountain Railroad | 27.8 min | 228 |
-| Tiana's Bayou Adventure | 27.7 min | 224 |
-| The Many Adventures of Winnie the Pooh | 26.2 min | 238 |
-| Space Mountain | 26.1 min | 254 |
-| Jungle Cruise | 25.6 min | 236 |
-| Haunted Mansion | 20.3 min | 255 |
+| TRON Lightcycle / Run | 52.2 min | 253 |
+| Seven Dwarfs Mine Train | 40.6 min | 238 |
+| Peter Pan's Flight | 35.3 min | 257 |
+| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 251 |
+| Tiana's Bayou Adventure | 27.8 min | 225 |
+| Big Thunder Mountain Railroad | 27.8 min | 229 |
+| The Many Adventures of Winnie the Pooh | 26.1 min | 239 |
+| Space Mountain | 26.0 min | 255 |
+| Jungle Cruise | 25.5 min | 237 |
+| Haunted Mansion | 20.3 min | 256 |
 
 
 ## Best Time for Each Attraction
@@ -55,7 +55,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
 | Monsters, Inc. Laugh Floor | 10 AM | 9.7 min | 18 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
-| Pirates of the Caribbean | 10 PM | 5.0 min | 5 |
+| Pirates of the Caribbean | 10 PM | 5.0 min | 6 |
 | Prince Charming Regal Carrousel | 7 AM | 5.0 min | 4 |
 | Seven Dwarfs Mine Train | 12 AM | 15.0 min | 2 |
 | Space Mountain | 12 AM | 7.5 min | 2 |
@@ -63,12 +63,12 @@ Because the dataset is still growing, results based on only a few observations s
 | TRON Lightcycle / Run | 8 AM | 25.0 min | 3 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
 | The Hall of Presidents | 9 AM | 15.0 min | 5 |
-| The Magic Carpets of Aladdin | 10 PM | 5.0 min | 5 |
+| The Magic Carpets of Aladdin | 10 PM | 5.0 min | 6 |
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
 | Tiana's Bayou Adventure | 8 AM | 5.0 min | 3 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 4 |
-| Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 5 |
-| Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 5 |
+| Tomorrowland Transit Authority PeopleMover | 10 PM | 5.0 min | 6 |
+| Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 6 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 8 PM | 15.0 min | 3 |
 | Walt Disney's Enchanted Tiki Room | 2 PM | 9.4 min | 18 |
