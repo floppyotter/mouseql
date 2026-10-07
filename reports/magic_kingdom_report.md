@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **14150**
+- Observations: **14186**
 - Attractions: **36**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **October 6, 2026 at 5:38 PM ET**
+- Latest observation: **October 6, 2026 at 9:32 PM ET**
 
 ## Best Overall Time
 
@@ -22,15 +22,15 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.1 min | 255 |
-| Seven Dwarfs Mine Train | 40.5 min | 240 |
-| Peter Pan's Flight | 35.3 min | 259 |
-| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 253 |
-| Big Thunder Mountain Railroad | 27.7 min | 231 |
-| Tiana's Bayou Adventure | 27.6 min | 227 |
-| The Many Adventures of Winnie the Pooh | 26.1 min | 241 |
-| Space Mountain | 26.0 min | 257 |
-| Jungle Cruise | 25.7 min | 239 |
+| TRON Lightcycle / Run | 52.0 min | 256 |
+| Seven Dwarfs Mine Train | 40.5 min | 241 |
+| Peter Pan's Flight | 35.3 min | 260 |
+| Buzz Lightyear’s Space Ranger Spin | 28.7 min | 254 |
+| Big Thunder Mountain Railroad | 27.7 min | 232 |
+| Tiana's Bayou Adventure | 27.5 min | 228 |
+| The Many Adventures of Winnie the Pooh | 26.0 min | 242 |
+| Space Mountain | 25.9 min | 258 |
+| Jungle Cruise | 25.6 min | 240 |
 | Haunted Mansion | 20.3 min | 257 |
 
 
