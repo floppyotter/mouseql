@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **14654**
+- Observations: **14690**
 - Attractions: **36**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **October 10, 2026 at 3:08 AM ET**
+- Latest observation: **October 10, 2026 at 9:42 AM ET**
 
 ## Best Overall Time
 
@@ -22,16 +22,16 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 52.2 min | 264 |
-| Seven Dwarfs Mine Train | 40.5 min | 249 |
-| Peter Pan's Flight | 35.3 min | 268 |
-| Buzz Lightyear’s Space Ranger Spin | 28.9 min | 262 |
-| Big Thunder Mountain Railroad | 27.8 min | 238 |
-| Tiana's Bayou Adventure | 27.3 min | 236 |
-| The Many Adventures of Winnie the Pooh | 26.0 min | 250 |
-| Space Mountain | 25.8 min | 266 |
-| Jungle Cruise | 25.6 min | 248 |
-| Haunted Mansion | 20.5 min | 265 |
+| TRON Lightcycle / Run | 52.2 min | 265 |
+| Seven Dwarfs Mine Train | 40.5 min | 250 |
+| Peter Pan's Flight | 35.3 min | 269 |
+| Buzz Lightyear’s Space Ranger Spin | 28.9 min | 263 |
+| Big Thunder Mountain Railroad | 27.8 min | 239 |
+| Tiana's Bayou Adventure | 27.2 min | 237 |
+| The Many Adventures of Winnie the Pooh | 26.0 min | 251 |
+| Space Mountain | 25.9 min | 267 |
+| Jungle Cruise | 25.7 min | 249 |
+| Haunted Mansion | 20.5 min | 266 |
 
 
 ## Best Time for Each Attraction
@@ -49,7 +49,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Country Bear Musical Jamboree | 11 AM | 9.5 min | 11 |
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 5 |
 | Enchanted Tales with Belle | 9 AM | 10.8 min | 6 |
-| Haunted Mansion | 9 AM | 12.7 min | 21 |
+| Haunted Mansion | 9 AM | 12.8 min | 22 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 4 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
@@ -62,7 +62,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Swiss Family Treehouse | 8 PM | 4.7 min | 15 |
 | TRON Lightcycle / Run | 8 AM | 25.0 min | 3 |
 | The Barnstormer | 7 AM | 5.0 min | 3 |
-| The Hall of Presidents | 9 AM | 15.0 min | 5 |
+| The Hall of Presidents | 9 AM | 15.0 min | 6 |
 | The Magic Carpets of Aladdin | 10 PM | 5.0 min | 7 |
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
 | Tiana's Bayou Adventure | 8 AM | 5.0 min | 3 |
