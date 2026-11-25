@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **21246**
+- Observations: **21282**
 - Attractions: **38**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **November 24, 2026 at 4:11 PM ET**
+- Latest observation: **November 24, 2026 at 11:13 PM ET**
 
 ## Best Overall Time
 
@@ -22,14 +22,14 @@ Observations during this hour: **43**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 53.9 min | 387 |
-| Seven Dwarfs Mine Train | 41.1 min | 375 |
-| Jingle Cruise | 39.0 min | 50 |
-| Peter Pan's Flight | 36.3 min | 389 |
-| Buzz Lightyear’s Space Ranger Spin | 29.5 min | 387 |
-| Big Thunder Mountain Railroad | 28.1 min | 355 |
-| Space Mountain | 26.7 min | 391 |
-| The Many Adventures of Winnie the Pooh | 26.6 min | 371 |
+| TRON Lightcycle / Run | 53.8 min | 388 |
+| Seven Dwarfs Mine Train | 41.1 min | 376 |
+| Jingle Cruise | 38.7 min | 51 |
+| Peter Pan's Flight | 36.3 min | 390 |
+| Buzz Lightyear’s Space Ranger Spin | 29.4 min | 388 |
+| Big Thunder Mountain Railroad | 28.1 min | 356 |
+| Space Mountain | 26.7 min | 392 |
+| The Many Adventures of Winnie the Pooh | 26.5 min | 372 |
 | Tiana's Bayou Adventure | 26.4 min | 309 |
 | Jungle Cruise | 26.1 min | 326 |
 
@@ -42,7 +42,7 @@ Because the dataset is still growing, results based on only a few observations s
 
 | Attraction | Best Time | Average Wait | Observations |
 |---|---:|---:|---:|
-| "it's a small world" | 11 PM | 4.4 min | 9 |
+| "it's a small world" | 11 PM | 4.0 min | 10 |
 | Astro Orbiter | 7 AM | 5.0 min | 6 |
 | Big Thunder Mountain Railroad | 8 AM | 6.7 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 6 |
@@ -50,7 +50,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Dumbo the Flying Elephant | 7 AM | 5.0 min | 6 |
 | Enchanted Tales with Belle | 9 AM | 10.8 min | 6 |
 | Haunted Mansion | 9 AM | 12.8 min | 25 |
-| Jingle Cruise | 11 PM | 5.0 min | 1 |
+| Jingle Cruise | 10 PM | 10.0 min | 2 |
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 5 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
