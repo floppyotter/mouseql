@@ -4,18 +4,18 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **21354**
+- Observations: **21390**
 - Attractions: **38**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **November 25, 2026 at 6:37 PM ET**
+- Latest observation: **November 26, 2026 at 3:17 AM ET**
 
 ## Best Overall Time
 
 Based on the data collected so far, the lowest average wait occurred around:
 
-**12 AM — 9.1 minute average**
+**3 AM — 0.0 minute average**
 
-Observations during this hour: **43**
+Observations during this hour: **2**
 
 
 ## Highest Average Waits
@@ -43,7 +43,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Attraction | Best Time | Average Wait | Observations |
 |---|---:|---:|---:|
 | "it's a small world" | 11 PM | 4.0 min | 10 |
-| Astro Orbiter | 7 AM | 5.0 min | 6 |
+| Astro Orbiter | 3 AM | 0.0 min | 1 |
 | Big Thunder Mountain Railroad | 8 AM | 6.7 min | 6 |
 | Buzz Lightyear’s Space Ranger Spin | 7 AM | 5.0 min | 6 |
 | Country Bear Musical Jamboree | 11 AM | 9.2 min | 20 |
@@ -68,7 +68,7 @@ Because the dataset is still growing, results based on only a few observations s
 | The Many Adventures of Winnie the Pooh | 12 AM | 5.0 min | 2 |
 | Tiana's Bayou Adventure | 8 AM | 5.8 min | 6 |
 | Tomorrowland Speedway | 7 AM | 5.0 min | 5 |
-| Tomorrowland Transit Authority PeopleMover | 10 PM | 4.0 min | 10 |
+| Tomorrowland Transit Authority PeopleMover | 3 AM | 0.0 min | 1 |
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 10 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 8 PM | 15.0 min | 3 |
