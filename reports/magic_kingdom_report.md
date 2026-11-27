@@ -4,10 +4,10 @@ Generated automatically from the MOUSEQL wait-time dataset.
 
 ## Dataset
 
-- Observations: **21498**
+- Observations: **21534**
 - Attractions: **38**
 - First observation: **August 17, 2026 at 5:55 PM ET**
-- Latest observation: **November 27, 2026 at 5:51 AM ET**
+- Latest observation: **November 27, 2026 at 2:56 PM ET**
 
 ## Best Overall Time
 
@@ -22,14 +22,14 @@ Observations during this hour: **2**
 
 | Attraction | Average Wait | Observations |
 |---|---:|---:|
-| TRON Lightcycle / Run | 54.1 min | 392 |
+| TRON Lightcycle / Run | 54.2 min | 393 |
 | Seven Dwarfs Mine Train | 41.1 min | 380 |
-| Jingle Cruise | 38.4 min | 55 |
-| Peter Pan's Flight | 36.3 min | 394 |
-| Buzz Lightyear’s Space Ranger Spin | 29.4 min | 392 |
-| Big Thunder Mountain Railroad | 28.1 min | 360 |
-| Space Mountain | 26.9 min | 396 |
-| The Many Adventures of Winnie the Pooh | 26.6 min | 376 |
+| Jingle Cruise | 38.5 min | 56 |
+| Peter Pan's Flight | 36.3 min | 395 |
+| Buzz Lightyear’s Space Ranger Spin | 29.4 min | 393 |
+| Big Thunder Mountain Railroad | 28.2 min | 361 |
+| Space Mountain | 27.0 min | 397 |
+| The Many Adventures of Winnie the Pooh | 26.6 min | 377 |
 | Tiana's Bayou Adventure | 26.4 min | 309 |
 | Jungle Cruise | 26.1 min | 326 |
 
@@ -54,7 +54,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Jungle Cruise | 12 AM | 5.0 min | 1 |
 | Mad Tea Party | 7 AM | 5.0 min | 5 |
 | Mickey's PhilharMagic | 11 PM | 8.3 min | 3 |
-| Monsters, Inc. Laugh Floor | 2 PM | 9.8 min | 23 |
+| Monsters, Inc. Laugh Floor | 2 PM | 9.8 min | 24 |
 | Peter Pan's Flight | 12 AM | 5.0 min | 2 |
 | Pirates of the Caribbean | 10 PM | 5.0 min | 10 |
 | Prince Charming Regal Carrousel | 7 AM | 5.0 min | 5 |
@@ -72,7 +72,7 @@ Because the dataset is still growing, results based on only a few observations s
 | Under the Sea - Journey of The Little Mermaid | 10 PM | 5.0 min | 10 |
 | Walt Disney World Railroad - Fantasyland | 8 PM | 15.0 min | 3 |
 | Walt Disney World Railroad - Main Street, U.S.A. | 8 PM | 15.0 min | 3 |
-| Walt Disney's Enchanted Tiki Room | 2 PM | 9.3 min | 22 |
+| Walt Disney's Enchanted Tiki Room | 2 PM | 9.3 min | 23 |
 
 
 ---
